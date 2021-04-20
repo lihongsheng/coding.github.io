@@ -311,7 +311,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-04-20 17:40:00" itemprop="dateModified" datetime="2021-04-20T17:40:00+08:00">2021-04-20</time>
+                <time title="修改时间：2021-04-20 18:14:13" itemprop="dateModified" datetime="2021-04-20T18:14:13+08:00">2021-04-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -352,156 +352,15 @@
 <p>   whatis command 查看命令的作用</p>
 <p>   info command 查看命令的详情</p>
 <p>   man command 查看命令的怎么使用，说明文档</p>
-<p>   which 查看命令二进制文件所在地方</p>
-<p>文件及目录：</p>
-<p>​      目录及文件的创建</p>
-<p>​      mkdir:创建目录 参数 -m 设置权限，-p递归创建 -v 显示创建信息</p>
-<p>​        mkdir -p /dir1/dir2</p>
-<p>​     rm 删除文件或是目录</p>
-<p>​        rm -rf 递归删除目录及文件。</p>
-<p>​       递归删除删除某一类后缀名 find ./rm/. -name “*.txt” |xargs rm -f</p>
-<p>​    mv 移动文件或者文件夹到另外一个目录下，-i 提示是否覆盖 -f强制覆盖 -v打印移动信息 </p>
-<p>​      mv fileName1 fileName2 更改文件名</p>
-<p>​     mv dir1 dir2 目标目录存在则移动dir1到dir2，dir2不存在更改目录命名</p>
-<p>​     mv file dir将文件移动到目录下</p>
-<p>   cp ：复制文件或是目录</p>
-<p>   ls 显示目录下下文件 ls -al ,ls -alt</p>
-<p>  cd 进入目录，pwd显示当前所在文件路径</p>
-<p>  scp 拷贝远程到本机或者本机到远程</p>
-<p>​     scp local/dir root@IP:/server/dir</p>
-<p>  split 切割文件</p>
-<p>  查找文件及目录</p>
-<p>  find ./ -name 文件名</p>
-<p>  查看文件内容</p>
-<p>​    cat -n 显示行号</p>
-<p>​    tail -f 实时跟踪文件变更</p>
-<p>​    wc -l 查看文件总行数</p>
-<p>​    head -10 查看文件开头十行</p>
-<p>​    tail -10查看文件最后十行</p>
-<p>   grep 匹配文件内容</p>
-<p>   cat file | grep</p>
-<p>   egrep 查找文件内容</p>
-<p> 改变文件属性</p>
-<p>  chown 改变文件所属用户组。chmod 改变文件读写执行权限</p>
-<p>链接</p>
-<p>  ln -s fiel newfile 建立软连接【软连接保存了指向目标文件的路径信息】  </p>
-<p> ln cc ccAgain :硬连接；删除一个，将仍能找到；</p>
-<p>一些特殊符号</p>
-<p> | 管道符号，用于把一个命令的输出的内容传递另外一个命令里 find . -name “*.txt” |xargs rm -f</p>
-<p> &gt; ,&gt;&gt; 重定向符号</p>
-<p> df,du磁盘相关：du -sh  -h是人性化显示 s是递归整个目录的大小</p>
-<p>网络攻击：</p>
-<p>​    netstat:查看网络端口和服务</p>
-<p>​         </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">netstat -a     #列出所有端口netstat -at    #列出所有tcp端口</span><br><span class="line">netstat -au    #列出所有udp端口    </span><br><span class="line">netstat -l        #只显示监听端口</span><br><span class="line">netstat -lt       #只列出所有监听 tcp 端口</span><br><span class="line">netstat -lu       #只列出所有监听 udp 端口netstat -lx       #只列出所有监听 UNIX 端口    netstat -antp | grep 6379 查找某一个端口netstat -an | grep &#39;:80&#39;netstat -anp|grep 8081 | grep LISTEN|awk &#39;&#123;printf $7&#125;&#39;|cut -d&#x2F; -f1 通过端口找进程IDnetstat -ntu | grep :80 | awk &#39;&#123;print $5&#125;&#39; | cut -d: -f1 | awk &#39;&#123;++ip[$1]&#125; END &#123;for(i in ip) print ip[i],&quot;\t&quot;,i&#125;&#39; | sort -nr 查看连接某服务端口最多的的IP地址：netstat -anpo | grep &quot;php-cgi&quot; | wc -l 查看phpcgi进程数，如果接近预设值，说明不够用，需要增加                     </span><br></pre></td></tr></table></figure>
-
-
-
-<p>​    route 查看路由状态</p>
-<p>   ping 发送ping报</p>
-<p>   traceroute IP 探测前往地址IP的路由路径</p>
-<p>性能监控：</p>
-<p>   top ,htop</p>
-<p>   sar -u 查看CPU利用率</p>
-<p>   free -m 查看内存使用情况</p>
-<p> 进程相关：</p>
-<p>   ps:查找进程的命令。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">linux上进程有5种状态: 1. 运行(正在运行或在运行队列中等待) 2. 中断(休眠中, 受阻, 在等待某个条件的形成或接受到信号) 3. 不可中断(收到信号不唤醒和不可运行, 进程必须等待直到有中断发生) 4. 僵死(进程已终止, 但进程描述符存在, 直到父进程调用wait4()系统调用后释放) 5. 停止(进程收到SIGSTOP, SIGSTP, SIGTIN, SIGTOU信号后停止运行运行) ps工具标识进程的5种状态码: D 不可中断 uninterruptible sleep (usually IO) R 运行 runnable (on run queue) S 中断 sleeping T 停止 traced or stopped Z 僵死 a defunct (”zombie”) process 1．命令格式：ps[参数]2．命令功能：用来显示当前进程的状态3．命令参数：a  显示所有进程-a 显示同一终端下的所有程序-A 显示所有进程c  显示进程的真实名称-N 反向选择-e 等于“-A”e  显示环境变量f  显示程序间的关系-H 显示树状结构r  显示当前终端的进程T  显示当前终端的所有程序u  指定用户的所有进程-au 显示较详细的资讯-aux 显示所有包含其他使用者的行程 -C&lt;命令&gt; 列出指定命令的状况--lines&lt;行数&gt; 每页显示的行数--width&lt;字符数&gt; 每页显示的字符数--help 显示帮助信息--version 显示版本显示例子： ps auxps -ef ps -fe| grep colin115|grep HOST |awk &#39;&#123;print $2&#125;&#39; | xargs kill -9; &#x2F;&#x2F;将用户colin115下所有进程名中包含HOST的进程终止: </span><br></pre></td></tr></table></figure>
-
-<p>使用命令pmap 进程ID，来输出进程内存的状况，可以用来分析线程堆栈；</p>
-<p>kill pid 杀死进程，kill -9 pid杀死相关进程</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">命令参数：</span><br><span class="line"></span><br><span class="line">-l  信号，若果不加信号的编号参数，则使用“-l”参数会列出全部的信号名称</span><br><span class="line"></span><br><span class="line">-a  当处理当前进程时，不限制命令名和进程号的对应关系</span><br><span class="line"></span><br><span class="line">-p  指定kill 命令只打印相关进程的进程号，而不发送任何信号</span><br><span class="line"></span><br><span class="line">-s  指定发送信号</span><br><span class="line"></span><br><span class="line">-u  指定用户注意：1、kill命令可以带信号号码选项，也可以不带。如果没有信号号码，kill命令就会发出终止信号(15)，这个信号可以被进程捕获，使得进程在退出之前可以清理并释放资源。也可以用kill向进程发送特定的信号。例如：kill -2 123它的效果等同于在前台运行PID为123的进程时按下Ctrl+C键。但是，普通用户只能使用不带signal参数的kill命令或最多使用-9信号。2、kill可以带有进程ID号作为参数。当用kill向这些进程发送信号时，必须是这些进程的主人。如果试图撤销一个没有权限撤销的进程或撤销一个不存在的进程，就会得到一个错误信息。3、可以向多个进程发信号或终止它们。4、当kill成功地发送了信号后，shell会在屏幕上显示出进程的终止信息。有时这个信息不会马上显示，只有当按下Enter键使shell的命令提示符再次出现时，才会显示出来。5、应注意，信号使进程强行终止，这常会带来一些副作用，如数据丢失或者终端无法恢复到正常状态。发送信号时必须小心，只有在万不得已时，才用kill信号(9)，因为进程不能首先捕获它。要撤销所有的后台作业，可以输入kill 0。因为有些在后台运行的命令会启动多个进程，跟踪并找到所有要杀掉的进程的PID是件很麻烦的事。这时，使用kill 0来终止所有由当前shell启动的进程，是个有效的方法。说明：</span><br><span class="line"></span><br><span class="line">只有第9种信号(SIGKILL)才可以无条件终止进程，其他信号进程都有权利忽略。	下面是常用的信号：</span><br><span class="line"></span><br><span class="line">HUP    1    终端断线</span><br><span class="line"></span><br><span class="line">INT     2    中断（同 Ctrl + C）</span><br><span class="line"></span><br><span class="line">QUIT    3    退出（同 Ctrl + \）</span><br><span class="line"></span><br><span class="line">TERM   15    终止</span><br><span class="line"></span><br><span class="line">KILL    9    强制终止</span><br><span class="line"></span><br><span class="line">CONT   18    继续（与STOP相反， fg&#x2F;bg命令）</span><br><span class="line"></span><br><span class="line">STOP    19    暂停（同 Ctrl + Z）</span><br></pre></td></tr></table></figure>
-
-
-
-<p>文本处理：</p>
-<p>   sed:命令处理文本内容</p>
-<p>   tr:将字符进行替换压缩和删除</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-c或——complerment：取代所有不属于第一字符集的字符；-d或——delete：删除所有属于第一字符集的字符；</span><br><span class="line">-s或--squeeze-repeats：把连续重复的字符以单独一个字符表示；</span><br><span class="line">-t或--truncate-set1：先删除第一字符集较第二字符集多出的字符。</span><br><span class="line">例子：</span><br><span class="line">    echo &quot;HELLO WORLD&quot; | tr &#39;A-Z&#39; &#39;a-z&#39; 将输入字符由大写转换为小写：hello world    echo &quot;hello 123 world 456&quot; | tr -d &#39;0-9&#39; 使用tr删除字符：hello world    echo &quot;thissss is      a text linnnnnnne.&quot; | tr -s &#39; sn&#39; 用tr压缩字符，可以压缩输入中重复的字符：this is a text line.</span><br></pre></td></tr></table></figure>
-
-<p>​    grep :文本搜索工具：是一种强大的文本搜索工具，它能使用正则表达式搜索文本，并把匹配的行打印出来。用于过滤/搜索的特定字符。可使用正则表达式能多种命令配合使用，使用上十分灵活。</p>
-<p>​            选项：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"> --text  # 不要忽略二进制数据。-A &lt;显示行数&gt;   --after-context&#x3D;&lt;显示行数&gt;   # 除了显示符合范本样式的那一行之外，并显示该行之后的内容。</span><br><span class="line">-b --byte-offset                           # 在显示符合范本样式的那一行之外，并显示该行之前的内容。</span><br><span class="line">-B&lt;显示行数&gt;   --before-context&#x3D;&lt;显示行数&gt;   # 除了显示符合样式的那一行之外，并显示该行之前的内容。</span><br><span class="line">-c --count    # 计算符合范本样式的列数。</span><br><span class="line">-C&lt;显示行数&gt; --context&#x3D;&lt;显示行数&gt;或-&lt;显示行数&gt; # 除了显示符合范本样式的那一列之外，并显示该列之前后的内容。</span><br><span class="line">-d&lt;进行动作&gt; --directories&#x3D;&lt;动作&gt;  # 当指定要查找的是目录而非文件时，必须使用这项参数，否则grep命令将回报信息并停止动作。</span><br><span class="line">-e&lt;范本样式&gt; --regexp&#x3D;&lt;范本样式&gt;   # 指定字符串作为查找文件内容的范本样式。</span><br><span class="line">-E --extended-regexp             # 将范本样式为延伸的普通表示法来使用，意味着使用能使用扩展正则表达式。</span><br><span class="line">-f&lt;范本文件&gt; --file&#x3D;&lt;规则文件&gt;     # 指定范本文件，其内容有一个或多个范本样式，让grep查找符合范本条件的文件内容，格式为每一列的范本样式。</span><br><span class="line">-F --fixed-regexp   # 将范本样式视为固定字符串的列表。</span><br><span class="line">-G --basic-regexp   # 将范本样式视为普通的表示法来使用。</span><br><span class="line">-h --no-filename    # 在显示符合范本样式的那一列之前，不标示该列所属的文件名称。</span><br><span class="line">-H --with-filename  # 在显示符合范本样式的那一列之前，标示该列的文件名称。</span><br><span class="line">-i --ignore-case    # 忽略字符大小写的差别。</span><br><span class="line">-l --file-with-matches   # 列出文件内容符合指定的范本样式的文件名称。</span><br><span class="line">-L --files-without-match # 列出文件内容不符合指定的范本样式的文件名称。</span><br><span class="line">-n --line-number         # 在显示符合范本样式的那一列之前，标示出该列的编号。</span><br><span class="line">-q --quiet或--silent     # 不显示任何信息。</span><br><span class="line">-R&#x2F;-r  --recursive       # 此参数的效果和指定“-d recurse”参数相同。</span><br><span class="line">-s --no-messages  # 不显示错误信息。</span><br><span class="line">-v --revert-match # 反转查找。</span><br><span class="line">-V --version      # 显示版本信息。   </span><br><span class="line">-w --word-regexp  # 只显示全字符合的列。</span><br><span class="line">-x --line-regexp  # 只显示全列符合的列。</span><br><span class="line">-y # 此参数效果跟“-i”相同。</span><br><span class="line">-o # 只输出文件中匹配到的部分。</span><br><span class="line">-m &lt;num&gt; --max-count&#x3D;&lt;num&gt; # 找到num行结果后停止查找，用来限制匹配行数</span><br></pre></td></tr></table></figure>
-
-<h3 id="规则表达式"><a href="#规则表达式" class="headerlink" title="规则表达式"></a>规则表达式</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">^    # 锚定行的开始 如：&#39;^grep&#39;匹配所有以grep开头的行。    </span><br><span class="line">$    # 锚定行的结束 如：&#39;grep$&#39; 匹配所有以grep结尾的行。</span><br><span class="line">.    # 匹配一个非换行符的字符 如：&#39;gr.p&#39;匹配gr后接一个任意字符，然后是p。    </span><br><span class="line">*    # 匹配零个或多个先前字符 如：&#39;*grep&#39;匹配所有一个或多个空格后紧跟grep的行。    </span><br><span class="line">.*   # 一起用代表任意字符。   </span><br><span class="line">[]   # 匹配一个指定范围内的字符，如&#39;[Gg]rep&#39;匹配Grep和grep。    </span><br><span class="line">[^]  # 匹配一个不在指定范围内的字符，如：&#39;[^A-FH-Z]rep&#39;匹配不包含A-R和T-Z的一个字母开头，紧跟rep的行。    </span><br><span class="line">\(..\)  # 标记匹配字符，如&#39;\(love\)&#39;，love被标记为1。    </span><br><span class="line">\&lt;      # 锚定单词的开始，如:&#39;\&lt;grep&#39;匹配包含以grep开头的单词的行。    </span><br><span class="line">\&gt;      # 锚定单词的结束，如&#39;grep\&gt;&#39;匹配包含以grep结尾的单词的行。    </span><br><span class="line">x\&#123;m\&#125;  # 重复字符x，m次，如：&#39;0\&#123;5\&#125;&#39;匹配包含5个o的行。    </span><br><span class="line">x\&#123;m,\&#125;   # 重复字符x,至少m次，如：&#39;o\&#123;5,\&#125;&#39;匹配至少有5个o的行。    </span><br><span class="line">x\&#123;m,n\&#125;  # 重复字符x，至少m次，不多于n次，如：&#39;o\&#123;5,10\&#125;&#39;匹配5--10个o的行。   </span><br><span class="line">\w    # 匹配文字和数字字符，也就是[A-Za-z0-9]，如：&#39;G\w*p&#39;匹配以G后跟零个或多个文字或数字字符，然后是p。   </span><br><span class="line">\W    # \w的反置形式，匹配一个或多个非单词字符，如点号句号等。   </span><br><span class="line">\b    # 单词锁定符，如: &#39;\bgrep\b&#39;只匹配grep。  </span><br></pre></td></tr></table></figure>
-
-<p> 常见用法：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">在文件中搜索一个单词，命令会返回一个包含 “match_pattern” 的文本行：grep &quot;match_pattern&quot; file_name</span><br><span class="line">输出除之外的所有行 -v 选项grep -v &quot;match_pattern&quot; file_name使用正则表达式 -E 选项：</span><br><span class="line">grep -E &quot;[1-9]+&quot;</span><br><span class="line">只输出文件中匹配到的部分 -o 选项：</span><br><span class="line">echo this is a test line. | grep -o -E &quot;[a-z]+\.&quot; 输出:line.</span><br><span class="line">搜索多个文件并查找匹配文本在哪些文件中：</span><br><span class="line">    grep -l &quot;text&quot; file1 file2 file3...在多级目录中对文本进行递归搜索：</span><br><span class="line">grep &quot;text&quot; . -r -n</span><br><span class="line"># .表示当前目录。</span><br></pre></td></tr></table></figure>
-
-<p>xargs：是给其他命令传递参数的一个过滤器，也是组合多个命令的一个工具。它擅长将标准输入数据转换成命令行参数，xargs 能够处理管道或者 stdin 并将其转换成特定命令的命令参数。xargs 也可以将单行或多行文本输入转换为其他格式，例如多行变单行，单行变多行。xargs 的默认命令是 echo，空格是默认定界符。这意味着通过管道传递给 xargs 的输入将会包含换行和空白，不过通过 xargs 的处理，换行和空白将被空格取代。xargs 是构建单行命令的重要组件之一。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">用作替换工具，读取输入数据重新格式化后输出。cat test.txt | xargs</span><br><span class="line">a b c d e f g h i j k l m n o p q r s t u v w x y z</span><br><span class="line">使用 -n 进行多行输出cat test.txt | xargs -n3</span><br><span class="line">a b c</span><br><span class="line">d e f</span><br><span class="line">g h i</span><br><span class="line">j k l</span><br><span class="line">m n o</span><br><span class="line">p q r</span><br><span class="line">s t u</span><br><span class="line">v w x</span><br><span class="line">y z</span><br><span class="line">使用 -d 分割输入echo &quot;nameXnameXnameXname&quot; | xargs -dX</span><br><span class="line">name name name name</span><br><span class="line">结合 -I 选项xargs 的一个 选项 -I ，使用 -I 指定一个替换字符串&#123;&#125;，这个字符串在 xargs 扩展时会被替换掉，当 -I 与 xargs 结合使用，每一个参数命令都会被执行一次：复制所有图片文件到 &#x2F;data&#x2F;images 目录下：</span><br><span class="line">ls *.jpg | xargs -n1 -I cp &#123;&#125; &#x2F;data&#x2F;images</span><br><span class="line">xargs 结合 find 使用用 rm 删除太多的文件时候，可能得到一个错误信息：&#x2F;bin&#x2F;rm Argument list too long. 用 xargs去避免这个问题：find . -type f -name &quot;*.log&quot; -print0 | xargs -0 rm -f</span><br><span class="line">使用 -p 选项确认执行的命令-p选项会在执行每一个命令时弹出确认，当你需要非常准确的确认每一次操作时可以使用 -p 参数，比如，查找当前目录下 .log 文件，每一次删除都需要确认：find . -maxdepth 1 -name &quot;*.log&quot; | xargs -p -I&#123;&#125; rm &#123;&#125;</span><br></pre></td></tr></table></figure>
-
-<p>awk:命令</p>
-<p>是一种编程语言，用于在linux/unix下对文本和数据进行处理。数据可以来自标准输入(stdin)、一个或多个文件，或其它命令的输出。它支持用户自定义函数和动态正则表达式等先进功能，是linux/unix下的一个强大编程工具。它在命令行中使用，但更多是作为脚本来使用。awk有很多内建的功能，比如数组、函数等，这是它和C语言的相同之处，灵活性是awk最大的优势。</p>
-<p><strong>常用命令选项</strong></p>
-<ul>
-<li><strong>-F fs</strong> fs指定输入分隔符，fs可以是字符串或正则表达式，如-F:</li>
-<li><strong>-v var=value</strong> 赋值一个用户定义变量，将外部变量传递给awk</li>
-<li><strong>-f scripfile</strong> 从脚本文件中读取awk命令</li>
-<li><strong>-m[fr] val</strong> 对val值设置内在限制，-mf选项限制分配给val的最大块数目；-mr选项限制记录的最大数目。这两个功能是Bell实验室版awk的扩展功能，在标准awk中不适用。</li>
-</ul>
-<h2 id="awk模式和操作"><a href="#awk模式和操作" class="headerlink" title="awk模式和操作"></a>awk模式和操作</h2><p>awk脚本是由模式和操作组成的。</p>
-<h3 id="模式"><a href="#模式" class="headerlink" title="模式"></a>模式</h3><p>模式可以是以下任意一个：</p>
-<ul>
-<li>/正则表达式/：使用通配符的扩展集。</li>
-<li>关系表达式：使用运算符进行操作，可以是字符串或数字的比较测试。</li>
-<li>模式匹配表达式：用运算符<code>~</code>（匹配）和<code>!~</code>（不匹配）。</li>
-<li>BEGIN语句块、pattern语句块、END语句块：参见awk的工作原理</li>
-</ul>
-<h3 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h3><p>操作由一个或多个命令、函数、表达式组成，之间由换行符或分号隔开，并位于大括号内，主要部分是：</p>
-<ul>
-<li><p>变量或数组赋值</p>
-</li>
-<li><p>输出命令</p>
-</li>
-<li><p>内置函数</p>
-</li>
-<li><p>控制流语句</p>
-</li>
-<li><h3 id=""><a href="#" class="headerlink" title=""></a></h3></li>
-<li><h3 id="-1"><a href="#-1" class="headerlink" title=""></a></h3></li>
-<li><h3 id="-2"><a href="#-2" class="headerlink" title=""></a></h3></li>
-<li><h3 id="-3"><a href="#-3" class="headerlink" title=""></a></h3></li>
-<li><h3 id="-4"><a href="#-4" class="headerlink" title=""></a></h3></li>
-<li><h2 id="awk脚本基本结构"><a href="#awk脚本基本结构" class="headerlink" title="awk脚本基本结构"></a>awk脚本基本结构</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &#39;BEGIN&#123; print &quot;start&quot; &#125; pattern&#123; commands &#125; END&#123; print &quot;end&quot; &#125;&#39; file</span><br></pre></td></tr></table></figure>
-
-<p>一个awk脚本通常由：BEGIN语句块、能够使用模式匹配的通用语句块、END语句块3部分组成，这三个部分是可选的。任意一个部分都可以不出现在脚本中，脚本通常是被 <strong>单引号</strong> 或 <strong>双引号</strong> 中，例如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">awk &#39;BEGIN&#123; i&#x3D;0 &#125; &#123; i++ &#125; END&#123; print i &#125;&#39; filename</span><br><span class="line">awk &quot;BEGIN&#123; i&#x3D;0 &#125; &#123; i++ &#125; END&#123; print i &#125;&quot; filename</span><br></pre></td></tr></table></figure>
-
-<h3 id="awk的工作原理"><a href="#awk的工作原理" class="headerlink" title="awk的工作原理"></a>awk的工作原理</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &#39;BEGIN&#123; commands &#125; pattern&#123; commands &#125; END&#123; commands &#125;&#39;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>第一步：执行<code>BEGIN&#123; commands &#125;</code>语句块中的语句；</p>
-</li>
-<li><p>第二步：从文件或标准输入(stdin)读取一行，然后执行<code>pattern&#123; commands &#125;</code>语句块，它逐行扫描文件，从第一行到最后一行重复这个过程，直到文件全部被读取完毕。</p>
-</li>
-<li><p>第三步：当读至输入流末尾时，执行<code>END&#123; commands &#125;</code>语句块。</p>
-<p><strong>BEGIN语句块</strong> 在awk开始从输入流中读取行 <strong>之前</strong> 被执行，这是一个可选的语句块，比如变量初始化、打印输出表格的表头等语句通常可以写在BEGIN语句块中。</p>
-<p><strong>END语句块</strong> 在awk从输入流中读取完所有的行 <strong>之后</strong> 即被执行，比如打印所有行的分析结果这类信息汇总都是在END语句块中完成，它也是一个可选语句块。</p>
-<p><strong>pattern语句块</strong> 中的通用命令是最重要的部分，它也是可选的。如果没有提供pattern语句块，则默认执行<code>&#123; print &#125;</code>，即打印每一个读取到的行，awk读取的每一行都会执行该语句块。</p>
-<p><strong>示例</strong></p>
-</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">echo -e &quot;A line 1\nA line 2&quot; | awk &#39;BEGIN&#123; print &quot;Start&quot; &#125; &#123; print &#125; END&#123; print &quot;End&quot; &#125;&#39;</span><br><span class="line">Start</span><br><span class="line">A line 1</span><br><span class="line">A line 2</span><br><span class="line">End</span><br></pre></td></tr></table></figure>
-
-<p>当使用不带参数的<code>print</code>时，它就打印当前行，当<code>print</code>的参数是以逗号进行分隔时，打印时则以空格作为定界符。在awk的print语句块中双引号是被当作拼接符使用，例如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo | awk &#39;&#123; var1&#x3D;&quot;v1&quot;; var2&#x3D;&quot;v2&quot;; var3&#x3D;&quot;v3&quot;; print var1,var2,var3; &#125;&#39; </span><br><span class="line">v1 v2 v3</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h3 id="特殊变量：-NR-NF-0-1-2"><a href="#特殊变量：-NR-NF-0-1-2" class="headerlink" title="特殊变量： NR NF $0 $1 $2"></a><a target="_blank" rel="noopener" href="https://linuxtools-rst.readthedocs.io/zh_CN/latest/base/03_text_processing.html#id34">特殊变量： NR NF $0 $1 $2</a></h3><p>NR:表示记录数量，在执行过程中对应当前行号；</p>
-<p>NF:表示字段数量，在执行过程总对应当前行的字段数；</p>
-<p>$0:这个变量包含执行过程中当前行的文本内容；</p>
-<p>$1:第一个字段的文本内容；</p>
-<p>$2:第二个字段的文本内容；</p>
-<p>使用-F来设置定界符（默认为空格）:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">awk -F: &#39;&#123;print $NF&#125;&#39; &#x2F;etc&#x2F;passwd</span><br><span class="line">查找指定进程并输出进程IDps aux | grep java|awk &#39;&#123;print $2&#125;&#39;|xargs echo</span><br></pre></td></tr></table></figure>
-
-<p><strong>uniq:消除重复行</strong></p>
-<p><strong>sort：排序</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sort unsort.txt | uniq -c 统计各行在文件中出现的次数</span><br></pre></td></tr></table></figure>
-
-<p><strong>wc 统计行和字符的工具</strong></p>
-<p><strong>cut:按列分割文本</strong></p>
-
+<p>   which 查看命令二进制文件所在地方
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/lhs-code.github.io/2019/07/28/linux-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -551,7 +410,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-04-20 18:03:27" itemprop="dateModified" datetime="2021-04-20T18:03:27+08:00">2021-04-20</time>
+                <time title="修改时间：2021-04-20 18:14:45" itemprop="dateModified" datetime="2021-04-20T18:14:45+08:00">2021-04-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -601,202 +460,15 @@
 </ul>
 </li>
 </ul>
-<p>分布式锁应该是怎么样的</p>
-<ul>
-<li>互斥性 可以保证在分布式部署的应用集群中，同一个方法在同一时间只能被一台机器上的一个线程执行。</li>
-<li>这把锁要是一把可重入锁（避免死锁）</li>
-<li>不会发生死锁：有一个客户端在持有锁的过程中崩溃而没有解锁，也能保证其他客户端能够加锁</li>
-<li>这把锁最好是一把阻塞锁（根据业务需求考虑要不要这条）</li>
-<li>有高可用的获取锁和释放锁功能</li>
-<li>获取锁和释放锁的性能要好</li>
-</ul>
-<p><strong>1、数据库锁</strong></p>
-<ul>
-<li><p>基于数据库表</p>
-</li>
-<li><ul>
-<li>要实现分布式锁，最简单的方式可能就是直接创建一张锁表，然后通过操作该表中的数据来实现了。</li>
-<li>当我们要锁住某个方法或资源时，我们就在该表中增加一条记录，想要释放锁的时候就删除这条记录。</li>
-</ul>
-</li>
-</ul>
-<p>​    <img src="/lhs-code.github.io/images/youdao/2036.png" alt="0"></p>
-<p>当我们想要锁住某个方法时，执行以下SQL：</p>
-<p>​    <img src="/lhs-code.github.io/images/youdao/2038.png" alt="0"></p>
-<p>因为我们对method_name做了唯一性约束，这里如果有多个请求同时提交到数据库的话，数据库会保证只有一个操作可以成功，那么我们就可以认为</p>
-<p>操作成功的那个线程获得了该方法的锁，可以执行方法体内容。</p>
-<p>当方法执行完毕之后，想要释放锁的话，需要执行以下Sql:</p>
-<p>​    <img src="/lhs-code.github.io/images/youdao/2040.png" alt="0"></p>
-<ul>
-<li><ul>
-<li>上面这种简单的实现有以下几个问题：</li>
-</ul>
-</li>
-<li><ul>
-<li><ul>
-<li>1、这把锁强依赖数据库的可用性，数据库是一个单点，一旦数据库挂掉，会导致业务系统不可用。</li>
-<li>2、这把锁没有失效时间，一旦解锁操作失败，就会导致锁记录一直在数据库中，其他线程无法再获得到锁。</li>
-<li>3、这把锁只能是非阻塞的，因为数据的insert操作，一旦插入失败就会直接报错。没有获得锁的线程并不会进入排队队列，要想再次获得锁就要再次触发获得锁操作。</li>
-<li>4、这把锁是非重入的，同一个线程在没有释放锁之前无法再次获得该锁。因为数据中数据已经存在了。</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><ul>
-<li>当然，我们也可以有其他方式解决上面的问题。</li>
-</ul>
-</li>
-<li><ul>
-<li><ul>
-<li>数据库是单点？搞两个数据库，数据之前双向同步。一旦挂掉快速切换到备库上。</li>
-<li>没有失效时间？只要做一个定时任务，每隔一定时间把数据库中的超时数据清理一遍。</li>
-<li>非阻塞的？搞一个while循环，直到insert成功再返回成功。</li>
-<li>非重入的？在数据库表中加个字段，记录当前获得锁的机器的主机信息和线程信息，那么下次再获取锁的时候先查询数据库，如果当前机器的主机信息和线程信息在数据库可以查到的话，直接把锁分配给他就可以了。</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>基于数据库的排它锁</p>
-</li>
-</ul>
-<p>除了可以通过增删操作数据表中的记录以外，其实还可以借助数据库中自带的锁来实现分布式的锁。</p>
-<p>我们还用刚刚创建的那张数据库表。可以通过数据库的排他锁来实现分布式锁。</p>
-<p>在查询语句后面增加for update，数据库会在查询过程中给数据库表增加排他锁。当某条记录被加上排他锁之后，其他线程无法再在该行记录上增加排他锁。</p>
-<p>我们可以认为获得排它锁的线程即可获得分布式锁，当获取到锁之后，可以执行方法的业务逻辑，执行完方法之后，再通过以下方法解锁：</p>
-<p>我们可以认为获得排它锁的线程即可获得分布式锁，当获取到锁之后，可以执行方法的业务逻辑，执行完方法之后，再通过以下方法解锁：</p>
-<p>public void unlock(){      connection.commit(); }</p>
-<p>通过connection.commit()操作来释放锁。</p>
-<p>这种方法可以有效的解决上面提到的无法释放锁和阻塞锁的问题。</p>
-<ul>
-<li><ul>
-<li>阻塞锁？ for update语句会在执行成功后立即返回，在执行失败时一直处于阻塞状态，直到成功。</li>
-<li>锁定之后服务宕机，无法释放？使用这种方式，服务宕机之后数据库会自己把锁释放掉。</li>
-</ul>
-</li>
-</ul>
-<p>但是还是无法直接解决数据库单点和可重入问题。</p>
-<ul>
-<li><p>总结：</p>
-</li>
-<li><ul>
-<li>总结一下使用数据库来实现分布式锁的方式，这两种方式都是依赖数据库的一张表，一种是通过表中的记录的存在情况确定当前是否有锁存在，另外一种是通过数据库的排他锁来实现分布式锁。</li>
-<li>数据库实现分布式锁的优点: 直接借助数据库，容易理解。</li>
-<li>数据库实现分布式锁的缺点: 会有各种各样的问题，在解决问题的过程中会使整个方案变得越来越复杂。</li>
-<li>操作数据库需要一定的开销，性能问题需要考虑。</li>
-</ul>
-</li>
-</ul>
-<p><strong>1.1、乐观锁</strong></p>
-<ul>
-<li><p>乐观锁假设认为数据一般情况下不会造成冲突，只有在进行数据的提交更新时，才会检测数据的冲突情况，如果发现冲突了，则返回错误信息</p>
-</li>
-<li><p>实现方式：</p>
-</li>
-<li><ul>
-<li>时间戳（timestamp）记录机制实现：给数据库表增加一个时间戳字段类型的字段，当读取数据时，将timestamp字段的值一同读出，数据每更新一次，timestamp也同步更新。当对数据做提交更新操作时，检查当前数据库中数据的时间戳和自己更新前取到的时间戳进行对比，若相等，则更新，否则认为是失效数据。</li>
-<li>若出现更新冲突，则需要上层逻辑修改，启动重试机制</li>
-<li>同样也可以使用version的方式。</li>
-</ul>
-</li>
-<li><p>性能对比</p>
-</li>
-<li><ul>
-<li>1、悲观锁实现方式是独占数据，其它线程需要等待，不会出现修改的冲突，能够保证数据的一致性，但是依赖数据库的实现，且在线程较多时出现等待造成效率降低的问题。一般情况下，对于数据很敏感且读取频率较低的场景，可以采用悲观锁的方式</li>
-<li>2、 乐观锁可以多线程同时读取数据，若出现冲突，也可以依赖上层逻辑修改，能够保证高并发下的读取，适用于读取频率很高而修改频率较少的场景</li>
-<li>3、 由于库存回写数据属于敏感数据且读取频率适中，所以建议使用悲观锁优化</li>
-</ul>
-</li>
-</ul>
-<p><strong>2、基于redis的分布式锁</strong></p>
-<ul>
-<li>相比较于基于数据库实现分布式锁的方案来说，基于缓存来实现在性能方面会表现的更好一点。而且很多缓存是可以集群部署的，可以解决单点问题。</li>
-</ul>
-<p>-首先，为了确保分布式锁可用，我们至少要确保锁的实现同时满足以下四个条件：</p>
-<ul>
-<li>互斥性。在任意时刻，只有一个客户端能持有锁。</li>
-<li>不会发生死锁。即使有一个客户端在持有锁的期间崩溃而没有主动解锁，也能保证后续其他客户端能加锁。</li>
-<li>具有容错性。只要大部分的Redis节点正常运行，客户端就可以加锁和解锁。</li>
-<li>解铃还须系铃人。加锁和解锁必须是同一个客户端，客户端自己不能把别人加的锁给解了。</li>
-</ul>
-<p>可以看到，我们加锁就一行代码：==jedis.set(String key, String value, String nxxx, String expx, int time)==，这个set()方法一共有五个形参：</p>
-<ul>
-<li>第一个为key，我们使用key来当锁，因为key是唯一的。</li>
-<li>第二个为value，我们传的是requestId，很多童鞋可能不明白，有key作为锁不就够了吗，为什么还要用到value？原因就是我们在上面讲到可靠性时，分布式锁要满足第四个条件解铃还须系铃人，通过给value赋值为requestId，我们就知道这把锁是哪个请求加的了，在解锁的时候就可以有依据。requestId可以使用UUID.randomUUID().toString()方法生成。</li>
-<li>第三个为nxxx，这个参数我们填的是NX，意思是SET IF NOT EXIST，即当key不存在时，我们进行set操作；若key已经存在，则不做任何操作；</li>
-<li>第四个为expx，这个参数我们传的是PX，意思是我们要给这个key加一个过期的设置，具体时间由第五个参数决定。</li>
-<li>第五个为time，与第四个参数相呼应，代表key的过期时间。</li>
-</ul>
-<p>总的来说，执行上面的set()方法就只会导致两种结果：1. 当前没有锁（key不存在），那么就进行加锁操作，并对锁设置个有效期，同时value表示加锁的客户端。2. 已有锁存在，不做任何操作。</p>
-<p>加锁代码满足我们可靠性里描述的三个条件。首先，set()加入了NX参数，可以保证如果已有key存在，则函数不会调用成功，也就是只有一个客户端能持有锁，满足互斥性。其次，由于我们对锁设置了过期时间，即使锁的持有者后续发生崩溃而没有解锁，锁也会因为到了过期时间而自动解锁（即key被删除），不会发生死锁。最后，因为我们将value赋值为requestId，代表加锁的客户端请求标识，那么在客户端在解锁的时候就可以进行校验是否是同一个客户端。由于我们只考虑Redis单机部署的场景，所以容错性我们暂不考虑。</p>
-<p><strong>错误实例</strong></p>
-<ul>
-<li>使用jedis.setnx()和jedis.expire()组合实现加锁</li>
-</ul>
-<p>​    <img src="/lhs-code.github.io/images/youdao/2042.png" alt="0"></p>
-<p>image</p>
-<p>setnx()方法作用就是SET IF NOT EXIST，expire()方法就是给锁加一个过期时间。乍一看好像和前面的set()方法结果一样，然而由于这是两条Redis命令，不具有原子性，如果程序在执行完setnx()之后突然崩溃，导致锁没有设置过期时间。那么将会发生死锁。网上之所以有人这样实现，是因为低版本的jedis并不支持多参数的set()方法。</p>
-<ul>
-<li><p>解锁：</p>
-</li>
-<li><ul>
-<li>首先获取锁对应的value值，检查是否与requestId相等，如果相等则删除锁（解锁）</li>
-<li>使用缓存实现分布式锁的优点</li>
-</ul>
-</li>
-<li><ul>
-<li><ul>
-<li>性能好，实现起来较为方便。</li>
-<li>使用缓存实现分布式锁的缺点</li>
-<li>通过超时时间来控制锁的失效时间并不是十分的靠谱。</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p>总结：</p>
-</li>
-<li><ul>
-<li>可以使用缓存来代替数据库来实现分布式锁，这个可以提供更好的性能，同时，很多缓存服务都是集群部署的，可以避免单点问题。并且很多缓存服务都提供了可以用来实现分布式锁的方法，比如redis的setnx方法等。并且，这些缓存服务也都提供了对数据的过期自动删除的支持，可以直接设置超时时间来控制锁的释放。</li>
-</ul>
-</li>
-</ul>
-<p><strong>3、基于Zookeeper实现分布式锁</strong></p>
-<ul>
-<li><p>基于zookeeper临时有序节点可以实现的分布式锁。大致思想即为：每个客户端对某个方法加锁时，在zookeeper上的与该方法对应的指定节点的目录下，生成一个唯一的瞬时有序节点。 判断是否获取锁的方式很简单，只需要判断有序节点中序号最小的一个。 当释放锁的时候，只需将这个瞬时节点删除即可。同时，其可以避免服务宕机导致的锁无法释放，而产生的死锁问题。</p>
-</li>
-<li><p>完成业务流程后，删除对应的子节点释放锁。</p>
-</li>
-<li><p>来看下Zookeeper能不能解决前面提到的问题。</p>
-</li>
-<li><ul>
-<li><strong>锁无法释放</strong>？使用Zookeeper可以有效的解决锁无法释放的问题，因为在创建锁的时候，客户端会在ZK中创建一个临时节点，一旦客户端获取到锁之后突然挂掉（Session连接断开），那么这个临时节点就会自动删除掉。其他客户端就可以再次获得锁。</li>
-<li><strong>非阻塞锁</strong>？使用Zookeeper可以实现阻塞的锁，客户端可以通过在ZK中创建顺序节点，并且在节点上绑定监听器，一旦节点有变化，Zookeeper会通知客户端，客户端可以检查自己创建的节点是不是当前所有节点中序号最小的，如果是，那么自己就获取到锁，便可以执行业务逻辑了。</li>
-<li><strong>不可重入</strong>？使用Zookeeper也可以有效的解决不可重入的问题，客户端在创建节点的时候，把当前客户端的主机信息和线程信息直接写入到节点中，下次想要获取锁的时候和当前最小的节点中的数据比对一下就可以了。如果和自己的信息一样，那么自己直接获取到锁，如果不一样就再创建一个临时的顺序节点，参与排队。</li>
-<li><strong>单点问题</strong>？使用Zookeeper可以有效的解决单点问题，ZK是集群部署的，只要集群中有半数以上的机器存活，就可以对外提供服务。</li>
-</ul>
-</li>
-<li><p>可以直接使用zookeeper第三方库Curator客户端，这个客户端中封装了一个可重入的锁服务。</p>
-</li>
-<li><p>Zookeeper实现的分布式锁其实存在一个缺点，那就是性能上可能并没有缓存服务那么高。</p>
-</li>
-<li><ul>
-<li>因为每次在创建锁和释放锁的过程中，都要动态创建、销毁瞬时节点来实现锁功能。ZK中创建和删除节点只能通过Leader服务器来执行，然后将数据同不到所有的Follower机器上。</li>
-</ul>
-</li>
-<li><p>使用Zookeeper实现分布式锁的优点: 有效的解决单点问题，不可重入问题，非阻塞问题以及锁无法释放的问题。实现起来较为简单。</p>
-</li>
-<li><p>使用Zookeeper实现分布式锁的缺点 : 性能上不如使用缓存实现分布式锁。 需要对ZK的原理有所了解。</p>
-</li>
-</ul>
-<p>​    <img src="/lhs-code.github.io/images/youdao/2044.png" alt="0"></p>
-<p><strong>4、三种方案的比较</strong></p>
-<ul>
-<li>从理解的难易程度角度（从低到高）: 数据库 &gt; 缓存 &gt; Zookeeper</li>
-<li>从实现的复杂性角度（从低到高）: Zookeeper &gt;= 缓存 &gt; 数据库</li>
-<li>从性能角度（从高到低）: 缓存 &gt; Zookeeper &gt;= 数据库</li>
-<li>从可靠性角度（从高到低）: Zookeeper &gt; 缓存 &gt; 数据库</li>
-</ul>
-<p><strong>在实践中，当然是从以可靠性为主。所以首推Zookeeper。</strong></p>
-
+<p>分布式锁应该是怎么样的
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/lhs-code.github.io/2019/04/21/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -846,7 +518,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-04-20 17:55:27" itemprop="dateModified" datetime="2021-04-20T17:55:27+08:00">2021-04-20</time>
+                <time title="修改时间：2021-04-20 18:14:29" itemprop="dateModified" datetime="2021-04-20T18:14:29+08:00">2021-04-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -889,37 +561,15 @@
 <li><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%8F%AF%E7%94%A8%E6%80%A7">可用性</a>（<strong>A</strong>vailability）（每次请求都能获取到非错的响应——但是不保证获取的数据为最新数据）</li>
 <li><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/w/index.php?title=%E7%BD%91%E7%BB%9C%E5%88%86%E5%8C%BA&action=edit&redlink=1">分区容错性</a>（<strong>P</strong>artition tolerance）（以实际效果而言，分区相当于对通信的时限要求。系统如果不能在时限内达成数据一致性，就意味着发生了分区的情况，必须就当前操作在C和A之间做出选择[<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/CAP%E5%AE%9A%E7%90%86#cite_note-3">3]</a>。）</li>
 </ul>
-<p>根据定理，分布式系统只能满足三项中的两项而不可能满足全部三项[<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/CAP%E5%AE%9A%E7%90%86#cite_note-4">4]</a>。理解CAP理论的最简单方式是想象两个节点分处分区两侧。允许至少一个节点更新状态会导致数据不一致，即丧失了C性质。如果为了保证数据一致性，将分区一侧的节点设置为不可用，那么又丧失了A性质。除非两个节点可以互相通信，才能既保证C又保证A，这又会导致丧失P性质。</p>
-<p>也就是说，在分布式系统中P一定存在的，因为种种原因，肯定会出现节点之间网络不互通的情况【比如某个分区断网，断电】。所以要在P的情况下载一致性和可用性之间做出选择。</p>
-<p>一个分布式系统里面，节点组成的网络本来应该是连通的。然而可能因为一些故障，使得有些节点之间不连通了，整个网络就分成了几块区域。数据就散布在了这些不连通的区域中。这就叫分区。</p>
-<p>​            当你一个数据项只在一个节点中保存，那么分区出现后，和这个节点不连通的部分就访问不到这个数据了。这时分区就是无法容忍的。如果要容忍，那么就会出现数据不一致性，因为网络之间不互通无法做到所有节点数据都更新。</p>
-<p>​       提高分区容忍性的办法就是一个数据项复制到多个节点上，那么出现分区之后，这一数据项就可能分布到各个区里。容忍性就提高了。</p>
-<p>​         然而，要把数据复制到多个节点，就会带来一致性的问题，就是多个节点上面的数据可能是不一致的。要保证一致，每次写操作就都要等待全部节点写成功，而这等待又会带来可用性的问题。这个时候回锁住分区的服务器知道他们都更新成功，才能对外提供服务，所以降低了可用性。</p>
-<p>​     总的来说就是，数据存在的节点越多，分区容忍性越高，但要复制更新的数据就越多，一致性就越难保证。为了保证一致性，更新所有节点数据所需要的时间就越长，可用性就会降低。</p>
-<p>例子：</p>
-<p>​      让我们考虑一个非常简单的分布式系统。我们的系统由两个服务器$ G_1 $和$ G_2 组成。这两个服务器都跟踪相同的变量$ v $，其初始值为$ v_0 。$ G_1 $和$ G_2 $可以彼此通信，也可以与外部客户端通信。这是我们的系统的外观。</p>
-<p>​    <img src="/lhs-code.github.io/images/7492.png" alt="0"></p>
-<p>客户端可以请求从任何服务器进行写入和读取。服务器收到请求后，将执行所需的任何计算，然后响应客户端。例如，这是写的样子。</p>
-<p>​    <img src="/lhs-code.github.io/images/7495.png" alt="0"></p>
-<p>一致性：</p>
-<p>​     在写操作完成之后开始的任何读操作必须返回该值，或者以后的写操作的结果</p>
-<p>在一致的系统中，客户端将值写入任何服务器并获得响应后，它期望从其读取的任何服务器取回该值（或更新鲜的值）。</p>
-<p>这是一个<strong>不一致的</strong>系统的示例。【此时G1服务器和G2服务未同步完成数据更新】</p>
-<p>​    <img src="/lhs-code.github.io/images/7500.png" alt="0"></p>
-<p>我们的客户将$ v_1 $写入$ G_1 $并且$ G_1 $确认，但是当它从$ G_2 $读取时，它会得到陈旧的数据：$ v_0 $。</p>
-<p>另一方面，这是一个<strong>一致的</strong> 系统的示例。</p>
-<p>​    <img src="/lhs-code.github.io/images/7504.png" alt="0"></p>
-<p>在此系统中，$ G_1 $将其值复制到$ G_2 $，然后再向客户端发送确认。因此，当客户端从$ G_2 $中读取时，它将获得$ v $的最新值：$ v_1 $。</p>
-<p>可用性：</p>
-<p>​        系统中非故障节点收到的每个请求都必须导致响应</p>
-<p>在可用的系统中，如果我们的客户端向服务器发送请求并且服务器没有崩溃，则服务器最终必须响应客户端。不允许服务器忽略客户端的请求。如上边的不一致性，提高了可用性，但是会造成数据不一致性。</p>
-<p><strong>分区容差</strong>：</p>
-<p>​    网络将被允许任意丢失从一个节点发送到另一节点的许多消息</p>
-<p>这意味着可以丢弃任何彼此发送的消息$ G_1 $和$ G_2 $。如果所有消息都被丢弃，那么我们的系统将如下所示。</p>
-<p>​    <img src="/lhs-code.github.io/images/7513.png" alt="0"></p>
-<p>为了容忍分区，我们的系统必须能够在任意网络分区下正常运行。</p>
-<p>此时，我们要在C和A之间做一个选择，如果选择C，那么节点之间会一致等待节点之间的互通或数据同步完成，期间会造成服务可用性降低【对客户端请求挂起等等】；如果选择A那么，节点之间会出现数据不一致性。</p>
-
+<p>根据定理，分布式系统只能满足三项中的两项而不可能满足全部三项[<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/CAP%E5%AE%9A%E7%90%86#cite_note-4">4]</a>。理解CAP理论的最简单方式是想象两个节点分处分区两侧。允许至少一个节点更新状态会导致数据不一致，即丧失了C性质。如果为了保证数据一致性，将分区一侧的节点设置为不可用，那么又丧失了A性质。除非两个节点可以互相通信，才能既保证C又保证A，这又会导致丧失P性质。
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/lhs-code.github.io/2019/04/20/cap%E5%AE%9A%E7%90%86/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
