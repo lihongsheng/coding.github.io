@@ -1306,7 +1306,7 @@
 <p>线程是最小的逻辑执行单元，只有在运行的时候才会有自身的寄存器等等。</p>
 <p>一个进程可以多个线程。</p>
 <ul>
-<li>由于线程共享公共变量，所以对于公共变量的更改要加锁以便防止并发改，或者一个线程执行到一半，又有另外的线程更改。造成数据不一致。<!---more--></li>
+<li>由于线程共享公共变量，所以对于公共变量的更改要加锁以便防止并发改，或者一个线程执行到一半，又有另外的线程更改。造成数据不一致。<span id="more"></span></li>
 </ul>
 <p>Java线程的创建或是执行方式：</p>
 <p>1:使用lambda方式实现及实现Runnable接口</p>
@@ -1356,7 +1356,7 @@
 <p>进程和线程的关系就是：一个进程可以包含一个或多个线程，但至少会有一个线程。</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">                        ┌──────────┐</span><br><span class="line">                        │Process   │</span><br><span class="line">                        │┌────────┐│</span><br><span class="line">            ┌──────────┐││ Thread ││┌──────────┐</span><br><span class="line">            │Process   ││└────────┘││Process   │</span><br><span class="line">            │┌────────┐││┌────────┐││┌────────┐│</span><br><span class="line">┌──────────┐││ Thread ││││ Thread ││││ Thread ││</span><br><span class="line">│Process   ││└────────┘││└────────┘││└────────┘│</span><br><span class="line">│┌────────┐││┌────────┐││┌────────┐││┌────────┐│</span><br><span class="line">││ Thread ││││ Thread ││││ Thread ││││ Thread ││</span><br><span class="line">│└────────┘││└────────┘││└────────┘││└────────┘│</span><br><span class="line">└──────────┘└──────────┘└──────────┘└──────────┘</span><br><span class="line">┌──────────────────────────────────────────────┐</span><br><span class="line">│               Operating System               │</span><br><span class="line">└──────────────────────────────────────────────┘</span><br></pre></td></tr></table></figure>
 
-
+<span id="more"></span>
 
 <p>操作系统调度的最小任务单位其实不是进程，而是线程。常用的Windows、Linux等操作系统都采用抢占式多任务，如何调度线程完全由操作系统决定，程序自己不能决定什么时候执行，以及执行多长时间。</p>
 <p>因为同一个应用程序，既可以有多个进程，也可以有多个线程，因此，实现多任务的方法，有以下几种：</p>
@@ -1411,7 +1411,7 @@
     <url>/lhs-code.github.io/2021/04/20/volatile%E5%85%B3%E9%94%AE%E5%AD%97%E8%A7%A3%E6%9E%90/</url>
     <content><![CDATA[<p>Java并发编程：volatile关键字解析</p>
 <p>　　 volatile这个关键字可能很多朋友都听说过，或许也都用过。在Java 5之前，它是一个备受争议的关键字，因为在程序中使用它往往会导致出人意料的结果。在Java 5之后，volatile关键字才得以重获生机。</p>
-<p>　　volatile关键字虽然从字面上理解起来比较简单，但是要用好不是一件容易的事情。由于volatile关键字是与Java的内存模型有关的，因此在讲述volatile关键之前，我们先来了解一下与内存模型相关的概念和知识，然后分析了volatile关键字的实现原理，最后给出了几个使用volatile关键字的场景。<!---more--></p>
+<p>　　volatile关键字虽然从字面上理解起来比较简单，但是要用好不是一件容易的事情。由于volatile关键字是与Java的内存模型有关的，因此在讲述volatile关键之前，我们先来了解一下与内存模型相关的概念和知识，然后分析了volatile关键字的实现原理，最后给出了几个使用volatile关键字的场景。<span id="more"></span></p>
 <p>　　以下是本文的目录大纲：</p>
 <p>　　一.内存模型的相关概念</p>
 <p>　　二.并发编程中的三个概念</p>
