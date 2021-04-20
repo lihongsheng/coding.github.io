@@ -421,6 +421,424 @@
   
   
 
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://lihongsheng.github.io/lhs-code.github.io/2019/04/21/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/lhs-code.github.io/images/avatar.gif">
+      <meta itemprop="name" content="lihongsheng">
+      <meta itemprop="description" content="保持编码的乐趣">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="keep coding">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/lhs-code.github.io/2019/04/21/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" class="post-title-link" itemprop="url">分布式锁</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-04-21 17:57:21" itemprop="dateCreated datePublished" datetime="2019-04-21T17:57:21+08:00">2019-04-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-04-20 18:00:27" itemprop="dateModified" datetime="2021-04-20T18:00:27+08:00">2021-04-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/lhs-code.github.io/categories/%E5%88%86%E5%B8%83%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">分布式</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p><strong>分布式锁解决并发的三种实现方式</strong></p>
+<ul>
+<li>在很多场景中，我们为了保证数据的最终一致性，需要很多的技术方案来支持，比如分布式事务、分布式锁等。有的时候，我们需要保证一个方法在同 一时间内只能被同一个线程执行。在单机环境中，Java中其实提供了很多并发处理相关的API，但是这些API在分布式场景中就无能为力了。也就是说单纯的Java Api并不能提供分布式锁的能力。所以针对分布式锁的实现目前有多种方案：</li>
+</ul>
+<p>分布式锁一般有三种实现方式：</p>
+<ul>
+<li><ul>
+<li>1、 <strong>数据库锁</strong></li>
+<li>2、<strong>基于Redis的分布式锁</strong></li>
+<li>3、<strong>基于ZooKeeper的分布式锁</strong></li>
+</ul>
+</li>
+</ul>
+<p>分布式锁应该是怎么样的</p>
+<ul>
+<li>互斥性 可以保证在分布式部署的应用集群中，同一个方法在同一时间只能被一台机器上的一个线程执行。</li>
+<li>这把锁要是一把可重入锁（避免死锁）</li>
+<li>不会发生死锁：有一个客户端在持有锁的过程中崩溃而没有解锁，也能保证其他客户端能够加锁</li>
+<li>这把锁最好是一把阻塞锁（根据业务需求考虑要不要这条）</li>
+<li>有高可用的获取锁和释放锁功能</li>
+<li>获取锁和释放锁的性能要好</li>
+</ul>
+<p><strong>1、数据库锁</strong></p>
+<ul>
+<li><p>基于数据库表</p>
+</li>
+<li><ul>
+<li>要实现分布式锁，最简单的方式可能就是直接创建一张锁表，然后通过操作该表中的数据来实现了。</li>
+<li>当我们要锁住某个方法或资源时，我们就在该表中增加一条记录，想要释放锁的时候就删除这条记录。</li>
+</ul>
+</li>
+</ul>
+<p>​    <img src="/lhs-code.github.io/images/youdao/2036.png" alt="0"></p>
+<p>当我们想要锁住某个方法时，执行以下SQL：</p>
+<p>​    <img src="/lhs-code.github.io/images/youdao/2038.png" alt="0"></p>
+<p>因为我们对method_name做了唯一性约束，这里如果有多个请求同时提交到数据库的话，数据库会保证只有一个操作可以成功，那么我们就可以认为</p>
+<p>操作成功的那个线程获得了该方法的锁，可以执行方法体内容。</p>
+<p>当方法执行完毕之后，想要释放锁的话，需要执行以下Sql:</p>
+<p>​    <img src="/lhs-code.github.io/images/youdao/2040.png" alt="0"></p>
+<ul>
+<li><ul>
+<li>上面这种简单的实现有以下几个问题：</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li>1、这把锁强依赖数据库的可用性，数据库是一个单点，一旦数据库挂掉，会导致业务系统不可用。</li>
+<li>2、这把锁没有失效时间，一旦解锁操作失败，就会导致锁记录一直在数据库中，其他线程无法再获得到锁。</li>
+<li>3、这把锁只能是非阻塞的，因为数据的insert操作，一旦插入失败就会直接报错。没有获得锁的线程并不会进入排队队列，要想再次获得锁就要再次触发获得锁操作。</li>
+<li>4、这把锁是非重入的，同一个线程在没有释放锁之前无法再次获得该锁。因为数据中数据已经存在了。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><ul>
+<li>当然，我们也可以有其他方式解决上面的问题。</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li>数据库是单点？搞两个数据库，数据之前双向同步。一旦挂掉快速切换到备库上。</li>
+<li>没有失效时间？只要做一个定时任务，每隔一定时间把数据库中的超时数据清理一遍。</li>
+<li>非阻塞的？搞一个while循环，直到insert成功再返回成功。</li>
+<li>非重入的？在数据库表中加个字段，记录当前获得锁的机器的主机信息和线程信息，那么下次再获取锁的时候先查询数据库，如果当前机器的主机信息和线程信息在数据库可以查到的话，直接把锁分配给他就可以了。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>基于数据库的排它锁</p>
+</li>
+</ul>
+<p>除了可以通过增删操作数据表中的记录以外，其实还可以借助数据库中自带的锁来实现分布式的锁。</p>
+<p>我们还用刚刚创建的那张数据库表。可以通过数据库的排他锁来实现分布式锁。</p>
+<p>在查询语句后面增加for update，数据库会在查询过程中给数据库表增加排他锁。当某条记录被加上排他锁之后，其他线程无法再在该行记录上增加排他锁。</p>
+<p>我们可以认为获得排它锁的线程即可获得分布式锁，当获取到锁之后，可以执行方法的业务逻辑，执行完方法之后，再通过以下方法解锁：</p>
+<p>我们可以认为获得排它锁的线程即可获得分布式锁，当获取到锁之后，可以执行方法的业务逻辑，执行完方法之后，再通过以下方法解锁：</p>
+<p>public void unlock(){      connection.commit(); }</p>
+<p>通过connection.commit()操作来释放锁。</p>
+<p>这种方法可以有效的解决上面提到的无法释放锁和阻塞锁的问题。</p>
+<ul>
+<li><ul>
+<li>阻塞锁？ for update语句会在执行成功后立即返回，在执行失败时一直处于阻塞状态，直到成功。</li>
+<li>锁定之后服务宕机，无法释放？使用这种方式，服务宕机之后数据库会自己把锁释放掉。</li>
+</ul>
+</li>
+</ul>
+<p>但是还是无法直接解决数据库单点和可重入问题。</p>
+<ul>
+<li><p>总结：</p>
+</li>
+<li><ul>
+<li>总结一下使用数据库来实现分布式锁的方式，这两种方式都是依赖数据库的一张表，一种是通过表中的记录的存在情况确定当前是否有锁存在，另外一种是通过数据库的排他锁来实现分布式锁。</li>
+<li>数据库实现分布式锁的优点: 直接借助数据库，容易理解。</li>
+<li>数据库实现分布式锁的缺点: 会有各种各样的问题，在解决问题的过程中会使整个方案变得越来越复杂。</li>
+<li>操作数据库需要一定的开销，性能问题需要考虑。</li>
+</ul>
+</li>
+</ul>
+<p><strong>1.1、乐观锁</strong></p>
+<ul>
+<li><p>乐观锁假设认为数据一般情况下不会造成冲突，只有在进行数据的提交更新时，才会检测数据的冲突情况，如果发现冲突了，则返回错误信息</p>
+</li>
+<li><p>实现方式：</p>
+</li>
+<li><ul>
+<li>时间戳（timestamp）记录机制实现：给数据库表增加一个时间戳字段类型的字段，当读取数据时，将timestamp字段的值一同读出，数据每更新一次，timestamp也同步更新。当对数据做提交更新操作时，检查当前数据库中数据的时间戳和自己更新前取到的时间戳进行对比，若相等，则更新，否则认为是失效数据。</li>
+<li>若出现更新冲突，则需要上层逻辑修改，启动重试机制</li>
+<li>同样也可以使用version的方式。</li>
+</ul>
+</li>
+<li><p>性能对比</p>
+</li>
+<li><ul>
+<li>1、悲观锁实现方式是独占数据，其它线程需要等待，不会出现修改的冲突，能够保证数据的一致性，但是依赖数据库的实现，且在线程较多时出现等待造成效率降低的问题。一般情况下，对于数据很敏感且读取频率较低的场景，可以采用悲观锁的方式</li>
+<li>2、 乐观锁可以多线程同时读取数据，若出现冲突，也可以依赖上层逻辑修改，能够保证高并发下的读取，适用于读取频率很高而修改频率较少的场景</li>
+<li>3、 由于库存回写数据属于敏感数据且读取频率适中，所以建议使用悲观锁优化</li>
+</ul>
+</li>
+</ul>
+<p><strong>2、基于redis的分布式锁</strong></p>
+<ul>
+<li>相比较于基于数据库实现分布式锁的方案来说，基于缓存来实现在性能方面会表现的更好一点。而且很多缓存是可以集群部署的，可以解决单点问题。</li>
+</ul>
+<p>-首先，为了确保分布式锁可用，我们至少要确保锁的实现同时满足以下四个条件：</p>
+<ul>
+<li>互斥性。在任意时刻，只有一个客户端能持有锁。</li>
+<li>不会发生死锁。即使有一个客户端在持有锁的期间崩溃而没有主动解锁，也能保证后续其他客户端能加锁。</li>
+<li>具有容错性。只要大部分的Redis节点正常运行，客户端就可以加锁和解锁。</li>
+<li>解铃还须系铃人。加锁和解锁必须是同一个客户端，客户端自己不能把别人加的锁给解了。</li>
+</ul>
+<p>可以看到，我们加锁就一行代码：==jedis.set(String key, String value, String nxxx, String expx, int time)==，这个set()方法一共有五个形参：</p>
+<ul>
+<li>第一个为key，我们使用key来当锁，因为key是唯一的。</li>
+<li>第二个为value，我们传的是requestId，很多童鞋可能不明白，有key作为锁不就够了吗，为什么还要用到value？原因就是我们在上面讲到可靠性时，分布式锁要满足第四个条件解铃还须系铃人，通过给value赋值为requestId，我们就知道这把锁是哪个请求加的了，在解锁的时候就可以有依据。requestId可以使用UUID.randomUUID().toString()方法生成。</li>
+<li>第三个为nxxx，这个参数我们填的是NX，意思是SET IF NOT EXIST，即当key不存在时，我们进行set操作；若key已经存在，则不做任何操作；</li>
+<li>第四个为expx，这个参数我们传的是PX，意思是我们要给这个key加一个过期的设置，具体时间由第五个参数决定。</li>
+<li>第五个为time，与第四个参数相呼应，代表key的过期时间。</li>
+</ul>
+<p>总的来说，执行上面的set()方法就只会导致两种结果：1. 当前没有锁（key不存在），那么就进行加锁操作，并对锁设置个有效期，同时value表示加锁的客户端。2. 已有锁存在，不做任何操作。</p>
+<p>加锁代码满足我们可靠性里描述的三个条件。首先，set()加入了NX参数，可以保证如果已有key存在，则函数不会调用成功，也就是只有一个客户端能持有锁，满足互斥性。其次，由于我们对锁设置了过期时间，即使锁的持有者后续发生崩溃而没有解锁，锁也会因为到了过期时间而自动解锁（即key被删除），不会发生死锁。最后，因为我们将value赋值为requestId，代表加锁的客户端请求标识，那么在客户端在解锁的时候就可以进行校验是否是同一个客户端。由于我们只考虑Redis单机部署的场景，所以容错性我们暂不考虑。</p>
+<p><strong>错误实例</strong></p>
+<ul>
+<li>使用jedis.setnx()和jedis.expire()组合实现加锁</li>
+</ul>
+<p>​    <img src="/lhs-code.github.io/images/youdao/2042.png" alt="0"></p>
+<p>image</p>
+<p>setnx()方法作用就是SET IF NOT EXIST，expire()方法就是给锁加一个过期时间。乍一看好像和前面的set()方法结果一样，然而由于这是两条Redis命令，不具有原子性，如果程序在执行完setnx()之后突然崩溃，导致锁没有设置过期时间。那么将会发生死锁。网上之所以有人这样实现，是因为低版本的jedis并不支持多参数的set()方法。</p>
+<ul>
+<li><p>解锁：</p>
+</li>
+<li><ul>
+<li>首先获取锁对应的value值，检查是否与requestId相等，如果相等则删除锁（解锁）</li>
+<li>使用缓存实现分布式锁的优点</li>
+</ul>
+</li>
+<li><ul>
+<li><ul>
+<li>性能好，实现起来较为方便。</li>
+<li>使用缓存实现分布式锁的缺点</li>
+<li>通过超时时间来控制锁的失效时间并不是十分的靠谱。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>总结：</p>
+</li>
+<li><ul>
+<li>可以使用缓存来代替数据库来实现分布式锁，这个可以提供更好的性能，同时，很多缓存服务都是集群部署的，可以避免单点问题。并且很多缓存服务都提供了可以用来实现分布式锁的方法，比如redis的setnx方法等。并且，这些缓存服务也都提供了对数据的过期自动删除的支持，可以直接设置超时时间来控制锁的释放。</li>
+</ul>
+</li>
+</ul>
+<p><strong>3、基于Zookeeper实现分布式锁</strong></p>
+<ul>
+<li><p>基于zookeeper临时有序节点可以实现的分布式锁。大致思想即为：每个客户端对某个方法加锁时，在zookeeper上的与该方法对应的指定节点的目录下，生成一个唯一的瞬时有序节点。 判断是否获取锁的方式很简单，只需要判断有序节点中序号最小的一个。 当释放锁的时候，只需将这个瞬时节点删除即可。同时，其可以避免服务宕机导致的锁无法释放，而产生的死锁问题。</p>
+</li>
+<li><p>完成业务流程后，删除对应的子节点释放锁。</p>
+</li>
+<li><p>来看下Zookeeper能不能解决前面提到的问题。</p>
+</li>
+<li><ul>
+<li><strong>锁无法释放</strong>？使用Zookeeper可以有效的解决锁无法释放的问题，因为在创建锁的时候，客户端会在ZK中创建一个临时节点，一旦客户端获取到锁之后突然挂掉（Session连接断开），那么这个临时节点就会自动删除掉。其他客户端就可以再次获得锁。</li>
+<li><strong>非阻塞锁</strong>？使用Zookeeper可以实现阻塞的锁，客户端可以通过在ZK中创建顺序节点，并且在节点上绑定监听器，一旦节点有变化，Zookeeper会通知客户端，客户端可以检查自己创建的节点是不是当前所有节点中序号最小的，如果是，那么自己就获取到锁，便可以执行业务逻辑了。</li>
+<li><strong>不可重入</strong>？使用Zookeeper也可以有效的解决不可重入的问题，客户端在创建节点的时候，把当前客户端的主机信息和线程信息直接写入到节点中，下次想要获取锁的时候和当前最小的节点中的数据比对一下就可以了。如果和自己的信息一样，那么自己直接获取到锁，如果不一样就再创建一个临时的顺序节点，参与排队。</li>
+<li><strong>单点问题</strong>？使用Zookeeper可以有效的解决单点问题，ZK是集群部署的，只要集群中有半数以上的机器存活，就可以对外提供服务。</li>
+</ul>
+</li>
+<li><p>可以直接使用zookeeper第三方库Curator客户端，这个客户端中封装了一个可重入的锁服务。</p>
+</li>
+<li><p>Zookeeper实现的分布式锁其实存在一个缺点，那就是性能上可能并没有缓存服务那么高。</p>
+</li>
+<li><ul>
+<li>因为每次在创建锁和释放锁的过程中，都要动态创建、销毁瞬时节点来实现锁功能。ZK中创建和删除节点只能通过Leader服务器来执行，然后将数据同不到所有的Follower机器上。</li>
+</ul>
+</li>
+<li><p>使用Zookeeper实现分布式锁的优点: 有效的解决单点问题，不可重入问题，非阻塞问题以及锁无法释放的问题。实现起来较为简单。</p>
+</li>
+<li><p>使用Zookeeper实现分布式锁的缺点 : 性能上不如使用缓存实现分布式锁。 需要对ZK的原理有所了解。</p>
+</li>
+</ul>
+<p>​    <img src="/lhs-code.github.io/images/youdao/2044.png" alt="0"></p>
+<p><strong>4、三种方案的比较</strong></p>
+<ul>
+<li>从理解的难易程度角度（从低到高）: 数据库 &gt; 缓存 &gt; Zookeeper</li>
+<li>从实现的复杂性角度（从低到高）: Zookeeper &gt;= 缓存 &gt; 数据库</li>
+<li>从性能角度（从高到低）: 缓存 &gt; Zookeeper &gt;= 数据库</li>
+<li>从可靠性角度（从高到低）: Zookeeper &gt; 缓存 &gt; 数据库</li>
+</ul>
+<p><strong>在实践中，当然是从以可靠性为主。所以首推Zookeeper。</strong></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://lihongsheng.github.io/lhs-code.github.io/2019/04/20/cap%E5%AE%9A%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/lhs-code.github.io/images/avatar.gif">
+      <meta itemprop="name" content="lihongsheng">
+      <meta itemprop="description" content="保持编码的乐趣">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="keep coding">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/lhs-code.github.io/2019/04/20/cap%E5%AE%9A%E7%90%86/" class="post-title-link" itemprop="url">cap定理</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-04-20 17:52:35" itemprop="dateCreated datePublished" datetime="2019-04-20T17:52:35+08:00">2019-04-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-04-20 17:55:27" itemprop="dateModified" datetime="2021-04-20T17:55:27+08:00">2021-04-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/lhs-code.github.io/categories/%E5%88%86%E5%B8%83%E5%BC%8F/" itemprop="url" rel="index"><span itemprop="name">分布式</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.7k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>2 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>它指出对于一个<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97">分布式计算系统</a>来说，不可能同时满足以下三点：</p>
+<ul>
+<li>一致性（<strong>C</strong>onsistency） （等同于所有节点访问同一份最新的数据副本）</li>
+<li><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%8F%AF%E7%94%A8%E6%80%A7">可用性</a>（<strong>A</strong>vailability）（每次请求都能获取到非错的响应——但是不保证获取的数据为最新数据）</li>
+<li><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/w/index.php?title=%E7%BD%91%E7%BB%9C%E5%88%86%E5%8C%BA&action=edit&redlink=1">分区容错性</a>（<strong>P</strong>artition tolerance）（以实际效果而言，分区相当于对通信的时限要求。系统如果不能在时限内达成数据一致性，就意味着发生了分区的情况，必须就当前操作在C和A之间做出选择[<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/CAP%E5%AE%9A%E7%90%86#cite_note-3">3]</a>。）</li>
+</ul>
+<p>根据定理，分布式系统只能满足三项中的两项而不可能满足全部三项[<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/CAP%E5%AE%9A%E7%90%86#cite_note-4">4]</a>。理解CAP理论的最简单方式是想象两个节点分处分区两侧。允许至少一个节点更新状态会导致数据不一致，即丧失了C性质。如果为了保证数据一致性，将分区一侧的节点设置为不可用，那么又丧失了A性质。除非两个节点可以互相通信，才能既保证C又保证A，这又会导致丧失P性质。</p>
+<p>也就是说，在分布式系统中P一定存在的，因为种种原因，肯定会出现节点之间网络不互通的情况【比如某个分区断网，断电】。所以要在P的情况下载一致性和可用性之间做出选择。</p>
+<p>一个分布式系统里面，节点组成的网络本来应该是连通的。然而可能因为一些故障，使得有些节点之间不连通了，整个网络就分成了几块区域。数据就散布在了这些不连通的区域中。这就叫分区。</p>
+<p>​            当你一个数据项只在一个节点中保存，那么分区出现后，和这个节点不连通的部分就访问不到这个数据了。这时分区就是无法容忍的。如果要容忍，那么就会出现数据不一致性，因为网络之间不互通无法做到所有节点数据都更新。</p>
+<p>​       提高分区容忍性的办法就是一个数据项复制到多个节点上，那么出现分区之后，这一数据项就可能分布到各个区里。容忍性就提高了。</p>
+<p>​         然而，要把数据复制到多个节点，就会带来一致性的问题，就是多个节点上面的数据可能是不一致的。要保证一致，每次写操作就都要等待全部节点写成功，而这等待又会带来可用性的问题。这个时候回锁住分区的服务器知道他们都更新成功，才能对外提供服务，所以降低了可用性。</p>
+<p>​     总的来说就是，数据存在的节点越多，分区容忍性越高，但要复制更新的数据就越多，一致性就越难保证。为了保证一致性，更新所有节点数据所需要的时间就越长，可用性就会降低。</p>
+<p>例子：</p>
+<p>​      让我们考虑一个非常简单的分布式系统。我们的系统由两个服务器$ G_1 $和$ G_2 组成。这两个服务器都跟踪相同的变量$ v $，其初始值为$ v_0 。$ G_1 $和$ G_2 $可以彼此通信，也可以与外部客户端通信。这是我们的系统的外观。</p>
+<p>​    <img src="/lhs-code.github.io/images/7492.png" alt="0"></p>
+<p>客户端可以请求从任何服务器进行写入和读取。服务器收到请求后，将执行所需的任何计算，然后响应客户端。例如，这是写的样子。</p>
+<p>​    <img src="/lhs-code.github.io/images/7495.png" alt="0"></p>
+<p>一致性：</p>
+<p>​     在写操作完成之后开始的任何读操作必须返回该值，或者以后的写操作的结果</p>
+<p>在一致的系统中，客户端将值写入任何服务器并获得响应后，它期望从其读取的任何服务器取回该值（或更新鲜的值）。</p>
+<p>这是一个<strong>不一致的</strong>系统的示例。【此时G1服务器和G2服务未同步完成数据更新】</p>
+<p>​    <img src="/lhs-code.github.io/images/7500.png" alt="0"></p>
+<p>我们的客户将$ v_1 $写入$ G_1 $并且$ G_1 $确认，但是当它从$ G_2 $读取时，它会得到陈旧的数据：$ v_0 $。</p>
+<p>另一方面，这是一个<strong>一致的</strong> 系统的示例。</p>
+<p>​    <img src="/lhs-code.github.io/images/7504.png" alt="0"></p>
+<p>在此系统中，$ G_1 $将其值复制到$ G_2 $，然后再向客户端发送确认。因此，当客户端从$ G_2 $中读取时，它将获得$ v $的最新值：$ v_1 $。</p>
+<p>可用性：</p>
+<p>​        系统中非故障节点收到的每个请求都必须导致响应</p>
+<p>在可用的系统中，如果我们的客户端向服务器发送请求并且服务器没有崩溃，则服务器最终必须响应客户端。不允许服务器忽略客户端的请求。如上边的不一致性，提高了可用性，但是会造成数据不一致性。</p>
+<p><strong>分区容差</strong>：</p>
+<p>​    网络将被允许任意丢失从一个节点发送到另一节点的许多消息</p>
+<p>这意味着可以丢弃任何彼此发送的消息$ G_1 $和$ G_2 $。如果所有消息都被丢弃，那么我们的系统将如下所示。</p>
+<p>​    <img src="/lhs-code.github.io/images/7513.png" alt="0"></p>
+<p>为了容忍分区，我们的系统必须能够在任意网络分区下正常运行。</p>
+<p>此时，我们要在C和A之间做一个选择，如果选择C，那么节点之间会一致等待节点之间的互通或数据同步完成，期间会造成服务可用性降低【对客户端请求挂起等等】；如果选择A那么，节点之间会出现数据不一致性。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
 
   
   <nav class="pagination">
@@ -490,20 +908,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/lhs-code.github.io/archives/">
         
-          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-count">13</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/lhs-code.github.io/categories/">
           
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/lhs-code.github.io/tags/">
           
-        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -539,12 +957,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">109k</span>
+    <span title="站点总字数">115k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">1:39</span>
+    <span title="站点阅读时长">1:45</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
   </div>
