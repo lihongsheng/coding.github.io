@@ -1441,7 +1441,7 @@
 <p>　　在早期的CPU当中，是通过在总线上加LOCK#锁的形式来解决缓存不一致的问题。因为CPU和其他部件进行通信都是通过总线来进行的，如果对总线加LOCK#锁的话，也就是说阻塞了其他CPU对其他部件访问（如内存），从而使得只能有一个CPU能使用这个变量的内存。比如上面例子中 如果一个线程在执行 i = i +1，如果在执行这段代码的过程中，在总线上发出了LCOK#锁的信号，那么只有等待这段代码完全执行完毕之后，其他CPU才能从变量i所在的内存读取变量，然后进行相应的操作。这样就解决了缓存不一致的问题。</p>
 <p>　　但是上面的方式会有一个问题，由于在锁住总线期间，其他CPU无法访问内存，导致效率低下。</p>
 <p>　　所以就出现了缓存一致性协议。最出名的就是Intel 的MESI协议，MESI协议保证了每个缓存中使用的共享变量的副本是一致的。它核心的思想是：当CPU写数据时，如果发现操作的变量是共享变量，即在其他CPU中也存在该变量的副本，会发出信号通知其他CPU将该变量的缓存行置为无效状态，因此当其他CPU需要读取这个变量时，发现自己缓存中缓存该变量的缓存行是无效的，那么它就会从内存重新读取。</p>
-<p>​    <img src="/Users/lhs/myself/myBlog/source/images/youdao/6107.png" alt="0"></p>
+<p>​    <img src="/lhs-code.github.io/images/youdao/6107.png" alt="0"></p>
 <p><strong>二.并发编程中的三个概念</strong></p>
 <p>　　在并发编程中，我们通常会遇到以下三个问题：原子性问题，可见性问题，有序性问题。我们先看具体看一下这三个概念：</p>
 <p><strong>1.原子性</strong></p>
@@ -1484,7 +1484,7 @@
 
 <p> 　这段代码有4个语句，那么可能的一个执行顺序是：</p>
 <p>　　</p>
-<p>​    <img src="/Users/lhs/myself/myBlog/source/images/youdao/0.jpeg" alt="0"></p>
+<p>​    <img src="/lhs-code.github.io/images/youdao/0.jpeg" alt="0"></p>
 <p>　　</p>
 <p>　　那么可不可能是这个执行顺序呢： 语句2  语句1  语句4  语句3</p>
 <p>　　不可能，因为处理器在进行重排序时是会考虑指令之间的数据依赖性，如果一个指令Instruction 2必须用到Instruction 1的结果，那么处理器会保证Instruction 1会在Instruction 2之前执行。</p>
@@ -1641,7 +1641,6 @@
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">volatile boolean inited &#x3D; false;</span><br><span class="line">&#x2F;&#x2F;线程1:</span><br><span class="line">context &#x3D; loadContext();  </span><br><span class="line">inited &#x3D; true;            </span><br><span class="line"> </span><br><span class="line">&#x2F;&#x2F;线程2:</span><br><span class="line">while(!inited )&#123;</span><br><span class="line">sleep()</span><br><span class="line">&#125;</span><br><span class="line">doSomethingwithconfig(context);</span><br></pre></td></tr></table></figure>
 
 
-
 <p><strong>2.double check</strong></p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">class Singleton&#123;</span><br><span class="line">    private volatile static Singleton instance &#x3D; null;</span><br><span class="line">     </span><br><span class="line">    private Singleton() &#123;</span><br><span class="line">         </span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    public static Singleton getInstance() &#123;</span><br><span class="line">        if(instance&#x3D;&#x3D;null) &#123;</span><br><span class="line">            synchronized (Singleton.class) &#123;</span><br><span class="line">                if(instance&#x3D;&#x3D;null)</span><br><span class="line">                    instance &#x3D; new Singleton();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -1664,6 +1663,227 @@
 <p>　　<a href="http://www.bdqn.cn/news/201312/12579.shtml">http://www.bdqn.cn/news/201312/12579.shtml</a></p>
 <p>　　<a href="http://exploer.blog.51cto.com/7123589/1193399">http://exploer.blog.51cto.com/7123589/1193399</a></p>
 <p>　　<a href="http://www.cnblogs.com/Mainz/p/3556430.html">http://www.cnblogs.com/Mainz/p/3556430.html</a></p>
+]]></content>
+      <categories>
+        <category>java</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+        <tag>线程</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>线程同步</title>
+    <url>/lhs-code.github.io/2021/04/20/%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5/</url>
+    <content><![CDATA[<p>一个进程是一个独立的程序运行单位【如运行的QQ程序等】：包括了运行是的一切资源如内存，编译好的二进制代码，寄存器，堆践等等。在计算机中，我们把一个任务称为一个进程，浏览器就是一个进程，视频播放器是另一个进程，类似的，音乐播放器和Word都是进程。某些进程内部还需要同时执行多个子任务。例如，我们在使用Word时，Word可以让我们一边打字，一边进行拼写检查，同时还可以在后台进行打印，我们把子任务称为线程。</p>
+<p>进程和线程的关系就是：一个进程可以包含一个或多个线程，但至少会有一个线程。</p>
+<p>操作系统调度的最小任务单位其实不是进程，而是线程。常用的Windows、Linux等操作系统都采用抢占式多任务，如何调度线程完全由操作系统决定，程序自己不能决定什么时候执行，以及执行多长时间。</p>
+<p>因为同一个应用程序，既可以有多个进程，也可以有多个线程。</p>
+<p>线程是最小的逻辑执行单元，只有在运行的时候才会有自身的寄存器【CPU缓存区】等等。一个进程可以拥有多个线程。这些线程调度有系统调度执行，所以访问共享资源的时候都要加锁。</p>
+<ul>
+<li>读：当一个线程修改变量的时候，另外一个变量读取变量就可能会造成数据不一致。因为在写操作需要两个存储器周期时间，需要先把数据写到寄存器，然后刷新到内存区域。如果另外的线程在写操作区间就会出现数据不一致【一个新值，一个老的值】。</li>
+</ul>
+<p><img src="/lhs-code.github.io/images/youdao/6370.png"> </p>
+<ul>
+<li>写：当多个线程在同一时间修改同一个变量的时候也是需要进行同步。</li>
+</ul>
+<p>​         一个变量的增值操作：</p>
+<p>​             1：从内存读取到寄存器</p>
+<p>​             2：在寄存器进行变量的增值操作</p>
+<p>​             3：把变量写入到内存区域</p>
+<p><img src="/lhs-code.github.io/images/youdao/6377.png"></p>
+<p>而线程同步的本质是保证一个线程顺序执行，不被中断。线程的同步需要</p>
+<p><strong>线程同步的一些方法：</strong></p>
+<p>   1： Pthread提供的互斥量：互斥量本质来说是一把锁，保证在同一时间内容只有以线程可以访问数据。在访问共享资源之前加锁，访问之后解锁。加锁后，任何其他试图再次加锁的线程会被阻塞。直到当前线程解锁：</p>
+<p>​           使用时会造成死锁。【<strong>死锁是指一个资源被多次调用，而多次调用方都未能释放该资源就会造成一种互相等待的现象，若无外力作用，它们都将无法推进下去。此时称系统处于死锁状态或系统产生了死锁。</strong>】</p>
+<p>​           1.1：同一个线程对于同一个互斥量不能加锁两次【必须是加锁解锁操作，不能是加锁加锁操作】，否则会造成死锁。</p>
+<p>​           1.2：多互斥量下的互相等待：既线程A锁住了互斥量A此时要锁住互斥量B，线程B锁住了互斥量B，想要锁住互斥量A，造成线程间的互相等待。</p>
+<p>​          1.3：Java 的 synchronized 重量级锁依赖于操作系统的互斥量（mutex） 实现</p>
+<p>​          Java死锁的例子：</p>
+<pre><code>            <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> m)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">synchronized</span>(lockA) &#123; <span class="comment">// 获得lockA的锁</span></span><br><span class="line">        <span class="keyword">this</span>.value += m;</span><br><span class="line">        <span class="keyword">synchronized</span>(lockB) &#123; <span class="comment">// 获得lockB的锁</span></span><br><span class="line">            <span class="keyword">this</span>.another += m;</span><br><span class="line">        &#125; <span class="comment">// 释放lockB的锁</span></span><br><span class="line">    &#125; <span class="comment">// 释放lockA的锁</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dec</span><span class="params">(<span class="keyword">int</span> m)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">synchronized</span>(lockB) &#123; <span class="comment">// 获得lockB的锁</span></span><br><span class="line">        <span class="keyword">this</span>.another -= m;</span><br><span class="line">        <span class="keyword">synchronized</span>(lockA) &#123; <span class="comment">// 获得lockA的锁</span></span><br><span class="line">            <span class="keyword">this</span>.value -= m;</span><br><span class="line">        &#125; <span class="comment">// 释放lockA的锁</span></span><br><span class="line">    &#125; <span class="comment">// 释放lockB的锁</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</code></pre>
+<p>​            </p>
+<p>​         在获取多个锁的时候，不同线程获取多个不同对象的锁可能导致死锁。对于上述代码，线程1和线程2如果分别执行add()和dec()方法时：</p>
+<ul>
+<li>线程1：进入add()，获得lockA；</li>
+<li>线程2：进入dec()，获得lockB。</li>
+</ul>
+<p>随后：</p>
+<ul>
+<li>线程1：准备获得lockB，失败，等待中；</li>
+<li>线程2：准备获得lockA，失败，等待中。</li>
+</ul>
+<p>此时，两个线程各自持有不同的锁，然后各自试图获取对方手里的锁，造成了双方无限等待下去，这就是死锁。</p>
+<p>死锁发生后，没有任何机制能解除死锁，只能强制结束JVM进程。</p>
+<p>因此，在编写多线程应用时，要特别注意防止死锁。因为死锁一旦形成，就只能强制结束进程。</p>
+<p>那么我们应该如何避免死锁呢？答案是：线程获取锁的顺序要一致。即严格按照先获取lockA，再获取lockB的顺序，改写dec()方法如下：</p>
+<pre><code>           <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public void dec(int m) &#123;</span><br><span class="line">    synchronized(lockA) &#123; &#x2F;&#x2F; 获得lockA的锁</span><br><span class="line">        this.value -&#x3D; m;</span><br><span class="line">        synchronized(lockB) &#123; &#x2F;&#x2F; 获得lockB的锁</span><br><span class="line">            this.another -&#x3D; m;</span><br><span class="line">        &#125; &#x2F;&#x2F; 释放lockB的锁</span><br><span class="line">    &#125; &#x2F;&#x2F; 释放lockA的锁</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+</code></pre>
+<p>2： 自旋锁</p>
+<p>自旋锁的主要特征是使用者在想要获得临界区执行权限时，如果临界区已经被加锁，那么自旋锁并不会阻塞睡眠【互斥量会阻塞】，等待系统来主动唤醒，而是原地忙轮询资源是否被释放加锁，自旋就是自我旋转，这个名字还是很形象的。自旋锁有它的优点就是避免了系统的唤醒，自己来执行轮询，如果在临界区的资源代码非常短且是原子的，那么使用起来是非常方便的，避免了各种上下文切换，开销非常小，因此在内核的一些数据结构中自旋锁被广泛的使用。</p>
+<p>​         1：自旋锁本身是有缺点的，它不能代替阻塞。自旋等待虽然避免了线程切换的开销，但它要占用处理器时间。如果锁被占用的时间很短，自旋等待的效果就会非常好。反之，如果锁被占用的时间很长，那么自旋的线程只会白浪费处理器资源。所以，自旋等待的时间必须要有一定的限度，如果自旋超过了限定次数（默认是10次，可以使用-XX:PreBlockSpin来更改）没有成功获得锁，就应当挂起线程。</p>
+<p>​        </p>
+<p><img src="/lhs-code.github.io/images/youdao/6431.png"></p>
+<p>3：读写锁rwlock</p>
+<p>读写锁也叫共享互斥锁：读模式共享和写模式互斥，本质上这种非常合理，因为在数据没有被写的前提下，多个使用者读取时完全不需要加锁的。读写锁有读加锁状态、写加锁状态和不加锁状态三种状态，当读写锁在写加锁模式下，任何试图对这个锁进行加锁的线程都会被阻塞，直到写进程对其解锁。</p>
+<p><em>读优先的读写锁</em>：读写锁rwlock默认的也是读优先，也就是:当读写锁在读加锁模式先，任何线程都可以对其进行读加锁操作，但是所有试图进行写加锁操作的线程都会被阻塞，直到所有的读线程都解锁，因此读写锁很适合读次数远远大于写的情况。这种情况需要考虑写饥饿问题，也就是大量的读一直轮不到写，因此需要设置公平的读写策略。在一次面试中曾经问到实现一个写优先级的读写锁，感兴趣的可以想想如何实现。</p>
+<p>4：可重入锁和不可重入锁</p>
+<p>​      Mutex可以分为递归锁（recursive mutex）【可重入锁】和非递归锁（non-recursive mutex）【不可重入锁】。 递归锁也叫可重入锁（reentrant mutex），非递归锁也叫不可重入锁（non-reentrant mutex）。</p>
+<p>   二者唯一的<strong>区别</strong>是：</p>
+<p>​      同一个线程可以多次获取同一个递归锁，不会产生死锁。</p>
+<p>​      如果一个线程多次获取同一个非递归锁，则会产生死锁。</p>
+<p>   Windows下的Mutex和Critical Section是可递归的。 </p>
+<p>   Linux下的pthread_mutex_t锁是默认是非递归的。可以通过设置PTHREAD_MUTEX_RECURSIVE属性，将pthread_mutex_t锁设置为递归锁。</p>
+<p>关于锁常见的名词的概念解锁：</p>
+<p>​     1：悲观锁和乐观锁</p>
+<p>乐观锁与悲观锁是一种广义上的概念，体现了看待线程同步的不同角度。在Java和数据库中都有此概念对应的实际应用。</p>
+<p>先说概念。对于同一个数据的并发操作，悲观锁认为自己在使用数据的时候一定有别的线程来修改数据，因此在获取数据的时候会先加锁，确保数据不会被别的线程修改。Java中，synchronized关键字和Lock的实现类都是悲观锁。</p>
+<p>而乐观锁认为自己在使用数据时不会有别的线程修改数据，所以不会添加锁，只是在更新数据的时候去判断之前有没有别的线程更新了这个数据。如果这个数据没有被更新，当前线程将自己修改的数据成功写入。如果数据已经被其他线程更新，则根据不同的实现方式执行不同的操作（例如报错或者自动重试）。</p>
+<p>乐观锁在Java中是通过使用无锁编程来实现，最常采用的是CAS算法，Java原子类中的递增操作就通过CAS自旋实现的 </p>
+<p><img src="/lhs-code.github.io/images/youdao/6461.png"></p>
+<p>2：</p>
+<p>3:参考</p>
+<p><a href="https://zhuanlan.zhihu.com/p/88241719">https://zhuanlan.zhihu.com/p/88241719</a> 锁概述</p>
+<p><a href="https://www.xuebuyuan.com/3255731.html">https://www.xuebuyuan.com/3255731.html</a> Linux互斥锁 概述</p>
+<p><a href="https://www.cnblogs.com/bigberg/p/7910024.html">https://www.cnblogs.com/bigberg/p/7910024.html</a></p>
+<p><a href="https://tech.meituan.com/2018/11/15/java-lock.html">https://tech.meituan.com/2018/11/15/java-lock.html</a></p>
+]]></content>
+      <categories>
+        <category>java</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+        <tag>java</tag>
+        <tag>线程</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java线程同步概述</title>
+    <url>/lhs-code.github.io/2021/04/20/Java%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5%E6%A6%82%E8%BF%B0/</url>
+    <content><![CDATA[<p>线程锁的那些概念：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>可重入锁</th>
+<th>不可重入锁</th>
+<th>悲观锁</th>
+<th>乐观锁</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>概念简述</td>
+<td>是否允许：同一个线程对共享区域重复加锁，Java可以理解成对同一个对象多次调用带有加锁机制的方法或是代码块synchronized，ReentrantLock都是可重入锁</td>
+<td>与可重入对立的。一次只能加一次锁，不能重复加锁，或者可能造成死锁。【NonReentrantLock非可重入锁】</td>
+<td>乐观锁与悲观锁是一种广义上的概念，体现了看待线程同步的不同角度。在Java和数据库中都有此概念对应的实际应用。        先说概念。对于同一个数据的并发操作，悲观锁认为自己在使用数据的时候一定有别的线程来修改数据，因此在获取数据的时候会先加锁，确保数据不会被别的线程修改。Java中，synchronized关键字和Lock的实现类都是悲观锁。           而乐观锁认为自己在使用数据时不会有别的线程修改数据，所以不会添加锁，只是在更新数据的时候去判断之前有没有别的线程更新了这个数据。如果这个数据没有被更新，当前线程将自己修改的数据成功写入。如果数据已经被其他线程更新，则根据不同的实现方式执行不同的操作（例如报错或者自动重试）。          乐观锁在Java中是通过使用无锁编程来实现，最常采用的是CAS算法，Java原子类中的递增操作就通过CAS自旋实现的 ● 悲观锁适合写操作多的场景，先加锁可以保证写操作时数据正确。● 乐观锁适合读操作多的场景，不加锁的特点能够使其读操作的性能大幅提升</td>
+<td></td>
+</tr>
+<tr>
+<td>示例</td>
+<td><strong>{</strong>    <strong>public synchronized void doSomething() {</strong>        <strong>System.out.println(“可重入锁…”);</strong>        <strong>doOthers();</strong>    <strong>}</strong>    <strong>public synchronized void doOthers() {</strong>        <strong>System.out.println(“方法2执行…”);</strong>    <strong>}****}</strong></td>
+<td>以：<strong>synchronized关键字为不可重入锁为例子：</strong>{    <strong>public synchronized voi</strong>d d<strong>oSomething() {</strong>        <strong>System.out.println(</strong>“<strong>会</strong>造<strong>成死锁，因为doSomething还未释放锁”);</strong>        <strong>doOthers();</strong>    <strong>}</strong>    <strong>public synchronized voi</strong>d d<strong>oOthers() {</strong>        <strong>System.out.println(</strong>“<strong>方</strong>法<strong>2执行…”);</strong>    <strong>}</strong>}</td>
+<td><em>// ReentrantLock**private Reentran</em>t<strong>Lock lo</strong>ck = new ReentrantLock**();** // 需要保证多个线程使用的是同一<em>个锁**public void modi</em>f<strong>yPublic</strong>Resources() {    <em>lock.lock();</em>    <em>// 操作同步资源</em>    <em>lock.unlock();**}</em></td>
+<td><em>// ————————- 乐观锁的调用方式**private AtomicInteger atomicInteger =</em> <strong>new Ato</strong>micInteger();  // 需要保证多个线程使用的是同<strong>一个A</strong>tomicInteger<em>atomicInteger.incrementAndGet(); //执行</em>自<strong>增1</strong></td>
+</tr>
+<tr>
+<td>在上面的代码中，类中的两个方法都是被内置锁synchronized修饰的，doSomething()方法中调用doOthers()方法。因为内置锁是可重入的，所以同一个线程在调用doOthers()时可以直接获得当前对象的锁，进入doOthers()进行操作。       如果是一个不可重入锁，那么当前线程在调用doOthers()之前需要将执行doSomething()时获取当前对象的锁释放掉，实际上该对象锁已被当前线程所持有，且无法释放。所以此时会出现死锁。</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>原理</td>
+<td>计数器方法：当进入加锁时，计数器加一，代码区域执行完毕后，计数器减一。等于0表示没有线程使用。ReentrantLock和synchronized都是重入锁，那么我们通过重入锁ReentrantLock以及非可重入锁NonReentrantLock的源码来对比分析一下为什么非可重入锁在重复调用同步资源时会出现死锁。首先ReentrantLock和NonReentrantLock都继承父类AQS，其父类AQS中维护了一个同步状态status来计数重入次数，status初始值为0。当线程尝试获取锁时，可重入锁先尝试获取并更新status值，如果status == 0表示没有其他线程在执行同步代码，则把status置为1，当前线程开始执行。如果status != 0，则判断当前线程是否是获取到这个锁的线程，如果是的话执行status+1，且当前线程可以再次获取锁。而非可重入锁是直接去获取并尝试更新当前status的值，如果status != 0的话会导致其获取锁失败，当前线程阻塞。释放锁时，可重入锁同样先获取当前status的值，在当前线程是持有锁的线程的前提下。如果status-1 == 0，则表示当前线程所有重复获取锁的操作都已经执行完毕，然后该线程才会真正释放锁。而非可重入锁则是在确定当前线程是持有锁的线程之后，直接将status置为0，将锁释放。</td>
+<td>CAS全称 Compare And Swap（比较与交换），是一种无锁算法。在不使用锁（没有线程被阻塞）的情况下实现多线程之间的变量同步。java.util.concurrent包中的原子类就是通过CAS来实现了乐观锁。CAS算法涉及到三个操作数：● 需要读写的内存值 V。● 进行比较的值 A。● 要写入的新值 B。当且仅当 V 的值等于 A 时，CAS通过原子方式用新值B来更新V的值（“比较+更新”整体是一个原子操作，使用汇编指令进行的原子操作），否则不会执行任何操作。一般情况下，“更新”是一个不断重试的操作。之前提到java.util.concurrent包中的原子类，就是通过CAS来实现了乐观锁。JDK通过CPU的cmpxchg指令，去比较寄存器中的 A 和 内存中的值 V。如果相等，就把要写入的新值 B 存入内存中。如果不相等，就将内存值 V 赋值给寄存器中的值 A。然后通过Java代码中的while循环再次调用cmpxchg指令进行重试，直到设置成功为止。CAS虽然很高效，但是它也存在三大问题，这里也简单说一下：1. ABA问题。CAS需要在操作值的时候检查内存值是否发生变化，没有发生变化才会更新内存值。但是如果内存值原来是A，后来变成了B，然后又变成了A，那么CAS进行检查时会发现值没有发生变化，但是实际上是有变化的。ABA问题的解决思路就是在变量前面添加版本号，每次变量更新的时候都把版本号加一，这样变化过程就从“A－B－A”变成了“1A－2B－3A”。    ○ JDK从1.5开始提供了AtomicStampedReference类来解决ABA问题，具体操作封装在compareAndSet()中。compareAndSet()首先检查当前引用和当前标志与预期引用和预期标志是否相等，如果都相等，则以原子方式将引用值和标志的值设置为给定的更新值。2. 循环时间长开销大。CAS操作如果长时间不成功，会导致其一直自旋，给CPU带来非常大的开销。3. 只能保证一个共享变量的原子操作。对一个共享变量执行操作时，CAS能够保证原子操作，但是对多个共享变量操作时，CAS是无法保证操作的原子性的。    ○ Java从1.5开始JDK提供了AtomicReference类来保证引用对象之间的原子性，可以把多个变量放在一个对象里来进行CAS操作。</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>公平锁</th>
+<th>非公平锁</th>
+<th>共享锁【读锁】</th>
+<th>排它锁【写锁】</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>公平锁是指多个线程按照申请锁的顺序来获取锁，线程直接进入队列中排队，队列中的第一个线程才能获得锁。公平锁的优点是等待锁的线程不会饿死。缺点是整体吞吐效率相对非公平锁要低，等待队列中除第一个线程以外的所有线程都会阻塞，CPU唤醒阻塞线程的开销比非公平锁大。非公平锁是多个线程加锁时直接尝试获取锁，获取不到才会到等待队列的队尾等待。但如果此时锁刚好可用，那么这个线程可以无需阻塞直接获取到锁，所以非公平锁有可能出现后申请锁的线程先获取锁的场景。非公平锁的优点是可以减少唤起线程的开销，整体的吞吐效率高，因为线程有几率不阻塞直接获得锁，CPU不必唤醒所有线程。缺点是处于等待队列中的线程可能会饿死，或者等很久才会获得锁。</td>
+<td>共享锁是指该锁可被多个线程所持有。如果线程T对数据A加上共享锁后，则其他线程只能对A再加共享锁，不能加排它锁。获得共享锁的线程只能读数据，不能修改数据。</td>
+<td>排它锁也叫独享锁，是指该锁一次只能被一个线程所持有。如果线程T对数据A加上排它锁后，则其他线程不能再对A加任何类型的锁。获得排它锁的线程即能读数据又能修改数据。JDK中的synchronized和JUC中Lock的实现类就是互斥锁。</td>
+<td></td>
+</tr>
+<tr>
+<td>ReentrantLock里面有一个内部类Sync，Sync继承AQS（AbstractQueuedSynchronizer），添加锁和释放锁的大部分操作实际上都是在Sync中实现的。它有公平锁FairSync和非公平锁NonfairSync两个子类。ReentrantLock默认使用非公平锁，也可以通过构造器来显示的指定使用公平锁。</td>
+<td>独享锁与共享锁也是通过AQS来实现的，通过实现不同的方法，来实现独享或者共享</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>protected final boolean tryAcquire(int acquires) {    final Thread current = Thread.currentThread();    int c = getState();    if (c == 0) {//判断是否队列的第一个，并且使用cas查看锁是否释放        if (!hasQueuedPredecessors() &amp;&amp;            compareAndSetState(0, acquires)) {            setExclusiveOwnerThread(current);            return true;        }    }    else if (current == getExclusiveOwnerThread()) {        int nextc = c + acquires;        if (nextc &lt; 0)            throw new Error(“Maximum lock count exceeded”);        setState(nextc);        return true;    }    return false;}</td>
+<td>final boolean nonfairTryAcquire(int acquires) {    final Thread current = Thread.currentThread();    int c = getState();    if (c == 0) {//使用cas查看锁是否释放,释放了抢占式加锁        if (compareAndSetState(0, acquires)) {            setExclusiveOwnerThread(current);            return true;        }    }    else if (current == getExclusiveOwnerThread()) {        int nextc = c + acquires;        if (nextc &lt; 0) // overflow            throw new Error(“Maximum lock count exceeded”);        setState(nextc);        return true;    }    return false;}</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>公平锁就是通过同步队列来实现多个线程按照申请锁的顺序来获取锁，从而实现公平的特性。非公平锁加锁时不考虑排队等待问题，直接尝试获取锁，所以存在后申请却先获得锁的情况。</td>
+<td>ReentrantReadWriteLock有两把锁：ReadLock和WriteLock，由词知意，一个读锁一个写锁，合称“读写锁”。再进一步观察可以发现ReadLock和WriteLock是靠内部类Sync实现的锁。Sync是AQS的一个子类，这种结构在CountDownLatch、ReentrantLock、Semaphore里面也都存在。在ReentrantReadWriteLock里面，读锁和写锁的锁主体都是Sync，但读锁和写锁的加锁方式不一样。读锁是共享锁，写锁是独享锁。读锁的共享锁可保证并发读非常高效，而读写、写读、写写的过程互斥，因为读锁和写锁是分离的。所以ReentrantReadWriteLock的并发性相比一般的互斥锁有了很大提升。那读锁和写锁的具体加锁方式有什么区别呢？在了解源码之前我们需要回顾一下其他知识。 在最开始提及AQS的时候我们也提到了state字段（int类型，32位），该字段用来描述有多少线程获持有锁。在独享锁中这个值通常是0或者1（如果是重入锁的话state值就是重入的次数），在共享锁中state就是持有锁的数量。但是在ReentrantReadWriteLock中有读、写两把锁，所以需要在一个整型变量state上分别描述读锁和写锁的数量（或者也可以叫状态）。于是将state变量“按位切割”切分成了两个部分，高16位表示读锁状态（读锁个数），低16位表示写锁状态（写锁个数）</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>自旋锁</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>阻塞或唤醒一个线程需要操作系统切换CPU状态来完成，这种状态转换需要耗费处理器时间。如果同步代码块中的内容过于简单，状态转换消耗的时间有可能比用户代码执行的时间还要长。因此在等待加锁的线程会一直 忙轮询，看看锁是否已被释放【会占用CPU资源】</td>
+</tr>
+<tr>
+<td>自旋锁的实现原理同样也是CAS，AtomicInteger中调用unsafe进行自增操作的源码中的do-while循环就是一个自旋操作，如果修改数值失败则通过循环来执行自旋，直至修改成功。public final int getAndUpdate(IntUnaryOperator updateFunction) {    int prev, next;    do {        prev = get();        next = updateFunction.applyAsInt(prev);    } while (!compareAndSet(prev, next));//自旋等待    return prev;}</td>
+</tr>
+<tr>
+<td>在许多场景中，同步资源的锁定时间很短，为了这一小段时间去切换线程，线程挂起和恢复现场的花费可能会让系统得不偿失。如果物理机器有多个处理器，能够让两个或以上的线程同时并行执行，我们就可以让后面那个请求锁的线程不放弃CPU的执行时间，看看持有锁的线程是否很快就会释放锁。而为了让当前线程“稍等一下”，我们需让当前线程进行自旋，如果在自旋完成后前面锁定同步资源的线程已经释放了锁，那么当前线程就可以不必阻塞而是直接获取同步资源，从而避免切换线程的开销。这就是自旋锁。自旋锁本身是有缺点的，它不能代替阻塞。自旋等待虽然避免了线程切换的开销，但它要占用处理器时间。如果锁被占用的时间很短，自旋等待的效果就会非常好。反之，如果锁被占用的时间很长，那么自旋的线程只会白浪费处理器资源。所以，自旋等待的时间必须要有一定的限度，如果自旋超过了限定次数（默认是10次，可以使用-XX:PreBlockSpin来更改）没有成功获得锁，就应当挂起线程。</td>
+</tr>
+</tbody></table>
+<p><img src="/lhs-code.github.io/images/youdao/6709.png"></p>
+<p>Java提供的线程哪些关键字及类库:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>synchronized关键字</th>
+<th>volatile</th>
+<th>ReentrantLock【AQS类】Java中的大部分同步类（Lock、Semaphore、ReentrantLock等）都是基于AbstractQueuedSynchronizer（简称为AQS）实现的。AQS是一种提供了原子式管理同步状态、阻塞和唤醒线程功能以及队列模型的简单框架</th>
+<th>java.util.concurrent.atomic.</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>锁特性</td>
+<td>1：悲观锁2：可重入锁3：排它锁</td>
+<td>保持了变量可见性，及提示线程对于这个经过这个关键字修饰过的变量必须从内存区域从新取值，而不是使用寄存器里缓存值</td>
+<td>1：悲观锁2：可重入锁3：排它锁，共享锁4：公平锁，非公平锁</td>
+<td>自旋锁</td>
+</tr>
+<tr>
+<td>描述</td>
+<td>synchronized关键字有四种锁的状态：无锁 VS 偏向锁 VS 轻量级锁 VS 重量级锁：这四种锁是指锁的状态，专门针对synchronized的。在介绍这四种锁状态之前还需要介绍一些额外的知识。首先为什么Synchronized能实现线程同步？在回答这个问题之前我们需要了解两个重要的概念：“Java对象头”、“Monitor”。Java对象头synchronized是悲观锁，在操作同步资源之前需要给同步资源先加锁，这把锁就是存在Java对象头里的，而Java对象头又是什么呢？我们以Hotspot虚拟机为例，Hotspot的对象头主要包括两部分数据：Mark Word（标记字段）、Klass Pointer（类型指针）。Mark Word：默认存储对象的HashCode，分代年龄和锁标志位信息。这些信息都是与对象自身定义无关的数据，所以Mark Word被设计成一个非固定的数据结构以便在极小的空间内存存储尽量多的数据。它会根据对象的状态复用自己的存储空间，也就是说在运行期间Mark Word里存储的数据会随着锁标志位的变化而变化。Klass Point：对象指向它的类元数据的指针，虚拟机通过这个指针来确定这个对象是哪个类的实例。MonitorMonitor可以理解为一个同步工具或一种同步机制，通常被描述为一个对象。每一个Java对象就有一把看不见的锁，称为内部锁或者Monitor锁。Monitor是线程私有的数据结构，每一个线程都有一个可用monitor record列表，同时还有一个全局的可用列表。每一个被锁住的对象都会和一个monitor关联，同时monitor中有一个Owner字段存放拥有该锁的线程的唯一标识，表示该锁被这个线程占用。现在话题回到synchronized，synchronized通过Monitor来实现线程同步，Monitor是依赖于底层的操作系统的Mutex Lock（互斥锁）来实现的线程同步。如同我们在自旋锁中提到的“阻塞或唤醒一个Java线程需要操作系统切换CPU状态来完成，这种状态转换需要耗费处理器时间。如果同步代码块中的内容过于简单，状态转换消耗的时间有可能比用户代码执行的时间还要长”。这种方式就是synchronized最初实现同步的方式，这就是JDK 6之前synchronized效率低的原因。这种依赖于操作系统Mutex Lock所实现的锁我们称之为“重量级锁”，JDK 6中为了减少获得锁和释放锁带来的性能消耗，引入了“偏向锁”和“轻量级锁”。所以目前锁一共有4种状态，级别从低到高依次是：无锁、偏向锁、轻量级锁和重量级锁。锁状态只能升级不能降级。通过上面的介绍，我们对synchronized的加锁机制以及相关知识有了一个了解，那么下面我们给出四种锁状态对应的的Mark Word内容，然后再分别讲解四种锁状态的思路以及特点：无锁无锁没有对资源进行锁定，所有的线程都能访问并修改同一个资源，但同时只有一个线程能修改成功。无锁的特点就是修改操作在循环内进行，线程会不断的尝试修改共享资源。如果没有冲突就修改成功并退出，否则就会继续循环尝试。如果有多个线程修改同一个值，必定会有一个线程能修改成功，而其他修改失败的线程会不断重试直到修改成功。上面我们介绍的CAS原理及应用即是无锁的实现。无锁无法全面代替有锁，但无锁在某些场合下的性能是非常高的。偏向锁偏向锁是指一段同步代码一直被一个线程所访问，那么该线程会自动获取锁，降低获取锁的代价。在大多数情况下，锁总是由同一线程多次获得，不存在多线程竞争，所以出现了偏向锁。其目标就是在只有一个线程执行同步代码块时能够提高性能。当一个线程访问同步代码块并获取锁时，会在Mark Word里存储锁偏向的线程ID。在线程进入和退出同步块时不再通过CAS操作来加锁和解锁，而是检测Mark Word里是否存储着指向当前线程的偏向锁。引入偏向锁是为了在无多线程竞争的情况下尽量减少不必要的轻量级锁执行路径，因为轻量级锁的获取及释放依赖多次CAS原子指令，而偏向锁只需要在置换ThreadID的时候依赖一次CAS原子指令即可。偏向锁只有遇到其他线程尝试竞争偏向锁时，持有偏向锁的线程才会释放锁，线程不会主动释放偏向锁。偏向锁的撤销，需要等待全局安全点（在这个时间点上没有字节码正在执行），它会首先暂停拥有偏向锁的线程，判断锁对象是否处于被锁定状态。撤销偏向锁后恢复到无锁（标志位为“01”）或轻量级锁（标志位为“00”）的状态。偏向锁在JDK 6及以后的JVM里是默认启用的。可以通过JVM参数关闭偏向锁：-XX:-UseBiasedLocking=false，关闭之后程序默认会进入轻量级锁状态。轻量级锁是指当锁是偏向锁的时候，被另外的线程所访问，偏向锁就会升级为轻量级锁，其他线程会通过自旋的形式尝试获取锁，不会阻塞，从而提高性能。在代码进入同步块的时候，如果同步对象锁状态为无锁状态（锁标志位为“01”状态，是否为偏向锁为“0”），虚拟机首先将在当前线程的栈帧中建立一个名为锁记录（Lock Record）的空间，用于存储锁对象目前的Mark Word的拷贝，然后拷贝对象头中的Mark Word复制到锁记录中。拷贝成功后，虚拟机将使用CAS操作尝试将对象的Mark Word更新为指向Lock Record的指针，并将Lock Record里的owner指针指向对象的Mark Word。如果这个更新动作成功了，那么这个线程就拥有了该对象的锁，并且对象Mark Word的锁标志位设置为“00”，表示此对象处于轻量级锁定状态。如果轻量级锁的更新操作失败了，虚拟机首先会检查对象的Mark Word是否指向当前线程的栈帧，如果是就说明当前线程已经拥有了这个对象的锁，那就可以直接进入同步块继续执行，否则说明多个线程竞争锁。若当前只有一个等待线程，则该线程通过自旋进行等待。但是当自旋超过一定的次数，或者一个线程在持有锁，一个在自旋，又有第三个来访时，轻量级锁升级为重量级锁。重量级锁升级为重量级锁时，锁标志的状态值变为“10”，此时Mark Word中存储的是指向重量级锁的指针，此时等待锁的线程都会进入阻塞状态。</td>
+<td><strong>volatile</strong>关键字可以用来提醒编译器它后面所定义的变量随时有可能改变，因此编译后的程序每次需要存储或读取这个变量的时候，都会直接从变量地址中读取数据。如果没有volatile关键字，则编译器可能优化读取和存储，可能暂时使用寄存器中的值，如果这个变量由别的程序更新了的话，将出现不一致的现象。<strong>Volatile</strong> 变量具有 synchronized 的可见性特性，但是不具备原子特性。这就是说线程能够自动发现 volatile 变量的最新值。Volatile 变量可用于提供线程安全，但是只能应用于非常有限的一组用例：多个变量之间或者某个变量的当前值与修改后值之间没有约束。因此，单独使用 volatile 还不足以实现计数器、互斥锁或任何具有与多个变量相关的不变式（Invariants）的类（例如 “start &lt;=end”）。<strong>出于简易性或可伸</strong>缩性的考虑，您可能倾向于使用 volatile 变量而不是锁。当使用 volatile 变量而非锁时，某些习惯用法（idiom）更加易于编码和阅读。此外，volatile 变量不会像锁那样造成线程阻塞，因此也很少造成可伸缩性问题。在某些情况下，如果读操作远远大于写操作，volatile 变量还可以提供优于锁的性能优势。</td>
+<td>内部通过CAS机制实现锁一系列判断操作。AQS核心思想是，如果被请求的共享资源空闲，那么就将当前请求资源的线程设置为有效的工作线程，将共享资源设置为锁定状态；如果共享资源被占用，就需要一定的阻塞等待唤醒机制来保证锁分配。这个机制主要用的是CLH队列的变体实现的，将暂时获取不到锁的线程加入到队列中。AQS使用一个Volatile的int类型的成员变量来表示同步状态，通过内置的FIFO队列来完成资源获取的排队工作，通过CAS完成对State【锁状态】值的修改。详情：美团的博客 <a href="https://tech.meituan.com/2019/12/05/aqs-theory-and-apply.html">https://tech.meituan.com/2019/12/05/aqs-theory-and-apply.html</a></td>
+<td>通过cas机制实现：一般自能支持单变量.并且借助了Java底层的unsafe类操作内存实现。public class AtomicInteger extends Number implements java.io.Serializable {    private static final long serialVersionUID = 6214790243416807050L;    // setup to use Unsafe.compareAndSwapInt for updates// 获取并操作内存的数据    private static final Unsafe unsafe = Unsafe.getUnsafe();    //存储value在AtomicInteger中的偏移量private static final long valueOffset;    static {        try {            valueOffset = unsafe.objectFieldOffset                (AtomicInteger.class.getDeclaredField(“value”));        } catch (Exception ex) { throw new Error(ex); }    }//存储AtomicInteger的int值，该属性需要借助volatile关键字保证其在线程间是可见的。    private volatile int value;// Unsafe.classpublic final int getAndAddInt(Object var1, long var2, int var4) {  int var5;  do {      var5 = this.getIntVolatile(var1, var2);  } while(!this.compareAndSwapInt(var1, var2, var5, var5 + var4));  return var5;}// ————————- OpenJDK 8源代码 ————————-// Unsafe.javapublic final int getAndAddInt(Object o, long offset, int delta) {   int v;   do {       v = getIntVolatile(o, offset);   } while (!compareAndSwapInt(o, offset, v, v + delta));   return v;}根据OpenJDK 8的源码我们可以看出，getAndAddInt()循环获取给定对象o中的偏移量处的值v，然后判断内存值是否等于v。如果相等则将内存值设置为 v + delta，否则返回false，继续循环进行重试，直到设置成功才能退出循环，并且将旧值返回。整个“比较+更新”操作封装在compareAn<em>dSwapInt()中，在JNI里</em>是借助于一个CPU指令完成的，属于原子操作，可以保证多个线程都能够看到同一个变量的修改值。后续JDK通过CPU的cmpxchg指令，去比较寄存器中的 A 和 内存中的值 V。如果相等，就把要写入的新值 B 存入内存中。如果不相等，就将内存值 V 赋值给寄存器中的值 A。然后通过Java代码中的while循环再次调用cmpxchg指令进行重试，直到设置成功为止。</td>
+</tr>
+<tr>
+<td></td>
+<td>综上，偏向锁通过对比Mark Word解决加锁问题，避免执行CAS操作。而轻量级锁是通过用CAS操作和自旋来解决加锁问题，避免线程阻塞和唤醒而影响性能。重量级锁是将除了拥有锁的线程以外的线程都阻塞。重量级锁会使用操作系统的Mutex Lock（互斥锁）来实现的线程同步</td>
+<td>volatile：保持了变量在多个线程内的可见性，以及保证赋值操作的原子性：如 var = 0;</td>
+<td></td>
+<td>使用自旋锁机制：来改变变量的值，一般只能保护单个变量值，不能保护代码区域块。</td>
+</tr>
+</tbody></table>
 ]]></content>
       <categories>
         <category>java</category>
