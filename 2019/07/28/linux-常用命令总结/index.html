@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/lhs-code.github.io/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/lhs-code.github.io/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/lhs-code.github.io/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/lhs-code.github.io/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/lhs-code.github.io/css/main.css">
+
+
+<link rel="stylesheet" href="/lhs-code.github.io/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lihongsheng.github.io","root":"/lhs-code.github.io/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="命令帮助    whatis command 查看命令的作用    info command 查看命令的详情    man command 查看命令的怎么使用，说明文档    which 查看命令二进制文件所在地方 文件及目录： ​      目录及文件的创建 ​      mkdir:创建目录 参数 -m 设置权限，-p递归创建 -v 显示创建信息 ​        mkdir -p &#x2F;dir1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux-常用命令总结">
+<meta property="og:url" content="https://lihongsheng.github.io/lhs-code.github.io/2019/07/28/linux-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="keep coding">
+<meta property="og:description" content="命令帮助    whatis command 查看命令的作用    info command 查看命令的详情    man command 查看命令的怎么使用，说明文档    which 查看命令二进制文件所在地方 文件及目录： ​      目录及文件的创建 ​      mkdir:创建目录 参数 -m 设置权限，-p递归创建 -v 显示创建信息 ​        mkdir -p &#x2F;dir1">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-07-28T09:38:29.000Z">
+<meta property="article:modified_time" content="2021-04-20T09:40:00.901Z">
+<meta property="article:author" content="lihongsheng">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="shell">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://lihongsheng.github.io/lhs-code.github.io/2019/07/28/linux-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>linux-常用命令总结 | keep coding</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/lhs-code.github.io/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">keep coding</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/lhs-code.github.io/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/lhs-code.github.io/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/lhs-code.github.io/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/lhs-code.github.io/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://lihongsheng.github.io/lhs-code.github.io/2019/07/28/linux-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/lhs-code.github.io/images/avatar.gif">
+      <meta itemprop="name" content="lihongsheng">
+      <meta itemprop="description" content="保持编码的乐趣">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="keep coding">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          linux-常用命令总结
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-07-28 17:38:29" itemprop="dateCreated datePublished" datetime="2019-07-28T17:38:29+08:00">2019-07-28</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-04-20 17:40:00" itemprop="dateModified" datetime="2021-04-20T17:40:00+08:00">2021-04-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/lhs-code.github.io/categories/linux/" itemprop="url" rel="index"><span itemprop="name">linux</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>9.3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>8 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>命令帮助</p>
+<p>   whatis command 查看命令的作用</p>
+<p>   info command 查看命令的详情</p>
+<p>   man command 查看命令的怎么使用，说明文档</p>
+<p>   which 查看命令二进制文件所在地方</p>
+<p>文件及目录：</p>
+<p>​      目录及文件的创建</p>
+<p>​      mkdir:创建目录 参数 -m 设置权限，-p递归创建 -v 显示创建信息</p>
+<p>​        mkdir -p /dir1/dir2</p>
+<p>​     rm 删除文件或是目录</p>
+<p>​        rm -rf 递归删除目录及文件。</p>
+<p>​       递归删除删除某一类后缀名 find ./rm/. -name “*.txt” |xargs rm -f</p>
+<p>​    mv 移动文件或者文件夹到另外一个目录下，-i 提示是否覆盖 -f强制覆盖 -v打印移动信息 </p>
+<p>​      mv fileName1 fileName2 更改文件名</p>
+<p>​     mv dir1 dir2 目标目录存在则移动dir1到dir2，dir2不存在更改目录命名</p>
+<p>​     mv file dir将文件移动到目录下</p>
+<p>   cp ：复制文件或是目录</p>
+<p>   ls 显示目录下下文件 ls -al ,ls -alt</p>
+<p>  cd 进入目录，pwd显示当前所在文件路径</p>
+<p>  scp 拷贝远程到本机或者本机到远程</p>
+<p>​     scp local/dir root@IP:/server/dir</p>
+<p>  split 切割文件</p>
+<p>  查找文件及目录</p>
+<p>  find ./ -name 文件名</p>
+<p>  查看文件内容</p>
+<p>​    cat -n 显示行号</p>
+<p>​    tail -f 实时跟踪文件变更</p>
+<p>​    wc -l 查看文件总行数</p>
+<p>​    head -10 查看文件开头十行</p>
+<p>​    tail -10查看文件最后十行</p>
+<p>   grep 匹配文件内容</p>
+<p>   cat file | grep</p>
+<p>   egrep 查找文件内容</p>
+<p> 改变文件属性</p>
+<p>  chown 改变文件所属用户组。chmod 改变文件读写执行权限</p>
+<p>链接</p>
+<p>  ln -s fiel newfile 建立软连接【软连接保存了指向目标文件的路径信息】  </p>
+<p> ln cc ccAgain :硬连接；删除一个，将仍能找到；</p>
+<p>一些特殊符号</p>
+<p> | 管道符号，用于把一个命令的输出的内容传递另外一个命令里 find . -name “*.txt” |xargs rm -f</p>
+<p> &gt; ,&gt;&gt; 重定向符号</p>
+<p> df,du磁盘相关：du -sh  -h是人性化显示 s是递归整个目录的大小</p>
+<p>网络攻击：</p>
+<p>​    netstat:查看网络端口和服务</p>
+<p>​         </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">netstat -a     #列出所有端口netstat -at    #列出所有tcp端口</span><br><span class="line">netstat -au    #列出所有udp端口    </span><br><span class="line">netstat -l        #只显示监听端口</span><br><span class="line">netstat -lt       #只列出所有监听 tcp 端口</span><br><span class="line">netstat -lu       #只列出所有监听 udp 端口netstat -lx       #只列出所有监听 UNIX 端口    netstat -antp | grep 6379 查找某一个端口netstat -an | grep &#39;:80&#39;netstat -anp|grep 8081 | grep LISTEN|awk &#39;&#123;printf $7&#125;&#39;|cut -d&#x2F; -f1 通过端口找进程IDnetstat -ntu | grep :80 | awk &#39;&#123;print $5&#125;&#39; | cut -d: -f1 | awk &#39;&#123;++ip[$1]&#125; END &#123;for(i in ip) print ip[i],&quot;\t&quot;,i&#125;&#39; | sort -nr 查看连接某服务端口最多的的IP地址：netstat -anpo | grep &quot;php-cgi&quot; | wc -l 查看phpcgi进程数，如果接近预设值，说明不够用，需要增加                     </span><br></pre></td></tr></table></figure>
+
+
+
+<p>​    route 查看路由状态</p>
+<p>   ping 发送ping报</p>
+<p>   traceroute IP 探测前往地址IP的路由路径</p>
+<p>性能监控：</p>
+<p>   top ,htop</p>
+<p>   sar -u 查看CPU利用率</p>
+<p>   free -m 查看内存使用情况</p>
+<p> 进程相关：</p>
+<p>   ps:查找进程的命令。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">linux上进程有5种状态: 1. 运行(正在运行或在运行队列中等待) 2. 中断(休眠中, 受阻, 在等待某个条件的形成或接受到信号) 3. 不可中断(收到信号不唤醒和不可运行, 进程必须等待直到有中断发生) 4. 僵死(进程已终止, 但进程描述符存在, 直到父进程调用wait4()系统调用后释放) 5. 停止(进程收到SIGSTOP, SIGSTP, SIGTIN, SIGTOU信号后停止运行运行) ps工具标识进程的5种状态码: D 不可中断 uninterruptible sleep (usually IO) R 运行 runnable (on run queue) S 中断 sleeping T 停止 traced or stopped Z 僵死 a defunct (”zombie”) process 1．命令格式：ps[参数]2．命令功能：用来显示当前进程的状态3．命令参数：a  显示所有进程-a 显示同一终端下的所有程序-A 显示所有进程c  显示进程的真实名称-N 反向选择-e 等于“-A”e  显示环境变量f  显示程序间的关系-H 显示树状结构r  显示当前终端的进程T  显示当前终端的所有程序u  指定用户的所有进程-au 显示较详细的资讯-aux 显示所有包含其他使用者的行程 -C&lt;命令&gt; 列出指定命令的状况--lines&lt;行数&gt; 每页显示的行数--width&lt;字符数&gt; 每页显示的字符数--help 显示帮助信息--version 显示版本显示例子： ps auxps -ef ps -fe| grep colin115|grep HOST |awk &#39;&#123;print $2&#125;&#39; | xargs kill -9; &#x2F;&#x2F;将用户colin115下所有进程名中包含HOST的进程终止: </span><br></pre></td></tr></table></figure>
+
+<p>使用命令pmap 进程ID，来输出进程内存的状况，可以用来分析线程堆栈；</p>
+<p>kill pid 杀死进程，kill -9 pid杀死相关进程</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">命令参数：</span><br><span class="line"></span><br><span class="line">-l  信号，若果不加信号的编号参数，则使用“-l”参数会列出全部的信号名称</span><br><span class="line"></span><br><span class="line">-a  当处理当前进程时，不限制命令名和进程号的对应关系</span><br><span class="line"></span><br><span class="line">-p  指定kill 命令只打印相关进程的进程号，而不发送任何信号</span><br><span class="line"></span><br><span class="line">-s  指定发送信号</span><br><span class="line"></span><br><span class="line">-u  指定用户注意：1、kill命令可以带信号号码选项，也可以不带。如果没有信号号码，kill命令就会发出终止信号(15)，这个信号可以被进程捕获，使得进程在退出之前可以清理并释放资源。也可以用kill向进程发送特定的信号。例如：kill -2 123它的效果等同于在前台运行PID为123的进程时按下Ctrl+C键。但是，普通用户只能使用不带signal参数的kill命令或最多使用-9信号。2、kill可以带有进程ID号作为参数。当用kill向这些进程发送信号时，必须是这些进程的主人。如果试图撤销一个没有权限撤销的进程或撤销一个不存在的进程，就会得到一个错误信息。3、可以向多个进程发信号或终止它们。4、当kill成功地发送了信号后，shell会在屏幕上显示出进程的终止信息。有时这个信息不会马上显示，只有当按下Enter键使shell的命令提示符再次出现时，才会显示出来。5、应注意，信号使进程强行终止，这常会带来一些副作用，如数据丢失或者终端无法恢复到正常状态。发送信号时必须小心，只有在万不得已时，才用kill信号(9)，因为进程不能首先捕获它。要撤销所有的后台作业，可以输入kill 0。因为有些在后台运行的命令会启动多个进程，跟踪并找到所有要杀掉的进程的PID是件很麻烦的事。这时，使用kill 0来终止所有由当前shell启动的进程，是个有效的方法。说明：</span><br><span class="line"></span><br><span class="line">只有第9种信号(SIGKILL)才可以无条件终止进程，其他信号进程都有权利忽略。	下面是常用的信号：</span><br><span class="line"></span><br><span class="line">HUP    1    终端断线</span><br><span class="line"></span><br><span class="line">INT     2    中断（同 Ctrl + C）</span><br><span class="line"></span><br><span class="line">QUIT    3    退出（同 Ctrl + \）</span><br><span class="line"></span><br><span class="line">TERM   15    终止</span><br><span class="line"></span><br><span class="line">KILL    9    强制终止</span><br><span class="line"></span><br><span class="line">CONT   18    继续（与STOP相反， fg&#x2F;bg命令）</span><br><span class="line"></span><br><span class="line">STOP    19    暂停（同 Ctrl + Z）</span><br></pre></td></tr></table></figure>
+
+
+
+<p>文本处理：</p>
+<p>   sed:命令处理文本内容</p>
+<p>   tr:将字符进行替换压缩和删除</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-c或——complerment：取代所有不属于第一字符集的字符；-d或——delete：删除所有属于第一字符集的字符；</span><br><span class="line">-s或--squeeze-repeats：把连续重复的字符以单独一个字符表示；</span><br><span class="line">-t或--truncate-set1：先删除第一字符集较第二字符集多出的字符。</span><br><span class="line">例子：</span><br><span class="line">    echo &quot;HELLO WORLD&quot; | tr &#39;A-Z&#39; &#39;a-z&#39; 将输入字符由大写转换为小写：hello world    echo &quot;hello 123 world 456&quot; | tr -d &#39;0-9&#39; 使用tr删除字符：hello world    echo &quot;thissss is      a text linnnnnnne.&quot; | tr -s &#39; sn&#39; 用tr压缩字符，可以压缩输入中重复的字符：this is a text line.</span><br></pre></td></tr></table></figure>
+
+<p>​    grep :文本搜索工具：是一种强大的文本搜索工具，它能使用正则表达式搜索文本，并把匹配的行打印出来。用于过滤/搜索的特定字符。可使用正则表达式能多种命令配合使用，使用上十分灵活。</p>
+<p>​            选项：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"> --text  # 不要忽略二进制数据。-A &lt;显示行数&gt;   --after-context&#x3D;&lt;显示行数&gt;   # 除了显示符合范本样式的那一行之外，并显示该行之后的内容。</span><br><span class="line">-b --byte-offset                           # 在显示符合范本样式的那一行之外，并显示该行之前的内容。</span><br><span class="line">-B&lt;显示行数&gt;   --before-context&#x3D;&lt;显示行数&gt;   # 除了显示符合样式的那一行之外，并显示该行之前的内容。</span><br><span class="line">-c --count    # 计算符合范本样式的列数。</span><br><span class="line">-C&lt;显示行数&gt; --context&#x3D;&lt;显示行数&gt;或-&lt;显示行数&gt; # 除了显示符合范本样式的那一列之外，并显示该列之前后的内容。</span><br><span class="line">-d&lt;进行动作&gt; --directories&#x3D;&lt;动作&gt;  # 当指定要查找的是目录而非文件时，必须使用这项参数，否则grep命令将回报信息并停止动作。</span><br><span class="line">-e&lt;范本样式&gt; --regexp&#x3D;&lt;范本样式&gt;   # 指定字符串作为查找文件内容的范本样式。</span><br><span class="line">-E --extended-regexp             # 将范本样式为延伸的普通表示法来使用，意味着使用能使用扩展正则表达式。</span><br><span class="line">-f&lt;范本文件&gt; --file&#x3D;&lt;规则文件&gt;     # 指定范本文件，其内容有一个或多个范本样式，让grep查找符合范本条件的文件内容，格式为每一列的范本样式。</span><br><span class="line">-F --fixed-regexp   # 将范本样式视为固定字符串的列表。</span><br><span class="line">-G --basic-regexp   # 将范本样式视为普通的表示法来使用。</span><br><span class="line">-h --no-filename    # 在显示符合范本样式的那一列之前，不标示该列所属的文件名称。</span><br><span class="line">-H --with-filename  # 在显示符合范本样式的那一列之前，标示该列的文件名称。</span><br><span class="line">-i --ignore-case    # 忽略字符大小写的差别。</span><br><span class="line">-l --file-with-matches   # 列出文件内容符合指定的范本样式的文件名称。</span><br><span class="line">-L --files-without-match # 列出文件内容不符合指定的范本样式的文件名称。</span><br><span class="line">-n --line-number         # 在显示符合范本样式的那一列之前，标示出该列的编号。</span><br><span class="line">-q --quiet或--silent     # 不显示任何信息。</span><br><span class="line">-R&#x2F;-r  --recursive       # 此参数的效果和指定“-d recurse”参数相同。</span><br><span class="line">-s --no-messages  # 不显示错误信息。</span><br><span class="line">-v --revert-match # 反转查找。</span><br><span class="line">-V --version      # 显示版本信息。   </span><br><span class="line">-w --word-regexp  # 只显示全字符合的列。</span><br><span class="line">-x --line-regexp  # 只显示全列符合的列。</span><br><span class="line">-y # 此参数效果跟“-i”相同。</span><br><span class="line">-o # 只输出文件中匹配到的部分。</span><br><span class="line">-m &lt;num&gt; --max-count&#x3D;&lt;num&gt; # 找到num行结果后停止查找，用来限制匹配行数</span><br></pre></td></tr></table></figure>
+
+<h3 id="规则表达式"><a href="#规则表达式" class="headerlink" title="规则表达式"></a>规则表达式</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">^    # 锚定行的开始 如：&#39;^grep&#39;匹配所有以grep开头的行。    </span><br><span class="line">$    # 锚定行的结束 如：&#39;grep$&#39; 匹配所有以grep结尾的行。</span><br><span class="line">.    # 匹配一个非换行符的字符 如：&#39;gr.p&#39;匹配gr后接一个任意字符，然后是p。    </span><br><span class="line">*    # 匹配零个或多个先前字符 如：&#39;*grep&#39;匹配所有一个或多个空格后紧跟grep的行。    </span><br><span class="line">.*   # 一起用代表任意字符。   </span><br><span class="line">[]   # 匹配一个指定范围内的字符，如&#39;[Gg]rep&#39;匹配Grep和grep。    </span><br><span class="line">[^]  # 匹配一个不在指定范围内的字符，如：&#39;[^A-FH-Z]rep&#39;匹配不包含A-R和T-Z的一个字母开头，紧跟rep的行。    </span><br><span class="line">\(..\)  # 标记匹配字符，如&#39;\(love\)&#39;，love被标记为1。    </span><br><span class="line">\&lt;      # 锚定单词的开始，如:&#39;\&lt;grep&#39;匹配包含以grep开头的单词的行。    </span><br><span class="line">\&gt;      # 锚定单词的结束，如&#39;grep\&gt;&#39;匹配包含以grep结尾的单词的行。    </span><br><span class="line">x\&#123;m\&#125;  # 重复字符x，m次，如：&#39;0\&#123;5\&#125;&#39;匹配包含5个o的行。    </span><br><span class="line">x\&#123;m,\&#125;   # 重复字符x,至少m次，如：&#39;o\&#123;5,\&#125;&#39;匹配至少有5个o的行。    </span><br><span class="line">x\&#123;m,n\&#125;  # 重复字符x，至少m次，不多于n次，如：&#39;o\&#123;5,10\&#125;&#39;匹配5--10个o的行。   </span><br><span class="line">\w    # 匹配文字和数字字符，也就是[A-Za-z0-9]，如：&#39;G\w*p&#39;匹配以G后跟零个或多个文字或数字字符，然后是p。   </span><br><span class="line">\W    # \w的反置形式，匹配一个或多个非单词字符，如点号句号等。   </span><br><span class="line">\b    # 单词锁定符，如: &#39;\bgrep\b&#39;只匹配grep。  </span><br></pre></td></tr></table></figure>
+
+<p> 常见用法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">在文件中搜索一个单词，命令会返回一个包含 “match_pattern” 的文本行：grep &quot;match_pattern&quot; file_name</span><br><span class="line">输出除之外的所有行 -v 选项grep -v &quot;match_pattern&quot; file_name使用正则表达式 -E 选项：</span><br><span class="line">grep -E &quot;[1-9]+&quot;</span><br><span class="line">只输出文件中匹配到的部分 -o 选项：</span><br><span class="line">echo this is a test line. | grep -o -E &quot;[a-z]+\.&quot; 输出:line.</span><br><span class="line">搜索多个文件并查找匹配文本在哪些文件中：</span><br><span class="line">    grep -l &quot;text&quot; file1 file2 file3...在多级目录中对文本进行递归搜索：</span><br><span class="line">grep &quot;text&quot; . -r -n</span><br><span class="line"># .表示当前目录。</span><br></pre></td></tr></table></figure>
+
+<p>xargs：是给其他命令传递参数的一个过滤器，也是组合多个命令的一个工具。它擅长将标准输入数据转换成命令行参数，xargs 能够处理管道或者 stdin 并将其转换成特定命令的命令参数。xargs 也可以将单行或多行文本输入转换为其他格式，例如多行变单行，单行变多行。xargs 的默认命令是 echo，空格是默认定界符。这意味着通过管道传递给 xargs 的输入将会包含换行和空白，不过通过 xargs 的处理，换行和空白将被空格取代。xargs 是构建单行命令的重要组件之一。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">用作替换工具，读取输入数据重新格式化后输出。cat test.txt | xargs</span><br><span class="line">a b c d e f g h i j k l m n o p q r s t u v w x y z</span><br><span class="line">使用 -n 进行多行输出cat test.txt | xargs -n3</span><br><span class="line">a b c</span><br><span class="line">d e f</span><br><span class="line">g h i</span><br><span class="line">j k l</span><br><span class="line">m n o</span><br><span class="line">p q r</span><br><span class="line">s t u</span><br><span class="line">v w x</span><br><span class="line">y z</span><br><span class="line">使用 -d 分割输入echo &quot;nameXnameXnameXname&quot; | xargs -dX</span><br><span class="line">name name name name</span><br><span class="line">结合 -I 选项xargs 的一个 选项 -I ，使用 -I 指定一个替换字符串&#123;&#125;，这个字符串在 xargs 扩展时会被替换掉，当 -I 与 xargs 结合使用，每一个参数命令都会被执行一次：复制所有图片文件到 &#x2F;data&#x2F;images 目录下：</span><br><span class="line">ls *.jpg | xargs -n1 -I cp &#123;&#125; &#x2F;data&#x2F;images</span><br><span class="line">xargs 结合 find 使用用 rm 删除太多的文件时候，可能得到一个错误信息：&#x2F;bin&#x2F;rm Argument list too long. 用 xargs去避免这个问题：find . -type f -name &quot;*.log&quot; -print0 | xargs -0 rm -f</span><br><span class="line">使用 -p 选项确认执行的命令-p选项会在执行每一个命令时弹出确认，当你需要非常准确的确认每一次操作时可以使用 -p 参数，比如，查找当前目录下 .log 文件，每一次删除都需要确认：find . -maxdepth 1 -name &quot;*.log&quot; | xargs -p -I&#123;&#125; rm &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>awk:命令</p>
+<p>是一种编程语言，用于在linux/unix下对文本和数据进行处理。数据可以来自标准输入(stdin)、一个或多个文件，或其它命令的输出。它支持用户自定义函数和动态正则表达式等先进功能，是linux/unix下的一个强大编程工具。它在命令行中使用，但更多是作为脚本来使用。awk有很多内建的功能，比如数组、函数等，这是它和C语言的相同之处，灵活性是awk最大的优势。</p>
+<p><strong>常用命令选项</strong></p>
+<ul>
+<li><strong>-F fs</strong> fs指定输入分隔符，fs可以是字符串或正则表达式，如-F:</li>
+<li><strong>-v var=value</strong> 赋值一个用户定义变量，将外部变量传递给awk</li>
+<li><strong>-f scripfile</strong> 从脚本文件中读取awk命令</li>
+<li><strong>-m[fr] val</strong> 对val值设置内在限制，-mf选项限制分配给val的最大块数目；-mr选项限制记录的最大数目。这两个功能是Bell实验室版awk的扩展功能，在标准awk中不适用。</li>
+</ul>
+<h2 id="awk模式和操作"><a href="#awk模式和操作" class="headerlink" title="awk模式和操作"></a>awk模式和操作</h2><p>awk脚本是由模式和操作组成的。</p>
+<h3 id="模式"><a href="#模式" class="headerlink" title="模式"></a>模式</h3><p>模式可以是以下任意一个：</p>
+<ul>
+<li>/正则表达式/：使用通配符的扩展集。</li>
+<li>关系表达式：使用运算符进行操作，可以是字符串或数字的比较测试。</li>
+<li>模式匹配表达式：用运算符<code>~</code>（匹配）和<code>!~</code>（不匹配）。</li>
+<li>BEGIN语句块、pattern语句块、END语句块：参见awk的工作原理</li>
+</ul>
+<h3 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h3><p>操作由一个或多个命令、函数、表达式组成，之间由换行符或分号隔开，并位于大括号内，主要部分是：</p>
+<ul>
+<li><p>变量或数组赋值</p>
+</li>
+<li><p>输出命令</p>
+</li>
+<li><p>内置函数</p>
+</li>
+<li><p>控制流语句</p>
+</li>
+<li><h3 id=""><a href="#" class="headerlink" title=""></a></h3></li>
+<li><h3 id="-1"><a href="#-1" class="headerlink" title=""></a></h3></li>
+<li><h3 id="-2"><a href="#-2" class="headerlink" title=""></a></h3></li>
+<li><h3 id="-3"><a href="#-3" class="headerlink" title=""></a></h3></li>
+<li><h3 id="-4"><a href="#-4" class="headerlink" title=""></a></h3></li>
+<li><h2 id="awk脚本基本结构"><a href="#awk脚本基本结构" class="headerlink" title="awk脚本基本结构"></a>awk脚本基本结构</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &#39;BEGIN&#123; print &quot;start&quot; &#125; pattern&#123; commands &#125; END&#123; print &quot;end&quot; &#125;&#39; file</span><br></pre></td></tr></table></figure>
+
+<p>一个awk脚本通常由：BEGIN语句块、能够使用模式匹配的通用语句块、END语句块3部分组成，这三个部分是可选的。任意一个部分都可以不出现在脚本中，脚本通常是被 <strong>单引号</strong> 或 <strong>双引号</strong> 中，例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">awk &#39;BEGIN&#123; i&#x3D;0 &#125; &#123; i++ &#125; END&#123; print i &#125;&#39; filename</span><br><span class="line">awk &quot;BEGIN&#123; i&#x3D;0 &#125; &#123; i++ &#125; END&#123; print i &#125;&quot; filename</span><br></pre></td></tr></table></figure>
+
+<h3 id="awk的工作原理"><a href="#awk的工作原理" class="headerlink" title="awk的工作原理"></a>awk的工作原理</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &#39;BEGIN&#123; commands &#125; pattern&#123; commands &#125; END&#123; commands &#125;&#39;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>第一步：执行<code>BEGIN&#123; commands &#125;</code>语句块中的语句；</p>
+</li>
+<li><p>第二步：从文件或标准输入(stdin)读取一行，然后执行<code>pattern&#123; commands &#125;</code>语句块，它逐行扫描文件，从第一行到最后一行重复这个过程，直到文件全部被读取完毕。</p>
+</li>
+<li><p>第三步：当读至输入流末尾时，执行<code>END&#123; commands &#125;</code>语句块。</p>
+<p><strong>BEGIN语句块</strong> 在awk开始从输入流中读取行 <strong>之前</strong> 被执行，这是一个可选的语句块，比如变量初始化、打印输出表格的表头等语句通常可以写在BEGIN语句块中。</p>
+<p><strong>END语句块</strong> 在awk从输入流中读取完所有的行 <strong>之后</strong> 即被执行，比如打印所有行的分析结果这类信息汇总都是在END语句块中完成，它也是一个可选语句块。</p>
+<p><strong>pattern语句块</strong> 中的通用命令是最重要的部分，它也是可选的。如果没有提供pattern语句块，则默认执行<code>&#123; print &#125;</code>，即打印每一个读取到的行，awk读取的每一行都会执行该语句块。</p>
+<p><strong>示例</strong></p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">echo -e &quot;A line 1\nA line 2&quot; | awk &#39;BEGIN&#123; print &quot;Start&quot; &#125; &#123; print &#125; END&#123; print &quot;End&quot; &#125;&#39;</span><br><span class="line">Start</span><br><span class="line">A line 1</span><br><span class="line">A line 2</span><br><span class="line">End</span><br></pre></td></tr></table></figure>
+
+<p>当使用不带参数的<code>print</code>时，它就打印当前行，当<code>print</code>的参数是以逗号进行分隔时，打印时则以空格作为定界符。在awk的print语句块中双引号是被当作拼接符使用，例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo | awk &#39;&#123; var1&#x3D;&quot;v1&quot;; var2&#x3D;&quot;v2&quot;; var3&#x3D;&quot;v3&quot;; print var1,var2,var3; &#125;&#39; </span><br><span class="line">v1 v2 v3</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="特殊变量：-NR-NF-0-1-2"><a href="#特殊变量：-NR-NF-0-1-2" class="headerlink" title="特殊变量： NR NF $0 $1 $2"></a><a target="_blank" rel="noopener" href="https://linuxtools-rst.readthedocs.io/zh_CN/latest/base/03_text_processing.html#id34">特殊变量： NR NF $0 $1 $2</a></h3><p>NR:表示记录数量，在执行过程中对应当前行号；</p>
+<p>NF:表示字段数量，在执行过程总对应当前行的字段数；</p>
+<p>$0:这个变量包含执行过程中当前行的文本内容；</p>
+<p>$1:第一个字段的文本内容；</p>
+<p>$2:第二个字段的文本内容；</p>
+<p>使用-F来设置定界符（默认为空格）:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">awk -F: &#39;&#123;print $NF&#125;&#39; &#x2F;etc&#x2F;passwd</span><br><span class="line">查找指定进程并输出进程IDps aux | grep java|awk &#39;&#123;print $2&#125;&#39;|xargs echo</span><br></pre></td></tr></table></figure>
+
+<p><strong>uniq:消除重复行</strong></p>
+<p><strong>sort：排序</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sort unsort.txt | uniq -c 统计各行在文件中出现的次数</span><br></pre></td></tr></table></figure>
+
+<p><strong>wc 统计行和字符的工具</strong></p>
+<p><strong>cut:按列分割文本</strong></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/lhs-code.github.io/tags/linux/" rel="tag"># linux</a>
+              <a href="/lhs-code.github.io/tags/shell/" rel="tag"># shell</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/lhs-code.github.io/2019/07/29/redis-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/" rel="next" title="redis-网络模型">
+      redis-网络模型 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%84%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="nav-number">1.</span> <span class="nav-text">规则表达式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#awk%E6%A8%A1%E5%BC%8F%E5%92%8C%E6%93%8D%E4%BD%9C"><span class="nav-number"></span> <span class="nav-text">awk模式和操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E5%BC%8F"><span class="nav-number">1.</span> <span class="nav-text">模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C"><span class="nav-number">2.</span> <span class="nav-text">操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">3.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#-1"><span class="nav-number">4.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#-2"><span class="nav-number">5.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#-3"><span class="nav-number">6.</span> <span class="nav-text"></span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#-4"><span class="nav-number">7.</span> <span class="nav-text"></span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#awk%E8%84%9A%E6%9C%AC%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84"><span class="nav-number"></span> <span class="nav-text">awk脚本基本结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#awk%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">awk的工作原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%B9%E6%AE%8A%E5%8F%98%E9%87%8F%EF%BC%9A-NR-NF-0-1-2"><span class="nav-number">2.</span> <span class="nav-text">特殊变量： NR NF $0 $1 $2</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">lihongsheng</p>
+  <div class="site-description" itemprop="description">保持编码的乐趣</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/lhs-code.github.io/archives/">
+        
+          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/lhs-code.github.io/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/lhs-code.github.io/tags/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lihongsheng</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">109k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">1:39</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lhs-code.github.io/lib/anime.min.js"></script>
+  <script src="/lhs-code.github.io/lib/velocity/velocity.min.js"></script>
+  <script src="/lhs-code.github.io/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/lhs-code.github.io/js/utils.js"></script>
+
+<script src="/lhs-code.github.io/js/motion.js"></script>
+
+
+<script src="/lhs-code.github.io/js/schemes/pisces.js"></script>
+
+
+<script src="/lhs-code.github.io/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/lhs-code.github.io/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
