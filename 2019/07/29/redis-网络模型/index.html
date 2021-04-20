@@ -5,42 +5,42 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
 <meta name="generator" content="Hexo 5.4.0">
-  <link rel="apple-touch-icon" sizes="180x180" href="/lhs-code.github.io/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/lhs-code.github.io/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/lhs-code.github.io/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/lhs-code.github.io/images/logo.svg" color="#222">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
 
-<link rel="stylesheet" href="/lhs-code.github.io/css/main.css">
+<link rel="stylesheet" href="/css/main.css">
 
 
-<link rel="stylesheet" href="/lhs-code.github.io/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"lihongsheng.github.io","root":"/lhs-code.github.io/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"lhs-code.youquwei.net","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="当我们进行网络IO时，Linux给我提供的常用的有seelct 和epoll两个系统级函数，来进行IO操作。现在大部分高并发的网络模型都是基于epoll，比如nginx，redis等。先学习下Linux的网络模型Linux网络I&#x2F;O模型简介   Linux的内核将所有外部设备都看做一个文件来操作,对一个文件的读写操作会调用内核提供的系统命令,返回一个file descriptor (fd,文件描述">
 <meta property="og:type" content="article">
 <meta property="og:title" content="redis-网络模型">
-<meta property="og:url" content="https://lihongsheng.github.io/lhs-code.github.io/2019/07/29/redis-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/index.html">
+<meta property="og:url" content="http://lhs-code.youquwei.net/2019/07/29/redis-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/index.html">
 <meta property="og:site_name" content="keep coding">
 <meta property="og:description" content="当我们进行网络IO时，Linux给我提供的常用的有seelct 和epoll两个系统级函数，来进行IO操作。现在大部分高并发的网络模型都是基于epoll，比如nginx，redis等。先学习下Linux的网络模型Linux网络I&#x2F;O模型简介   Linux的内核将所有外部设备都看做一个文件来操作,对一个文件的读写操作会调用内核提供的系统命令,返回一个file descriptor (fd,文件描述">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://lihongsheng.github.io/lhs-code.github.io/images/4615.png">
-<meta property="og:image" content="https://lihongsheng.github.io/lhs-code.github.io/images/4616.png">
-<meta property="og:image" content="https://lihongsheng.github.io/lhs-code.github.io/images/4614.png">
-<meta property="og:image" content="https://lihongsheng.github.io/lhs-code.github.io/images/4458.png">
-<meta property="og:image" content="https://lihongsheng.github.io/lhs-code.github.io/images/img/12-01/5ba479c5-efd4-4dff-b7ab-aa4b19cbdc8d.png">
+<meta property="og:image" content="http://images/4615.png">
+<meta property="og:image" content="http://images/4616.png">
+<meta property="og:image" content="http://images/4614.png">
+<meta property="og:image" content="http://images/4458.png">
+<meta property="og:image" content="http://images/img/12-01/5ba479c5-efd4-4dff-b7ab-aa4b19cbdc8d.png">
 <meta property="article:published_time" content="2019-07-29T09:40:20.000Z">
-<meta property="article:modified_time" content="2021-04-20T09:49:10.027Z">
+<meta property="article:modified_time" content="2021-04-20T11:54:25.985Z">
 <meta property="article:author" content="lihongsheng">
 <meta property="article:tag" content="linux">
 <meta property="article:tag" content="redis">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://lihongsheng.github.io/lhs-code.github.io/images/4615.png">
+<meta name="twitter:image" content="http://images/4615.png">
 
-<link rel="canonical" href="https://lihongsheng.github.io/lhs-code.github.io/2019/07/29/redis-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/">
+<link rel="canonical" href="http://lhs-code.youquwei.net/2019/07/29/redis-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/">
 
 
 <script id="page-configurations">
@@ -102,7 +102,7 @@
 
   <div class="site-meta">
 
-    <a href="/lhs-code.github.io/" class="brand" rel="start">
+    <a href="/" class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
       <h1 class="site-title">keep coding</h1>
       <span class="logo-line-after"><i></i></span>
@@ -123,22 +123,22 @@
   <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/lhs-code.github.io/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/lhs-code.github.io/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/lhs-code.github.io/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/lhs-code.github.io/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -196,10 +196,10 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://lihongsheng.github.io/lhs-code.github.io/2019/07/29/redis-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/">
+    <link itemprop="mainEntityOfPage" href="http://lhs-code.youquwei.net/2019/07/29/redis-%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/lhs-code.github.io/images/avatar.gif">
+      <meta itemprop="image" content="/images/avatar.gif">
       <meta itemprop="name" content="lihongsheng">
       <meta itemprop="description" content="保持编码的乐趣">
     </span>
@@ -226,7 +226,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-04-20 17:49:10" itemprop="dateModified" datetime="2021-04-20T17:49:10+08:00">2021-04-20</time>
+                <time title="修改时间：2021-04-20 19:54:25" itemprop="dateModified" datetime="2021-04-20T19:54:25+08:00">2021-04-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -234,7 +234,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/lhs-code.github.io/categories/cache/" itemprop="url" rel="index"><span itemprop="name">cache</span></a>
+                  <a href="/categories/cache/" itemprop="url" rel="index"><span itemprop="name">cache</span></a>
                 </span>
             </span>
 
@@ -269,23 +269,23 @@
 <p>(2)非阻塞I/O模型: </p>
 <p>   recvfrom从应用层到内核的时候,如果该缓冲区没有数据的话,就直接返回一个EWOULDBLOCK错误,一般都对非阻塞I/O模型进行轮询检查这个状态,看内核是不是有数据到来。</p>
 <p>   当用户进程发出read操作时，如果kernel中的数据还没有准备好，那么它并不会block用户进程，而是立刻返回一个error。从用户进程角度讲 ，它发起一个read操作后，并不需要等待，而是马上就得到了一个结果。用户进程判断结果是一个error时，它就知道数据还没有准备好，于是它可以再次发送read操作。一旦kernel中的数据准备好了，并且又再次收到了用户进程的system call，那么它马上就将数据拷贝到了用户内存，然后返回。应用进程可以继续执行，但是需要不断的执行系统调用来获知 I/O 是否完成，这种方式称为轮询（polling）。linux下，可以通过设置socket使其变为non-blocking。当对一个non-blocking socket执行读操作时，流程是这个样子：如图1-2所示。</p>
-<p><img src="/lhs-code.github.io/images/4615.png" alt="img"></p>
+<p><img src="//images/4615.png" alt="img"></p>
 <p>(3) I/O复用模型（多路复用）: </p>
 <p>   Linux提供select/poll,进程通过将一个或多个fd传递给select或poll系统调用,阻塞在select操作上,这样select/poll可以帮我们侦测多个fd是否处于就绪状态。select/poll是顺序扫描fd是否就绪,而且支持的fd数量有限,因此它的使用受到了一些制约。Linux还提供了一个epoll系统调用, epoll使用基于事件驱动方式代替顺序扫描,因此性能更高。当有fd就绪时,立即回调函数rollback,如图1-3所示。</p>
 <p>   当用户进程发出read操作时，如果kernel中的数据还没有准备好，那么它并不会block用户进程，而是立刻返回一个error。从用户进程角度讲 ，它发起一个read操作后，并不需要等待，而是马上就得到了一个结果。用户进程判断结果是一个error时，它就知道数据还没有准备好，于是它可以再次发送read操作。一旦kernel中的数据准备好了，并且又再次收到了用户进程的system call，那么它马上就将数据拷贝到了用户内存，然后返回。应用进程可以继续执行，但是需要不断的执行系统调用来获知 I/O 是否完成，这种方式称为轮询（polling）。linux下，可以通过设置socket使其变为non-blocking。当对一个non-blocking socket执行读操作时，流程是这个样子：如图1-2所示。</p>
 <p>select和epoll都提供IO多路复用支持的，可以在一个进程内支持很多的网络链接。并且他们在读取数据的时候都是阻塞的模式【因为他们都需要在读写事件就绪后自己负责进行读写（把数据从内核态拷贝到当前用户进程态），也就是说这个读写过程是阻塞的】</p>
 <p>(4)信号驱动I/O模型:</p>
 <p>  首先开启套接口信号驱动I/O功能,并通过系统调用sigaction执行一个信号处理函数(此系统调用立即返回,进程继续工作,它是非阻塞的)。当数据准备就绪时,就为该进程生成一个SIGIO信号,通过信号回调通知应用程序调用recvfrom来读取数据,并通知主循环函数处理数据,如图1-4所示。</p>
-<p><img src="/lhs-code.github.io/images/4616.png" alt="img"></p>
+<p><img src="//images/4616.png" alt="img"></p>
 <p>(5)异步I/O:</p>
 <p>   告知内核启动某个操作,并让内核在整个操作完成后(包括将数据从内核复制到用户自己的缓冲区,其它IO模型都的调用系统函数把数据从内核态拷贝到当前用户进程态，所以其他IO模型可以说是非阻塞同步IO或是阻塞同步IO。)通知我们。这种模型与信号驱动模型的主要区别是:信号驱动I/O由内核通知我们何时可以开始一个I/O操作;异步I/O模型由内核通知我们I/O操作何时已经完成,</p>
 <p>如图1-5所示。</p>
 <p>   用户进程发起read操作之后，立刻就可以开始去做其它的事。而另一方面，从kernel的角度，当它受到一个asynchronous read之后，首先它会立刻返回，所以不会对用户进程产生任何block。然后，kernel会等待数据准备完成，然后将数据拷贝到用户内存，当这一切都完成之后，kernel会给用户进程发送一个signal，告诉它read操作完成了。</p>
 <p>如果想要了解更多的UNIX系统网络编程知识,可以阅读《UNIX网络编程》,里面有非常详细的原理和API介绍。</p>
-<p><img src="/lhs-code.github.io/images/4614.png" alt="img"></p>
+<p><img src="//images/4614.png" alt="img"></p>
 <p>IO多路复用：</p>
 <p>  就是我们说的select，poll，epoll，有些地方也称这种IO方式为event driven IO。select/epoll的好处就在于单个process就可以同时处理多个网络连接的IO。它的基本原理就是select，poll，epoll这个function会不断的轮询所负责的所有socket，当某个socket有数据到达了，就通知用户进程。当用户进程调用了select，那么整个进程会被block，而同时，kernel会“监视”所有select负责的socket，当任何一个socket中的数据准备好了，select就会返回。这个时候用户进程再调用read操作，将数据从kernel拷贝到用户进程。所以，I/O 多路复用的特点是通过一种机制一个进程能同时等待多个文件描述符，而这些文件描述符（套接字描述符）其中的任意一个进入读就绪状态，select()函数就可以返回。</p>
-<p><img src="/lhs-code.github.io/images/4458.png" alt="img"></p>
+<p><img src="//images/4458.png" alt="img"></p>
 <p><strong>IO多路复用解决的问题：</strong></p>
 <p>   非阻塞IO时的用户进程的一直轮询，而是告诉内核我当前所关注的IO事件是哪些，当内核检测到进程所关注的IO有事件的时候，内核会返回就绪的事件IO，这个时候还是需要阻塞的同步去把数据从内核态拷贝用户进程态（拷贝数据是阻塞，而异步IO是内核把数据拷贝好了后通知进程）。select 和epoll都支持IO多路复用,并且阻塞IO，非阻塞IO都属于同步IO。</p>
 <p>select ：</p>
@@ -323,7 +323,7 @@
 <h3 id="redis在网络模型结构"><a href="#redis在网络模型结构" class="headerlink" title="redis在网络模型结构"></a><strong>redis在网络模型结构</strong></h3><p>事件处理主要基于eventLoop结构体：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* State of an event based program </span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * 事件处理器的状态</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">aeEventLoop</span> &#123;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 目前已注册的最大描述符</span></span><br><span class="line">    <span class="keyword">int</span> maxfd;   <span class="comment">/* highest file descriptor currently registered */</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 目前已追踪的最大描述符</span></span><br><span class="line">    <span class="keyword">int</span> setsize; <span class="comment">/* max number of file descriptors tracked */</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 用于生成时间事件 id</span></span><br><span class="line">    <span class="keyword">long</span> <span class="keyword">long</span> timeEventNextId;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 最后一次执行时间事件的时间</span></span><br><span class="line">    <span class="keyword">time_t</span> lastTime;     <span class="comment">/* Used to detect system clock skew */</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 已注册的文件事件</span></span><br><span class="line">    aeFileEvent *events; <span class="comment">/* Registered events */</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 已就绪的文件事件</span></span><br><span class="line">    aeFiredEvent *fired; <span class="comment">/* Fired events */</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 时间事件</span></span><br><span class="line">    aeTimeEvent *timeEventHead;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 事件处理器的开关</span></span><br><span class="line">    <span class="keyword">int</span> stop;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 多路复用库的私有数据</span></span><br><span class="line">    <span class="keyword">void</span> *apidata; <span class="comment">/* This is used for polling API specific data */</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 在处理事件前要执行的函数</span></span><br><span class="line">    aeBeforeSleepProc *beforesleep;</span><br><span class="line"></span><br><span class="line">&#125; aeEventLoop;</span><br></pre></td></tr></table></figure>
 
-<p><img src="/lhs-code.github.io/images/img/12-01/5ba479c5-efd4-4dff-b7ab-aa4b19cbdc8d.png" alt="img"></p>
+<p><img src="//images/img/12-01/5ba479c5-efd4-4dff-b7ab-aa4b19cbdc8d.png" alt="img"></p>
 <p>1：对 epoll的封装，用来操作加入监听事件，删除事件和获取就绪事件 ae_apoll.c其中也有 ae_kqueue.c</p>
 <p>定义这些主要是对外有统一的接口和访问方式，来屏蔽不同操作系统间的差异。并且对外提供一致的接口。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Linux epoll(2) based ae.c module</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * Copyright (c) 2009-2012, Salvatore Sanfilippo &lt;antirez at gmail dot com&gt;</span></span><br><span class="line"><span class="comment"> * All rights reserved.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * Redistribution and use in source and binary forms, with or without</span></span><br><span class="line"><span class="comment"> * modification, are permitted provided that the following conditions are met:</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *   * Redistributions of source code must retain the above copyright notice,</span></span><br><span class="line"><span class="comment"> *     this list of conditions and the following disclaimer.</span></span><br><span class="line"><span class="comment"> *   * Redistributions in binary form must reproduce the above copyright</span></span><br><span class="line"><span class="comment"> *     notice, this list of conditions and the following disclaimer in the</span></span><br><span class="line"><span class="comment"> *     documentation and/or other materials provided with the distribution.</span></span><br><span class="line"><span class="comment"> *   * Neither the name of Redis nor the names of its contributors may be used</span></span><br><span class="line"><span class="comment"> *     to endorse or promote products derived from this software without</span></span><br><span class="line"><span class="comment"> *     specific prior written permission.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;</span></span><br><span class="line"><span class="comment"> * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE</span></span><br><span class="line"><span class="comment"> * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE</span></span><br><span class="line"><span class="comment"> * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE</span></span><br><span class="line"><span class="comment"> * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR</span></span><br><span class="line"><span class="comment"> * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF</span></span><br><span class="line"><span class="comment"> * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS</span></span><br><span class="line"><span class="comment"> * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN</span></span><br><span class="line"><span class="comment"> * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)</span></span><br><span class="line"><span class="comment"> * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE</span></span><br><span class="line"><span class="comment"> * POSSIBILITY OF SUCH DAMAGE.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/epoll.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 事件状态</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">aeApiState</span> &#123;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// epoll_creat创建返回的ID</span></span><br><span class="line">    <span class="keyword">int</span> epfd;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 事件槽,用来保存 epoll_wait返回的事件数组</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">epoll_event</span> *<span class="title">events</span>;</span></span><br><span class="line"></span><br><span class="line">&#125; aeApiState;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 创建一个新的 epoll 实例，并将它赋值给 eventLoop</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">aeApiCreate</span><span class="params">(aeEventLoop *eventLoop)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//申请内存，并且创建 aeApiState变量</span></span><br><span class="line">    aeApiState *state = zmalloc(<span class="keyword">sizeof</span>(aeApiState));</span><br><span class="line">    <span class="comment">//类似 aeApiState *state = malloc(sizeof(aeApiState));</span></span><br><span class="line">    <span class="comment">//  创建失败 </span></span><br><span class="line">    <span class="keyword">if</span> (!state) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="comment">// 初始化事件槽空间</span></span><br><span class="line">    <span class="comment">//malloc(sizeof(struct epoll_event)*eventLoop-&gt;setsize);</span></span><br><span class="line">    state-&gt;events = zmalloc(<span class="keyword">sizeof</span>(struct epoll_event)*eventLoop-&gt;setsize);</span><br><span class="line">    <span class="keyword">if</span> (!state-&gt;events) &#123;</span><br><span class="line">        <span class="comment">//free(state);</span></span><br><span class="line">        zfree(state);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建 epoll 实例</span></span><br><span class="line">    <span class="comment">//epoll_create的参数只是一个参考值，没有实质行的影响</span></span><br><span class="line">    state-&gt;epfd = epoll_create(<span class="number">1024</span>); <span class="comment">/* 1024 is just a hint for the kernel */</span></span><br><span class="line">    <span class="keyword">if</span> (state-&gt;epfd == <span class="number">-1</span>) &#123;</span><br><span class="line">        <span class="comment">//free(state-&gt;events)</span></span><br><span class="line">        zfree(state-&gt;events);</span><br><span class="line">        <span class="comment">//free(state);</span></span><br><span class="line">        zfree(state);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 赋值给 eventLoop,作为epoll的记录</span></span><br><span class="line">    eventLoop-&gt;apidata = state;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 调整事件槽大小</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">aeApiResize</span><span class="params">(aeEventLoop *eventLoop, <span class="keyword">int</span> setsize)</span> </span>&#123;</span><br><span class="line">    aeApiState *state = eventLoop-&gt;apidata;</span><br><span class="line">    state-&gt;events = zrealloc(state-&gt;events, <span class="keyword">sizeof</span>(struct epoll_event)*setsize);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 释放 epoll 实例和事件槽</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">aeApiFree</span><span class="params">(aeEventLoop *eventLoop)</span> </span>&#123;</span><br><span class="line">    aeApiState *state = eventLoop-&gt;apidata;</span><br><span class="line"></span><br><span class="line">    close(state-&gt;epfd);</span><br><span class="line">    zfree(state-&gt;events);</span><br><span class="line">    zfree(state);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 关联给定事件到 fd</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">aeApiAddEvent</span><span class="params">(aeEventLoop *eventLoop, <span class="keyword">int</span> fd, <span class="keyword">int</span> mask)</span> </span>&#123;</span><br><span class="line">    aeApiState *state = eventLoop-&gt;apidata;</span><br><span class="line">    <span class="comment">//创建一个 epoll_event 结构体变量</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">epoll_event</span> <span class="title">ee</span>;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/* If the fd was already monitored for some event, we need a MOD</span></span><br><span class="line"><span class="comment">     * operation. Otherwise we need an ADD operation. </span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * 如果 fd 没有关联任何事件，那么这是一个 ADD 操作。</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * 如果已经关联了某个/某些事件，那么这是一个 MOD 操作。</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">int</span> op = eventLoop-&gt;events[fd].mask == AE_NONE ?</span><br><span class="line">            EPOLL_CTL_ADD : EPOLL_CTL_MOD;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 注册事件到 epoll</span></span><br><span class="line">    ee.events = <span class="number">0</span>;</span><br><span class="line">    mask |= eventLoop-&gt;events[fd].mask; <span class="comment">/* Merge old events */</span></span><br><span class="line">    <span class="keyword">if</span> (mask &amp; AE_READABLE) ee.events |= EPOLLIN;</span><br><span class="line">    <span class="keyword">if</span> (mask &amp; AE_WRITABLE) ee.events |= EPOLLOUT;</span><br><span class="line">    ee.data.u64 = <span class="number">0</span>; <span class="comment">/* avoid valgrind warning */</span></span><br><span class="line">    ee.data.fd = fd;</span><br><span class="line">    <span class="comment">//添加到 epoll事件里</span></span><br><span class="line">    <span class="keyword">if</span> (epoll_ctl(state-&gt;epfd,op,fd,&amp;ee) == <span class="number">-1</span>) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 从 fd 中删除特定事件</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">aeApiDelEvent</span><span class="params">(aeEventLoop *eventLoop, <span class="keyword">int</span> fd, <span class="keyword">int</span> delmask)</span> </span>&#123;</span><br><span class="line">    aeApiState *state = eventLoop-&gt;apidata;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">epoll_event</span> <span class="title">ee</span>;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> mask = eventLoop-&gt;events[fd].mask &amp; (~delmask);</span><br><span class="line"></span><br><span class="line">    ee.events = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (mask &amp; AE_READABLE) ee.events |= EPOLLIN;</span><br><span class="line">    <span class="keyword">if</span> (mask &amp; AE_WRITABLE) ee.events |= EPOLLOUT;</span><br><span class="line">    ee.data.u64 = <span class="number">0</span>; <span class="comment">/* avoid valgrind warning */</span></span><br><span class="line">    ee.data.fd = fd;</span><br><span class="line">    <span class="keyword">if</span> (mask != AE_NONE) &#123;<span class="comment">//判断是否需要删除，如果还有事件，修改</span></span><br><span class="line">        epoll_ctl(state-&gt;epfd,EPOLL_CTL_MOD,fd,&amp;ee);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;<span class="comment">//没有事件从epoll里删除事件</span></span><br><span class="line">        <span class="comment">/* Note, Kernel &lt; 2.6.9 requires a non null event pointer even for</span></span><br><span class="line"><span class="comment">         * EPOLL_CTL_DEL. */</span></span><br><span class="line">        epoll_ctl(state-&gt;epfd,EPOLL_CTL_DEL,fd,&amp;ee);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 获取可执行事件</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">aeApiPoll</span><span class="params">(aeEventLoop *eventLoop, struct timeval *tvp)</span> </span>&#123;</span><br><span class="line">    aeApiState *state = eventLoop-&gt;apidata;</span><br><span class="line">    <span class="keyword">int</span> retval, numevents = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 等待时间</span></span><br><span class="line">    <span class="comment">// 如果有事件，epoll会填充 state-&gt;events</span></span><br><span class="line">    <span class="comment">//state-&gt;events数组的大小要和 eventLoop-&gt;setsize数字值一致</span></span><br><span class="line">    retval = epoll_wait(state-&gt;epfd,state-&gt;events,eventLoop-&gt;setsize,</span><br><span class="line">            tvp ? (tvp-&gt;tv_sec*<span class="number">1000</span> + tvp-&gt;tv_usec/<span class="number">1000</span>) : <span class="number">-1</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 有至少一个事件就绪？</span></span><br><span class="line">    <span class="keyword">if</span> (retval &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">int</span> j;</span><br><span class="line">        <span class="comment">// 为已就绪事件设置相应的模式</span></span><br><span class="line">        <span class="comment">// 并加入到 eventLoop 的 fired 数组中</span></span><br><span class="line">        numevents = retval;</span><br><span class="line">        <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; numevents; j++) &#123;</span><br><span class="line">            <span class="keyword">int</span> mask = <span class="number">0</span>;</span><br><span class="line">            <span class="class"><span class="keyword">struct</span> <span class="title">epoll_event</span> *<span class="title">e</span> =</span> state-&gt;events+j;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (e-&gt;events &amp; EPOLLIN) mask |= AE_READABLE;</span><br><span class="line">            <span class="keyword">if</span> (e-&gt;events &amp; EPOLLOUT) mask |= AE_WRITABLE;</span><br><span class="line">            <span class="keyword">if</span> (e-&gt;events &amp; EPOLLERR) mask |= AE_WRITABLE;</span><br><span class="line">            <span class="keyword">if</span> (e-&gt;events &amp; EPOLLHUP) mask |= AE_WRITABLE;</span><br><span class="line">            <span class="comment">//从 eventLoop-&gt;apiData-&gt;events里填充到 eventLoop-&gt;fired</span></span><br><span class="line">            eventLoop-&gt;fired[j].fd = e-&gt;data.fd;</span><br><span class="line">            eventLoop-&gt;fired[j].mask = mask;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 返回已就绪事件个数</span></span><br><span class="line">    <span class="keyword">return</span> numevents;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * 返回当前正在使用的 poll 库的名字</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">char</span> *<span class="title">aeApiName</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;epoll&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -354,8 +354,8 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/lhs-code.github.io/tags/linux/" rel="tag"># linux</a>
-              <a href="/lhs-code.github.io/tags/redis/" rel="tag"># redis</a>
+              <a href="/tags/linux/" rel="tag"># linux</a>
+              <a href="/tags/redis/" rel="tag"># redis</a>
           </div>
 
         
@@ -364,11 +364,11 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/lhs-code.github.io/2019/07/28/linux-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93/" rel="prev" title="linux-常用命令总结">
+    <a href="/2019/07/28/linux-%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93/" rel="prev" title="linux-常用命令总结">
       <i class="fa fa-chevron-left"></i> linux-常用命令总结
     </a></div>
       <div class="post-nav-item">
-    <a href="/lhs-code.github.io/2019/08/07/heap%E5%A0%86/" rel="next" title="heap堆">
+    <a href="/2019/08/07/heap%E5%A0%86/" rel="next" title="heap堆">
       heap堆 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
@@ -441,20 +441,20 @@
 <div class="site-state-wrap motion-element">
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
-          <a href="/lhs-code.github.io/archives/">
+          <a href="/archives/">
         
           <span class="site-state-item-count">19</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
-            <a href="/lhs-code.github.io/categories/">
+            <a href="/categories/">
           
         <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-            <a href="/lhs-code.github.io/tags/">
+            <a href="/tags/">
           
         <span class="site-state-item-count">14</span>
         <span class="site-state-item-name">标签</span></a>
@@ -467,12 +467,12 @@
       </div>
 
       
-      <script type="text/javascript" charset="utf-8" src="/lhs-code.github.io/js/tagcloud.js"></script>
-      <script type="text/javascript" charset="utf-8" src="/lhs-code.github.io/js/tagcanvas.js"></script>
+      <script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+      <script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
       <div class="widget-wrap">
           <div id="myCanvasContainer" class="widget tagcloud">
           <canvas width="220" height="250" id="resCanvas" style="width=100%">
-              <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/lhs-code.github.io/tags/cap/" rel="tag">cap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/lhs-code.github.io/tags/db/" rel="tag">db</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/lhs-code.github.io/tags/java/" rel="tag">java</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/lhs-code.github.io/tags/linux/" rel="tag">linux</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/lhs-code.github.io/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/lhs-code.github.io/tags/php/" rel="tag">php</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/lhs-code.github.io/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/lhs-code.github.io/tags/shell/" rel="tag">shell</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/lhs-code.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag">分布式</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/lhs-code.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" rel="tag">分布式锁</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/lhs-code.github.io/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/lhs-code.github.io/tags/%E7%B4%A2%E5%BC%95/" rel="tag">索引</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/lhs-code.github.io/tags/%E7%BA%BF%E7%A8%8B/" rel="tag">线程</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/lhs-code.github.io/tags/%E8%BF%9B%E7%A8%8B/" rel="tag">进程</a><span class="tag-list-count">1</span></li></ul>
+              <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/cap/" rel="tag">cap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/db/" rel="tag">db</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/" rel="tag">php</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/" rel="tag">shell</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag">分布式</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" rel="tag">分布式锁</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B4%A2%E5%BC%95/" rel="tag">索引</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E7%A8%8B/" rel="tag">线程</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BF%9B%E7%A8%8B/" rel="tag">进程</a><span class="tag-list-count">1</span></li></ul>
           </canvas>
           </div>
       </div>
@@ -527,30 +527,30 @@
   </div>
 
   
-  <script src="/lhs-code.github.io/lib/anime.min.js"></script>
-  <script src="/lhs-code.github.io/lib/velocity/velocity.min.js"></script>
-  <script src="/lhs-code.github.io/lib/velocity/velocity.ui.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
 
-<script src="/lhs-code.github.io/js/utils.js"></script>
+<script src="/js/utils.js"></script>
 
-<script src="/lhs-code.github.io/js/motion.js"></script>
-
-
-<script src="/lhs-code.github.io/js/schemes/pisces.js"></script>
+<script src="/js/motion.js"></script>
 
 
-<script src="/lhs-code.github.io/js/next-boot.js"></script>
+<script src="/js/schemes/pisces.js"></script>
 
 
-
-
-  
+<script src="/js/next-boot.js"></script>
 
 
 
 
   
-<script src="/lhs-code.github.io/js/local-search.js"></script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
 
 
 
