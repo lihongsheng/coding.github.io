@@ -1898,9 +1898,9 @@
     <title>java注解写一个简单路由示例</title>
     <url>/2021/04/22/java%E6%B3%A8%E8%A7%A3%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E8%B7%AF%E7%94%B1%E7%A4%BA%E4%BE%8B/</url>
     <content><![CDATA[<h3 id="注解"><a href="#注解" class="headerlink" title="注解"></a>注解</h3><p>注解是放在Java源码的类、方法、字段、参数前的一种特殊“注释”。是附加在代码中的一些元信息，用于编译和运行时进行解析和使用，起到说明、配置的功能。注解不会影响代码的实际逻辑，仅仅起到辅助性的作用。包含在java.lang.annotation包中。</p>
-<p>​     注释不会打包到class文件中，注解则可以被编译器打包进入class文件，因此，注解是一种用作标注的“元数据”。<span id="more"></span></p>
+<p>​     注释不会打包到class文件中，注解则可以被编译器打包进入class文件，因此，注解是一种用作标注的“元数据”。</p>
 <h4 id="注解大致分为三类"><a href="#注解大致分为三类" class="headerlink" title="注解大致分为三类"></a>注解大致分为三类</h4><ul>
-<li> 第一类是由编译器使用的注解【这类注解不会被编译进入<code>.class</code>文件，它们在编译后就被编译器扔掉了。】</li>
+<li> 第一类是由编译器使用的注解【这类注解不会被编译进入<code>.class</code>文件，它们在编译后就被编译器扔掉了。】<span id="more"></span></li>
 </ul>
 <ul>
 <li><code>@Override</code>：让编译器检查该方法是否正确地实现了覆写；</li>
