@@ -2000,9 +2000,10 @@
 <ul>
 <li>客户端需要与服务端建立连接，建立连接的时候，服务端会验证客户端的登录验证，登录用户权限等操作</li>
 <li>处理SQL语句<br>登录成功后，客户端发送SQL语句，需要解析SQL，然后优化SQL语句的执行，判断不同的执行类型，让执行器执行。<br>如果是操作数据的操作，还需要从磁盘加载数据到内存做相应的处理。修改类的还需要回写到磁盘，以防数据丢失。<br>然后基于不同的SQL语句返回处理结果</li>
-<li>客户端基于返回结果集做处理<br><img src="/images/db/mysql-struct.png" alt="mysql"> </li>
+<li>客户端基于返回结果集做处理<br><img src="/images/db/mysql-struct.png" alt="mysql">  </li>
 </ul>
 <h3 id="分析一个update的执行流程"><a href="#分析一个update的执行流程" class="headerlink" title="分析一个update的执行流程"></a>分析一个update的执行流程</h3><p><img src="/images/db/mysql-update.png" alt="mysql-update"> </p>
+<span id="more"></span>
 <p>当执行一条更新的SQL语句的时候，需要经历很多流程。  </p>
 <ul>
 <li>执行需要先判断当前数据是否在内存中，如果没有需要从磁盘加载数据，到内存，然后记录当前的原始值，以备执行失败的时候回滚。</li>
