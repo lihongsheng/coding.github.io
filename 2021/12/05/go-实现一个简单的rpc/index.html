@@ -20,17 +20,21 @@
     var CONFIG = {"hostname":"code.youquwei.net","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="保持编码的乐趣">
-<meta property="og:type" content="website">
-<meta property="og:title" content="keep coding">
-<meta property="og:url" content="http://code.youquwei.net/categories/%E5%88%86%E5%B8%83%E5%BC%8F/index.html">
+  <meta name="description" content="rpc 的一个流程当一个请求过来的，经过网关，网关调用应用服务，应用服务也需要调其他的服务。这个时候我们要考虑的问题。    服务之间的发现 我们需要一个发现服务和注册服务的地方，既是注册中心。还需要监控服务的可用性 服务是多机器部署的，怎么均衡服务节点的流量 负载均衡的实现，保证流量不被打到某一台或者特定的几台节点上，其他节点无流量 调用超时问题 需要关心网关调用服务，或者服务之间调用的超时问题">
+<meta property="og:type" content="article">
+<meta property="og:title" content="go 实现一个简单的rpc">
+<meta property="og:url" content="http://code.youquwei.net/2021/12/05/go-%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84rpc/index.html">
 <meta property="og:site_name" content="keep coding">
-<meta property="og:description" content="保持编码的乐趣">
+<meta property="og:description" content="rpc 的一个流程当一个请求过来的，经过网关，网关调用应用服务，应用服务也需要调其他的服务。这个时候我们要考虑的问题。    服务之间的发现 我们需要一个发现服务和注册服务的地方，既是注册中心。还需要监控服务的可用性 服务是多机器部署的，怎么均衡服务节点的流量 负载均衡的实现，保证流量不被打到某一台或者特定的几台节点上，其他节点无流量 调用超时问题 需要关心网关调用服务，或者服务之间调用的超时问题">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://code.youquwei.net/images/gateway.jpg">
+<meta property="article:published_time" content="2021-12-04T16:14:28.000Z">
+<meta property="article:modified_time" content="2021-12-04T16:32:40.508Z">
 <meta property="article:author" content="lihongsheng">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://code.youquwei.net/images/gateway.jpg">
 
-<link rel="canonical" href="http://code.youquwei.net/categories/%E5%88%86%E5%B8%83%E5%BC%8F/">
+<link rel="canonical" href="http://code.youquwei.net/2021/12/05/go-%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84rpc/">
 
 
 <script id="page-configurations">
@@ -38,12 +42,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>分类: 分布式 | keep coding</title>
+  <title>go 实现一个简单的rpc | keep coding</title>
   
 
 
@@ -179,77 +183,127 @@
         <div class="content-wrap">
           
 
-          <div class="content category">
+          <div class="content post posts-expand">
             
 
+    
   
   
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://code.youquwei.net/2021/12/05/go-%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84rpc/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="lihongsheng">
+      <meta itemprop="description" content="保持编码的乐趣">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="keep coding">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          go 实现一个简单的rpc
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-12-05 00:14:28 / 修改时间：00:32:40" itemprop="dateCreated datePublished" datetime="2021-12-05T00:14:28+08:00">2021-12-05</time>
+            </span>
+
+          
   
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h2 class="collection-header">分布式
-          <small>分类</small>
-        </h2>
-      </div>
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2021/12/05/go-%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84rpc/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2021/12/05/go-实现一个简单的rpc/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>305</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>1 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2019</span>
+        <h3 id="rpc-的一个流程"><a href="#rpc-的一个流程" class="headerlink" title="rpc 的一个流程"></a>rpc 的一个流程</h3><p>当一个请求过来的，经过网关，网关调用应用服务，应用服务也需要调其他的服务。这个时候我们要考虑的问题。  </p>
+<ul>
+<li>服务之间的发现<br> 我们需要一个发现服务和注册服务的地方，既是注册中心。还需要监控服务的可用性</li>
+<li>服务是多机器部署的，怎么均衡服务节点的流量<br> 负载均衡的实现，保证流量不被打到某一台或者特定的几台节点上，其他节点无流量</li>
+<li>调用超时问题<br> 需要关心网关调用服务，或者服务之间调用的超时问题</li>
+<li>服务负载问题<br> 如果某一个服务集群负载过高怎么办</li>
+<li>服务的节点管理等等<br>怎么样管理和监控服务节点</li>
+<li>服务之间交互的协议<br><img src="/images/gateway.jpg" alt="gateway"></li>
+</ul>
+<h3 id="做这个的目的"><a href="#做这个的目的" class="headerlink" title="做这个的目的"></a>做这个的目的</h3><p>给自己复盘一下微服务的需要关注的问题及基本实现原理及关注点，也可以作为团队内的分享，一起了解微服务的一些基本知识点</p>
+<span id="more"></span>
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+    
+    
+    
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2019-04-21T17:57:21+08:00"
-              content="2019-04-21">
-          04-21
-        </time>
-      </div>
+      <footer class="post-footer">
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2019/04/21/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" itemprop="url">
-            <span itemprop="name">分布式锁</span>
-          </a>
-      </div>
+        
 
-    </header>
-  </article>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2019-04-20T17:52:35+08:00"
-              content="2019-04-20">
-          04-20
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2019/04/20/cap%E5%AE%9A%E7%90%86/" itemprop="url">
-            <span itemprop="name">cap定理</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/11/20/MySQL%E7%9A%84update-insert%E6%B5%81%E7%A8%8B/" rel="prev" title="MySQL的update,insert流程">
+      <i class="fa fa-chevron-left"></i> MySQL的update,insert流程
+    </a></div>
+      <div class="post-nav-item"></div>
     </div>
-  </div>
+      </footer>
+    
+  </article>
   
   
-  
-
   
 
 
 
           </div>
           
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -296,6 +350,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#rpc-%E7%9A%84%E4%B8%80%E4%B8%AA%E6%B5%81%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">rpc 的一个流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%81%9A%E8%BF%99%E4%B8%AA%E7%9A%84%E7%9B%AE%E7%9A%84"><span class="nav-number">2.</span> <span class="nav-text">做这个的目的</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -443,6 +498,26 @@
   }
   // defer loading until the whole page loading is completed
   window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://code.youquwei.net/2021/12/05/go-%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84rpc/";
+    this.page.identifier = "2021/12/05/go-实现一个简单的rpc/";
+    this.page.title = "go 实现一个简单的rpc";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://coding-lhs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
 </script>
 
 </body>
