@@ -2038,7 +2038,15 @@
 <li>ROW 基于行的复制，记录每次数据的变化，如果是批量更改语句等会产生大量的日志</li>
 <li>MIXED 基于 STATMENT 和 ROW 两种模式的混合复制( mixed-based replication, MBR )，一般的复制使用 STATEMENT 模式保存 binlog ，对于 STATEMENT 模式无法复制的操作使用 ROW 模式保存 binlog</li>
 </ul>
-<h3 id="怎么保证数据的不丢失"><a href="#怎么保证数据的不丢失" class="headerlink" title="怎么保证数据的不丢失"></a>怎么保证数据的不丢失</h3>]]></content>
+<h3 id="怎么保证数据的不丢失"><a href="#怎么保证数据的不丢失" class="headerlink" title="怎么保证数据的不丢失"></a>怎么保证数据的不丢失</h3><p>回顾下数据的写入流程<br>记录历史数据，更新内存的数据，写入redo log,写入bin log,更新redo log为commited状态</p>
+<ul>
+<li>当写入undo log，未写入redo log，这个时候崩溃了【内存的数据也未落入磁盘】，数据相当于没修改。不造成影响</li>
+<li>当写入undo ，redo 为写入bin崩溃。这个时候会判断是否需要回滚等等操作。如果不做，会造成master的实际和从库【依据bin同步数据】实际数据不一致。</li>
+<li>写入 undo,redo,bin未写入commit状态，重启的时候回依据commit状态做二次处理。<br>为什么不选择先写入 bin:<br>当先写入bin的时候，如果未写入redo，会造成从库数据的时候不一致性。<br>在MySQL内部，在事务提交时利用两阶段提交(内部XA的两阶段提交)很好地解决了上面提到的binlog和redo log的一致性问题：  </li>
+<li>第一阶段： InnoDB Prepare阶段。此时SQL已经成功执行，并生成事务ID(xid)信息及redo和undo的内存日志。此阶段InnoDB会写事务的redo log，但要注意的是，此时redo log只是记录了事务的所有操作日志，并没有记录提交（commit）日志，因此事务此时的状态为Prepare。此阶段对binlog不会有任何操作。</li>
+<li>第二阶段：commit 阶段，这个阶段又分成两个步骤。第一步写binlog（先调用write()将binlog内存日志数据写入文件系统缓存，再调用fsync()将binlog文件系统缓存日志数据永久写入磁盘）；第二步完成事务的提交（commit），此时在redo log中记录此事务的提交日志（增加commit 标签）。<br>综上所述，MySQL innodb依赖于undo ,redo,bin保证数据上完整的一致性</li>
+</ul>
+]]></content>
       <categories>
         <category>db</category>
       </categories>
