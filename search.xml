@@ -1995,7 +1995,7 @@
   </entry>
   <entry>
     <title>MySQL的update,insert流程</title>
-    <url>/2021/04/20/MySQL%E7%9A%84update-insert%E6%B5%81%E7%A8%8B/</url>
+    <url>/2021/11/20/MySQL%E7%9A%84update-insert%E6%B5%81%E7%A8%8B/</url>
     <content><![CDATA[<h3 id="MySQL的架构图"><a href="#MySQL的架构图" class="headerlink" title="MySQL的架构图"></a>MySQL的架构图</h3><p><img src="/images/db/mysql-struct.png" alt="mysql"> </p>
 <p>一条SQL语句从客户端发送到服务端，需要经历很多流程 </p>
 <ul>
