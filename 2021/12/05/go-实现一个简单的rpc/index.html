@@ -29,7 +29,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://code.youquwei.net/images/gateway.jpg">
 <meta property="article:published_time" content="2021-12-04T16:14:28.000Z">
-<meta property="article:modified_time" content="2021-12-04T16:40:17.350Z">
+<meta property="article:modified_time" content="2022-01-25T16:42:08.683Z">
 <meta property="article:author" content="lihongsheng">
 <meta property="article:tag" content="go">
 <meta name="twitter:card" content="summary">
@@ -213,10 +213,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-12-05 00:14:28 / 修改时间：00:40:17" itemprop="dateCreated datePublished" datetime="2021-12-05T00:14:28+08:00">2021-12-05</time>
+              <time title="创建时间：2021-12-05 00:14:28" itemprop="dateCreated datePublished" datetime="2021-12-05T00:14:28+08:00">2021-12-05</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-01-26 00:42:08" itemprop="dateModified" datetime="2022-01-26T00:42:08+08:00">2022-01-26</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -247,7 +253,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>311</span>
+              <span>765</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -275,8 +281,13 @@
 <li>服务的节点管理等等<br>怎么样管理和监控服务节点</li>
 <li>服务之间交互的协议<br><img src="/images/gateway.jpg" alt="gateway"></li>
 </ul>
-<h3 id="做这个的目的"><a href="#做这个的目的" class="headerlink" title="做这个的目的"></a>做这个的目的</h3><p>给自己复盘一下微服务的需要关注的问题及基本实现原理及关注点，也可以作为团队内的分享，一起了解微服务的一些基本知识点<br>文章未写完…</p>
 <span id="more"></span>
+<h3 id="协议的格式"><a href="#协议的格式" class="headerlink" title="协议的格式"></a>协议的格式</h3><p>[版本号]|[数据包长度]|[requestID]|[请求报文类型]|[报文编码格式]|[实际报文内容]的封包格式</p>
+<h3 id="request-请求体结构"><a href="#request-请求体结构" class="headerlink" title="request 请求体结构"></a>request 请求体结构</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Request <span class="keyword">struct</span> &#123;</span><br><span class="line">	ServerName <span class="keyword">string</span></span><br><span class="line">	MethodName <span class="keyword">string</span></span><br><span class="line">	Params []<span class="keyword">interface</span>&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="一个RPC的请求流程"><a href="#一个RPC的请求流程" class="headerlink" title="一个RPC的请求流程"></a>一个RPC的请求流程</h3><p>客户端建立与服务端的链接 -&gt; 基于客户端代理类，调用需要请求的方法 -&gt; 生成请求体request，基于编码格式和协议格式，做数据转换-&gt;发送到服务端-》服务端接受到二进制报文，基于编码和协议格式，做反解码操作-》基于request的指定的server类和方法名调用注册的server方法返回数据-&gt; 服务端把返回数据，编码返回给客户端-&gt;客户端反解码，拿到调用结果</p>
+<h3 id="调式"><a href="#调式" class="headerlink" title="调式"></a>调式</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">go</span> run main.<span class="keyword">go</span> -start server -port <span class="number">9099</span></span><br><span class="line"><span class="keyword">go</span> run main.<span class="keyword">go</span> -start client -port <span class="number">9099</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">初始代码：https:&#x2F;&#x2F;github.com&#x2F;lihongsheng&#x2F;go-simple-rpc.git</span><br></pre></td></tr></table></figure>
+<h3 id="服务端"><a href="#服务端" class="headerlink" title="服务端"></a>服务端</h3><h3 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h3>
     </div>
 
     
@@ -363,7 +374,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#rpc-%E7%9A%84%E4%B8%80%E4%B8%AA%E6%B5%81%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">rpc 的一个流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%81%9A%E8%BF%99%E4%B8%AA%E7%9A%84%E7%9B%AE%E7%9A%84"><span class="nav-number">2.</span> <span class="nav-text">做这个的目的</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#rpc-%E7%9A%84%E4%B8%80%E4%B8%AA%E6%B5%81%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">rpc 的一个流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%8F%E8%AE%AE%E7%9A%84%E6%A0%BC%E5%BC%8F"><span class="nav-number">2.</span> <span class="nav-text">协议的格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#request-%E8%AF%B7%E6%B1%82%E4%BD%93%E7%BB%93%E6%9E%84"><span class="nav-number">3.</span> <span class="nav-text">request 请求体结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E4%B8%AARPC%E7%9A%84%E8%AF%B7%E6%B1%82%E6%B5%81%E7%A8%8B"><span class="nav-number">4.</span> <span class="nav-text">一个RPC的请求流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E5%BC%8F"><span class="nav-number">5.</span> <span class="nav-text">调式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E7%AB%AF"><span class="nav-number">6.</span> <span class="nav-text">服务端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="nav-number">7.</span> <span class="nav-text">客户端</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -442,7 +453,7 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:33</span>
+    <span title="站点阅读时长">2:34</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
   </div>

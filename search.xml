@@ -417,8 +417,13 @@
 <li>服务的节点管理等等<br>怎么样管理和监控服务节点</li>
 <li>服务之间交互的协议<br><img src="/images/gateway.jpg" alt="gateway"></li>
 </ul>
-<h3 id="做这个的目的"><a href="#做这个的目的" class="headerlink" title="做这个的目的"></a>做这个的目的</h3><p>给自己复盘一下微服务的需要关注的问题及基本实现原理及关注点，也可以作为团队内的分享，一起了解微服务的一些基本知识点<br>文章未写完…</p>
-<span id="more"></span>]]></content>
+<span id="more"></span>
+<h3 id="协议的格式"><a href="#协议的格式" class="headerlink" title="协议的格式"></a>协议的格式</h3><p>[版本号]|[数据包长度]|[requestID]|[请求报文类型]|[报文编码格式]|[实际报文内容]的封包格式</p>
+<h3 id="request-请求体结构"><a href="#request-请求体结构" class="headerlink" title="request 请求体结构"></a>request 请求体结构</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">type</span> Request <span class="keyword">struct</span> &#123;</span><br><span class="line">	ServerName <span class="keyword">string</span></span><br><span class="line">	MethodName <span class="keyword">string</span></span><br><span class="line">	Params []<span class="keyword">interface</span>&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="一个RPC的请求流程"><a href="#一个RPC的请求流程" class="headerlink" title="一个RPC的请求流程"></a>一个RPC的请求流程</h3><p>客户端建立与服务端的链接 -&gt; 基于客户端代理类，调用需要请求的方法 -&gt; 生成请求体request，基于编码格式和协议格式，做数据转换-&gt;发送到服务端-》服务端接受到二进制报文，基于编码和协议格式，做反解码操作-》基于request的指定的server类和方法名调用注册的server方法返回数据-&gt; 服务端把返回数据，编码返回给客户端-&gt;客户端反解码，拿到调用结果</p>
+<h3 id="调式"><a href="#调式" class="headerlink" title="调式"></a>调式</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">go</span> run main.<span class="keyword">go</span> -start server -port <span class="number">9099</span></span><br><span class="line"><span class="keyword">go</span> run main.<span class="keyword">go</span> -start client -port <span class="number">9099</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">初始代码：https:&#x2F;&#x2F;github.com&#x2F;lihongsheng&#x2F;go-simple-rpc.git</span><br></pre></td></tr></table></figure>
+<h3 id="服务端"><a href="#服务端" class="headerlink" title="服务端"></a>服务端</h3><h3 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h3>]]></content>
       <categories>
         <category>go</category>
       </categories>
