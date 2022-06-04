@@ -28,12 +28,12 @@
 <meta property="og:description" content="缓存的使用从系统层面看，使用缓存的目的无外乎缓解 DB 压力（主要是读压力），提升服务响应速度。引入缓存，就不可避免地引入了缓存与业务 DB 数据的一致性问题，而不同的业务场景，对数据一致性的要求也不同。因为redis和db毕竟是两套系统，数据的一致性想要达到何种程度要根据业务场景来取舍：  最终一致性分布式缓存场景 对于业务场景对数据一致性要求不是那么高的情况下，我们可以通过队列，binlog等">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://code.youquwei.net/images/rw-cache.png">
-<meta property="og:image" content="http://code.youquwei.net/images/rw-cache2.png">
+<meta property="og:image" content="http://code.youquwei.net/images/rw-ccahe2.png">
 <meta property="og:image" content="http://code.youquwei.net/images/rw-cache3.png">
 <meta property="og:image" content="http://code.youquwei.net/images/rw-cache4.png">
 <meta property="og:image" content="http://code.youquwei.net/images/rw-cache6.png">
 <meta property="article:published_time" content="2022-06-04T07:06:21.000Z">
-<meta property="article:modified_time" content="2022-06-04T08:58:26.128Z">
+<meta property="article:modified_time" content="2022-06-04T09:18:28.639Z">
 <meta property="article:author" content="lihongsheng">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://code.youquwei.net/images/rw-cache.png">
@@ -218,7 +218,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2022-06-04 15:06:21 / 修改时间：16:58:26" itemprop="dateCreated datePublished" datetime="2022-06-04T15:06:21+08:00">2022-06-04</time>
+              <time title="创建时间：2022-06-04 15:06:21 / 修改时间：17:18:28" itemprop="dateCreated datePublished" datetime="2022-06-04T15:06:21+08:00">2022-06-04</time>
             </span>
 
           
@@ -274,7 +274,7 @@
 <p>再这里，不过多讨论，更新的数据的其他方式。如<br>先更新缓存，在更新数据，【数据库可能回滚，这个时候还是要删除缓存】<br>先更新数据，在更新缓存。【两个线程同时更新的情况，有可能时序上出现错乱，导致不是最新数据】<br>先删除缓存，在更新数据。【数据未更新完成的情况，会有老数据写入缓存】</p>
 <p>然而，我们在执行 更新数据和过期数据重新设置缓存的，在并发情况下会出现时序问题，造成缓存写入的不一定是最新数据。</p>
 <ul>
-<li>当缓存失效时，同时有一个读请求和写请求或者读请求在写未完毕的过程中，此时读到的是old数据，并且由于时序原因【网络等各种情况导致的】，导致写入的操作在删除操作之后，会写入老数据。<br><img src="/images/rw-cache.png"><br><img src="/images/rw-cache2.png"><br><img src="/images/rw-cache3.png"></li>
+<li>当缓存失效时，同时有一个读请求和写请求或者读请求在写未完毕的过程中，此时读到的是old数据，并且由于时序原因【网络等各种情况导致的】，导致写入的操作在删除操作之后，会写入老数据。<br><img src="/images/rw-cache.png"><br><img src="/images/rw-ccahe2.png"><br><img src="/images/rw-cache3.png"></li>
 </ul>
 <p>对于此种情况，如果对数据一致性没那么敏感的情况下，我们可以考虑设置的缓存时间短一些，<br>在有从库情况下考虑监听binlog下情况，在数据同步后在执行一次删除缓存的操作。</p>
 <h4 id="数据库和缓存的一致性"><a href="#数据库和缓存的一致性" class="headerlink" title="数据库和缓存的一致性"></a>数据库和缓存的一致性</h4><p>如果想达到强一致的情况，我们必须考虑加锁降请求串行化执行，在设置缓存的过程中，会降低一定的系统负载。<br>而且删除和设置缓存都需要加锁。如下图<br><img src="/images/rw-cache4.png"></p>
