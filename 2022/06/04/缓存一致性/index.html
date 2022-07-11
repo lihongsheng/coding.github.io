@@ -33,7 +33,7 @@
 <meta property="og:image" content="http://code.youquwei.net/images/rw-cache4.png">
 <meta property="og:image" content="http://code.youquwei.net/images/rw-cache6.png">
 <meta property="article:published_time" content="2022-06-04T07:06:21.000Z">
-<meta property="article:modified_time" content="2022-06-04T09:18:28.639Z">
+<meta property="article:modified_time" content="2022-07-11T15:30:08.213Z">
 <meta property="article:author" content="lihongsheng">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://code.youquwei.net/images/rw-cache.png">
@@ -216,10 +216,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-06-04 15:06:21 / 修改时间：17:18:28" itemprop="dateCreated datePublished" datetime="2022-06-04T15:06:21+08:00">2022-06-04</time>
+              <time title="创建时间：2022-06-04 15:06:21" itemprop="dateCreated datePublished" datetime="2022-06-04T15:06:21+08:00">2022-06-04</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-07-11 23:30:08" itemprop="dateModified" datetime="2022-07-11T23:30:08+08:00">2022-07-11</time>
+              </span>
 
           
   
@@ -271,12 +277,12 @@
 <li>命中缓存：程序先从缓存中读取数据，如果命中，则直接返回</li>
 <li>更新数据：程序先更新数据库，在删除缓存</li>
 </ul>
-<p>再这里，不过多讨论，更新的数据的其他方式。如<br>先更新缓存，在更新数据，【数据库可能回滚，这个时候还是要删除缓存】<br>先更新数据，在更新缓存。【两个线程同时更新的情况，有可能时序上出现错乱，导致不是最新数据】<br>先删除缓存，在更新数据。【数据未更新完成的情况，会有老数据写入缓存】</p>
+<p>再这里，不过多讨论，数据更新的其他方式。如<br>先更新缓存，在更新数据，【数据库可能回滚，这个时候还是要删除缓存】<br>先更新数据，在更新缓存。【两个线程同时更新的情况，有可能时序上出现错乱，导致不是最新数据】<br>先删除缓存，在更新数据。【数据未更新完成的情况，会有老数据写入缓存】</p>
 <p>然而，我们在执行 更新数据和过期数据重新设置缓存的，在并发情况下会出现时序问题，造成缓存写入的不一定是最新数据。</p>
 <ul>
 <li>当缓存失效时，同时有一个读请求和写请求或者读请求在写未完毕的过程中，此时读到的是old数据，并且由于时序原因【网络等各种情况导致的】，导致写入的操作在删除操作之后，会写入老数据。<br><img src="/images/rw-cache.png"><br><img src="/images/rw-ccahe2.png"><br><img src="/images/rw-cache3.png"></li>
 </ul>
-<p>对于此种情况，如果对数据一致性没那么敏感的情况下，我们可以考虑设置的缓存时间短一些，<br>在有从库情况下考虑监听binlog下情况，在数据同步后在执行一次删除缓存的操作。</p>
+<p>对于此种情况，如果对数据一致性没那么敏感的情况下，我们可以考虑设置的缓存时间短一些，<br>在有从库情况下考虑监听binlog下情况，在数据同步后在执行一次删除缓存的操作。<br>或者用一个key 表明数据处在主从延迟同步的情况，需要从主库读取，如果有数据库代理中间件，在中间内做这个操作是最好的。</p>
 <h4 id="数据库和缓存的一致性"><a href="#数据库和缓存的一致性" class="headerlink" title="数据库和缓存的一致性"></a>数据库和缓存的一致性</h4><p>如果想达到强一致的情况，我们必须考虑加锁降请求串行化执行，在设置缓存的过程中，会降低一定的系统负载。<br>而且删除和设置缓存都需要加锁。如下图<br><img src="/images/rw-cache4.png"></p>
 <p>当更新数据或者更新缓存的时候：<br>  在更新时候先尝试进行加锁，若当前有锁说明当前有 DB 或缓存正在更新，则进行等待和重试，从而可避免查询到 DB 中的老数据更新到缓存中。这种方案适合写并发低的场景。</p>
 <p>读的并发操作控制：<br>   在进行读的时候，先查验锁，如果锁不存在。说明无更新缓存和更新DB的操作。此时如果缓存有数据直接读取，无数据加锁重新设置缓存即可。<br>在有锁的时候。说明有更新数据或者设置缓存的操作正在执行。不能直接查询缓存，可以系统 配置在查询 DB 后返回数据或者检测到有锁后可进行短暂的等待和重试，好处是可进一步增加缓存的命中率，但是多一次锁等待，可能会影响到查询接口的性能。</p>
@@ -286,7 +292,7 @@
 <li>方案二：在事务提交前加锁，删除缓存后解锁。在满足一致性要求的前提下，锁的粒度可以做到最小，但是增加了 DB 事务的范围，若 redis 出现超时则可能导致事务时间拉长，进而影响 DB 操作性能。</li>
 <li>方案三：在事务开始前加锁，删除缓存后解锁。锁的范围较大，但是能满足我们一致性要求，对单个 DB 事务也基本无影响。且对同一个用户来说，贷前数据的更新并不频繁，锁范围稍大一些是我们可以接受的。</li>
 </ul>
-<p>此外还需要考虑如果有从库的情况下的主从延迟情况，如果延迟过大，在db更新后，需要标记下数据在多长时间下是从主库读取。</p>
+<p>此外还需要考虑如果有从库的情况下的主从延迟情况，如果延迟过大，在db更新后，需要标记下数据在主从延迟的时间下范围内是从主库读取。</p>
 
     </div>
 
