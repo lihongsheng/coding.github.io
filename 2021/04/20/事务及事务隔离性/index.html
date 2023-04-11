@@ -17,13 +17,13 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"code.youquwei.net","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"lee-code.top","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="事务的几个概念： ​    A（atomicity）原子性 ​        是指，一个事务里的多条SQL命令要么全部执行，要么全部不执行。    C（consistency）一致性 ​         数据更改状态：及如果数据更新成功，要和预期值一致，如果失败要保持到更新之前的状态不变。    I (isolation) 隔离性 ​        事务的隔离性要求每个读写事务的对象对其他事务的操">
 <meta property="og:type" content="article">
 <meta property="og:title" content="事务及事务隔离性">
-<meta property="og:url" content="http://code.youquwei.net/2021/04/20/%E4%BA%8B%E5%8A%A1%E5%8F%8A%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E6%80%A7/index.html">
+<meta property="og:url" content="http://lee-code.top/2021/04/20/%E4%BA%8B%E5%8A%A1%E5%8F%8A%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E6%80%A7/index.html">
 <meta property="og:site_name" content="keep coding">
 <meta property="og:description" content="事务的几个概念： ​    A（atomicity）原子性 ​        是指，一个事务里的多条SQL命令要么全部执行，要么全部不执行。    C（consistency）一致性 ​         数据更改状态：及如果数据更新成功，要和预期值一致，如果失败要保持到更新之前的状态不变。    I (isolation) 隔离性 ​        事务的隔离性要求每个读写事务的对象对其他事务的操">
 <meta property="og:locale" content="zh_CN">
@@ -33,7 +33,7 @@
 <meta property="article:tag" content="db">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://code.youquwei.net/2021/04/20/%E4%BA%8B%E5%8A%A1%E5%8F%8A%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E6%80%A7/">
+<link rel="canonical" href="http://lee-code.top/2021/04/20/%E4%BA%8B%E5%8A%A1%E5%8F%8A%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E6%80%A7/">
 
 
 <script id="page-configurations">
@@ -189,7 +189,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://code.youquwei.net/2021/04/20/%E4%BA%8B%E5%8A%A1%E5%8F%8A%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E6%80%A7/">
+    <link itemprop="mainEntityOfPage" href="http://lee-code.top/2021/04/20/%E4%BA%8B%E5%8A%A1%E5%8F%8A%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E6%80%A7/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -679,7 +679,7 @@
 </script>
 <script>
   var disqus_config = function() {
-    this.page.url = "http://code.youquwei.net/2021/04/20/%E4%BA%8B%E5%8A%A1%E5%8F%8A%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E6%80%A7/";
+    this.page.url = "http://lee-code.top/2021/04/20/%E4%BA%8B%E5%8A%A1%E5%8F%8A%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E6%80%A7/";
     this.page.identifier = "2021/04/20/事务及事务隔离性/";
     this.page.title = "事务及事务隔离性";
     };

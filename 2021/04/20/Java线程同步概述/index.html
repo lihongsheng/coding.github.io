@@ -17,26 +17,26 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"code.youquwei.net","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"lee-code.top","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="线程锁的那些概念： 乐观锁与悲观锁是一种广义上的概念，体现了看待线程同步的不同角度。在Java和数据库中都有此概念对应的实际应用。        先说概念。对于同一个数据的并发操作，悲观锁认为自己在使用数据的时候一定有别的线程来修改数据，因此在获取数据的时候会先加锁，确保数据不会被别的线程修改。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java线程同步概述">
-<meta property="og:url" content="http://code.youquwei.net/2021/04/20/Java%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5%E6%A6%82%E8%BF%B0/index.html">
+<meta property="og:url" content="http://lee-code.top/2021/04/20/Java%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5%E6%A6%82%E8%BF%B0/index.html">
 <meta property="og:site_name" content="keep coding">
 <meta property="og:description" content="线程锁的那些概念： 乐观锁与悲观锁是一种广义上的概念，体现了看待线程同步的不同角度。在Java和数据库中都有此概念对应的实际应用。        先说概念。对于同一个数据的并发操作，悲观锁认为自己在使用数据的时候一定有别的线程来修改数据，因此在获取数据的时候会先加锁，确保数据不会被别的线程修改。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://code.youquwei.net/images/youdao/6709.png">
+<meta property="og:image" content="http://lee-code.top/images/youdao/6709.png">
 <meta property="article:published_time" content="2021-04-20T11:15:43.000Z">
 <meta property="article:modified_time" content="2021-04-20T16:58:57.373Z">
 <meta property="article:author" content="lihongsheng">
 <meta property="article:tag" content="java">
 <meta property="article:tag" content="线程">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://code.youquwei.net/images/youdao/6709.png">
+<meta name="twitter:image" content="http://lee-code.top/images/youdao/6709.png">
 
-<link rel="canonical" href="http://code.youquwei.net/2021/04/20/Java%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5%E6%A6%82%E8%BF%B0/">
+<link rel="canonical" href="http://lee-code.top/2021/04/20/Java%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5%E6%A6%82%E8%BF%B0/">
 
 
 <script id="page-configurations">
@@ -192,7 +192,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://code.youquwei.net/2021/04/20/Java%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5%E6%A6%82%E8%BF%B0/">
+    <link itemprop="mainEntityOfPage" href="http://lee-code.top/2021/04/20/Java%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5%E6%A6%82%E8%BF%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -639,7 +639,7 @@
 </script>
 <script>
   var disqus_config = function() {
-    this.page.url = "http://code.youquwei.net/2021/04/20/Java%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5%E6%A6%82%E8%BF%B0/";
+    this.page.url = "http://lee-code.top/2021/04/20/Java%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5%E6%A6%82%E8%BF%B0/";
     this.page.identifier = "2021/04/20/Java线程同步概述/";
     this.page.title = "Java线程同步概述";
     };

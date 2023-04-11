@@ -17,13 +17,13 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"code.youquwei.net","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"lee-code.top","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="锁的作用​     锁是为了控制对共享资源的并发访问和操作。数据库系统使用锁是为了支持对共享资源进行并发访问，提供数据的完整性和一致性。两种锁的概念：  Latch:闩锁，这是一种轻量级锁，用于线程中的临界资源的操作【例如，操作缓冲池中的LRU列表，删除、添加、移动LRU列表中的元素，为了保证一致性，必须有锁的介入】。锁定的时间非常短，而且没有死锁检测机制。  lock:用于数据事务的锁，并且在一">
 <meta property="og:type" content="article">
 <meta property="og:title" content="mysql锁">
-<meta property="og:url" content="http://code.youquwei.net/2021/04/20/mysql%E9%94%81/index.html">
+<meta property="og:url" content="http://lee-code.top/2021/04/20/mysql%E9%94%81/index.html">
 <meta property="og:site_name" content="keep coding">
 <meta property="og:description" content="锁的作用​     锁是为了控制对共享资源的并发访问和操作。数据库系统使用锁是为了支持对共享资源进行并发访问，提供数据的完整性和一致性。两种锁的概念：  Latch:闩锁，这是一种轻量级锁，用于线程中的临界资源的操作【例如，操作缓冲池中的LRU列表，删除、添加、移动LRU列表中的元素，为了保证一致性，必须有锁的介入】。锁定的时间非常短，而且没有死锁检测机制。  lock:用于数据事务的锁，并且在一">
 <meta property="og:locale" content="zh_CN">
@@ -33,7 +33,7 @@
 <meta property="article:tag" content="db">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://code.youquwei.net/2021/04/20/mysql%E9%94%81/">
+<link rel="canonical" href="http://lee-code.top/2021/04/20/mysql%E9%94%81/">
 
 
 <script id="page-configurations">
@@ -189,7 +189,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://code.youquwei.net/2021/04/20/mysql%E9%94%81/">
+    <link itemprop="mainEntityOfPage" href="http://lee-code.top/2021/04/20/mysql%E9%94%81/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -527,7 +527,7 @@
 </script>
 <script>
   var disqus_config = function() {
-    this.page.url = "http://code.youquwei.net/2021/04/20/mysql%E9%94%81/";
+    this.page.url = "http://lee-code.top/2021/04/20/mysql%E9%94%81/";
     this.page.identifier = "2021/04/20/mysql锁/";
     this.page.title = "mysql锁";
     };
