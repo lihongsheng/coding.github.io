@@ -210,7 +210,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2023-04-11 00:17:56 / 修改时间：22:11:01" itemprop="dateCreated datePublished" datetime="2023-04-11T00:17:56+08:00">2023-04-11</time>
+              <time title="创建时间：2023-04-11 00:17:56 / 修改时间：22:21:41" itemprop="dateCreated datePublished" datetime="2023-04-11T00:17:56+08:00">2023-04-11</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -242,7 +242,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>9.6k</span>
+              <span>9.7k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -261,7 +261,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="sync-mutex-作用"><a href="#sync-mutex-作用" class="headerlink" title="sync.mutex 作用"></a>sync.mutex 作用</h2><p><a target="_blank" rel="noopener" href="https://golang.org/pkg/sync/#Mutex">sync.Mutex</a>是Go标准库中常用的一个排外锁。当一个 goroutine 获得了这个锁的拥有权后， 其它请求锁的 goroutine 就会阻塞在<br>Lock 方法的调用上，直到锁被释放。<br><img src="/images/sync-mutex/sync1.png"></p>
+          <p>sync.mutex 作用:<br><a target="_blank" rel="noopener" href="https://golang.org/pkg/sync/#Mutex">sync.Mutex</a>是Go标准库中常用的一个排外锁。当一个 goroutine 获得了这个锁的拥有权后， 其它请求锁的 goroutine 就会阻塞在<br>Lock 方法的调用上，直到锁被释放。<br><img src="/images/sync-mutex/sync1.png"></p>
 <h2 id="初代mutext"><a href="#初代mutext" class="headerlink" title="初代mutext"></a>初代mutext</h2><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Mutex <span class="keyword">struct</span> &#123;</span><br><span class="line">  key <span class="keyword">int32</span>;</span><br><span class="line">  sema <span class="keyword">int32</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">xadd</span><span class="params">(val *<span class="keyword">int32</span>, delta <span class="keyword">int32</span>)</span> <span class="params">(<span class="built_in">new</span> <span class="keyword">int32</span>)</span></span> &#123;</span><br><span class="line">  <span class="keyword">for</span> &#123;</span><br><span class="line">    v := *val;</span><br><span class="line">    <span class="keyword">if</span> cas(val, v, v+delta) &#123;</span><br><span class="line">      <span class="keyword">return</span> v+delta;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">panic</span>(<span class="string">&quot;unreached&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(m *Mutex)</span> <span class="title">Lock</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="keyword">if</span> xadd(&amp;m.key, <span class="number">1</span>) == <span class="number">1</span> &#123;</span><br><span class="line">    <span class="comment">// changed from 0 to 1; we hold lock</span></span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  sys.semacquire(&amp;m.sema);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(m *Mutex)</span> <span class="title">Unlock</span><span class="params">()</span></span> &#123;</span><br><span class="line">  <span class="keyword">if</span> xadd(&amp;m.key, <span class="number">-1</span>) == <span class="number">0</span> &#123;</span><br><span class="line">    <span class="comment">// changed from 1 to 0; no contention</span></span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  sys.semrelease(&amp;m.sema);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>通过cas对 key 进行加一, 如果key的值是从0加到1, 则直接获得了锁。否则通过semacquire进行sleep, 被唤醒的时候就获得了锁。<br>2016年 Go 1.9中增加了饥饿模式，让锁变得更公平，不公平的等待时间限制在1毫秒，并且修复了一个大bug,唤醒的goroutine总是放在等待队列的尾部会导致更加不公平的等待时间。<br>现有的锁实现是很复杂的。粗略的瞄一眼，很难理解其中的逻辑， 尤其实现中字段的共用，标识的位操作，sync函数的调用、正常模式和饥饿模式的改变等</p>
 <h2 id="sync-mutex"><a href="#sync-mutex" class="headerlink" title="sync.mutex"></a>sync.mutex</h2><p>在分析源代码之前， 我们要从多线程(goroutine)的并发场景去理解为什么实现中有很多的分支。</p>
@@ -343,10 +343,16 @@ state 是一个共用的字段，第 0 个bit 表示是被 goroutine 所拥有�
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-07-03 18:07:08 / 修改时间：23:45:05" itemprop="dateCreated datePublished" datetime="2022-07-03T18:07:08+08:00">2022-07-03</time>
+              <time title="创建时间：2022-07-03 18:07:08" itemprop="dateCreated datePublished" datetime="2022-07-03T18:07:08+08:00">2022-07-03</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-11 22:23:03" itemprop="dateModified" datetime="2023-04-11T22:23:03+08:00">2023-04-11</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -396,7 +402,7 @@ state 是一个共用的字段，第 0 个bit 表示是被 goroutine 所拥有�
     <div class="post-body" itemprop="articleBody">
 
       
-          <h3 id="什么是-context"><a href="#什么是-context" class="headerlink" title="什么是 context"></a>什么是 context</h3><p>context 是golang用来设计的在多个Goroutine中传递上下文信息，包括：取消信号、超时时间、截止时间、k-v 等。<br>context.Context 类型的值可以协调多个 groutine 中的代码执行“取消”操作，并且可以存储键值对。最重要的是它是并发安全的。<br>随着 context 包的引入，标准库中很多接口因此加上了 context 参数，例如 database/sql 包。context 几乎成为了并发控制和超时控制的标准做法。</p>
+          <p>什么是 context:<br>context 是golang用来设计的在多个Goroutine中传递上下文信息，包括：取消信号、超时时间、截止时间、k-v 等。<br>context.Context 类型的值可以协调多个 groutine 中的代码执行“取消”操作，并且可以存储键值对。最重要的是它是并发安全的。<br>随着 context 包的引入，标准库中很多接口因此加上了 context 参数，例如 database/sql 包。context 几乎成为了并发控制和超时控制的标准做法。</p>
 <p>context 在设计上是一个多叉树，且不同的子context，在不同的groutine中是不会有影响的。而且context 实现中有的是基于channel，有的加有 lock所以是线程安全的。<br>一个context 的典型图<br><img src="/images/golang-context.drawio.png"></p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//如：net/http 中就是在 Listener后，产生一个context.Background,</span></span><br><span class="line"><span class="comment">// 随后 会有一个循环，一直接受 新的请求，并且启动一个goruntime去处理，在处理函数里会生成一个Cancel的context，</span></span><br><span class="line"><span class="comment">// 用来在处理完毕请求后，通知这个请求下所有 goruntime取消。</span></span><br><span class="line"><span class="keyword">for</span> &#123;</span><br><span class="line">.....</span><br><span class="line"> r := l.Accept()</span><br><span class="line"> <span class="keyword">go</span> server(ctx) &#123;</span><br><span class="line">    ctx,cancel := context.WithCancel(ctx)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>在使用context的中，如果想监听 取消，或者超时的通知，需要在接受的goruntime里 监听 Context.Done()的方法，来订阅到超时或者取消的通知，或者是没什么用的</p>
@@ -475,10 +481,16 @@ state 是一个共用的字段，第 0 个bit 表示是被 goroutine 所拥有�
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-06-05 23:42:05 / 修改时间：23:43:21" itemprop="dateCreated datePublished" datetime="2022-06-05T23:42:05+08:00">2022-06-05</time>
+              <time title="创建时间：2022-06-05 23:42:05" itemprop="dateCreated datePublished" datetime="2022-06-05T23:42:05+08:00">2022-06-05</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-11 22:23:03" itemprop="dateModified" datetime="2023-04-11T22:23:03+08:00">2023-04-11</time>
+              </span>
 
           
   
@@ -681,10 +693,16 @@ state 是一个共用的字段，第 0 个bit 表示是被 goroutine 所拥有�
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2022-05-25 00:23:48 / 修改时间：01:23:50" itemprop="dateCreated datePublished" datetime="2022-05-25T00:23:48+08:00">2022-05-25</time>
+              <time title="创建时间：2022-05-25 00:23:48" itemprop="dateCreated datePublished" datetime="2022-05-25T00:23:48+08:00">2022-05-25</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-11 22:23:40" itemprop="dateModified" datetime="2023-04-11T22:23:40+08:00">2023-04-11</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -734,8 +752,8 @@ state 是一个共用的字段，第 0 个bit 表示是被 goroutine 所拥有�
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="记fasthttp-workerpool的实现方式"><a href="#记fasthttp-workerpool的实现方式" class="headerlink" title="记fasthttp-workerpool的实现方式"></a>记fasthttp-workerpool的实现方式</h2><p>golang中官方自带的net/http 默认处理请求的方式，对于一个http请求会单独的新起一个协程去做处理。在请求量大的时候，会使goroutine数量巨大，会增加runtime层的上下文切换成本，调度负担。而fasthttp 使用了workerpool规避这些问题。</p>
-<h3 id="fastHTTP的请求流程的处理"><a href="#fastHTTP的请求流程的处理" class="headerlink" title="fastHTTP的请求流程的处理"></a>fastHTTP的请求流程的处理</h3><p>fasthttp的server启动时候，主要做了  </p>
+          <p>记fasthttp-workerpool的实现方式:<br>golang中官方自带的net/http 默认处理请求的方式，对于一个http请求会单独的新起一个协程去做处理。在请求量大的时候，会使goroutine数量巨大，会增加runtime层的上下文切换成本，调度负担。而fasthttp 使用了workerpool规避这些问题。</p>
+<h3 id="fastHTTP的请求流程的处理"><a href="#fastHTTP的请求流程的处理" class="headerlink" title="fastHTTP的请求流程的处理"></a>fastHTTP的请求流程的处理</h3><p>fasthttp的server启动时候，主要做了</p>
 <ol>
 <li>监听端口</li>
 <li>启动wokerpool</li>
