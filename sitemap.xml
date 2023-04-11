@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://code.youquwei.net/2023/04/11/golang%E7%9A%84sync-mutex/</loc>
+    
+    <lastmod>2023-04-11</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://code.youquwei.net/2019/08/12/MySQL-InnoDB-%E7%B4%A2%E5%BC%95%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%8F%8A%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86/</loc>
     
     <lastmod>2022-08-17</lastmod>
@@ -265,7 +274,7 @@
 
   <url>
     <loc>http://code.youquwei.net/</loc>
-    <lastmod>2022-08-17</lastmod>
+    <lastmod>2023-04-11</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -273,105 +282,105 @@
   
   <url>
     <loc>http://code.youquwei.net/tags/java/</loc>
-    <lastmod>2022-08-17</lastmod>
+    <lastmod>2023-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://code.youquwei.net/tags/%E7%BA%BF%E7%A8%8B/</loc>
-    <lastmod>2022-08-17</lastmod>
+    <lastmod>2023-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://code.youquwei.net/tags/db/</loc>
-    <lastmod>2022-08-17</lastmod>
+    <lastmod>2023-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://code.youquwei.net/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</loc>
-    <lastmod>2022-08-17</lastmod>
+    <lastmod>2023-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://code.youquwei.net/tags/cap/</loc>
-    <lastmod>2022-08-17</lastmod>
+    <lastmod>2023-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://code.youquwei.net/tags/%E5%88%86%E5%B8%83%E5%BC%8F/</loc>
-    <lastmod>2022-08-17</lastmod>
+    <lastmod>2023-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://code.youquwei.net/tags/go/</loc>
-    <lastmod>2022-08-17</lastmod>
+    <lastmod>2023-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://code.youquwei.net/tags/mysql/</loc>
-    <lastmod>2022-08-17</lastmod>
+    <lastmod>2023-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://code.youquwei.net/tags/%E7%B4%A2%E5%BC%95/</loc>
-    <lastmod>2022-08-17</lastmod>
+    <lastmod>2023-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://code.youquwei.net/tags/linux/</loc>
-    <lastmod>2022-08-17</lastmod>
+    <lastmod>2023-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://code.youquwei.net/tags/shell/</loc>
-    <lastmod>2022-08-17</lastmod>
+    <lastmod>2023-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://code.youquwei.net/tags/php/</loc>
-    <lastmod>2022-08-17</lastmod>
+    <lastmod>2023-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://code.youquwei.net/tags/redis/</loc>
-    <lastmod>2022-08-17</lastmod>
+    <lastmod>2023-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://code.youquwei.net/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/</loc>
-    <lastmod>2022-08-17</lastmod>
+    <lastmod>2023-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://code.youquwei.net/tags/%E8%BF%9B%E7%A8%8B/</loc>
-    <lastmod>2022-08-17</lastmod>
+    <lastmod>2023-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
@@ -380,56 +389,56 @@
   
   <url>
     <loc>http://code.youquwei.net/categories/java/</loc>
-    <lastmod>2022-08-17</lastmod>
+    <lastmod>2023-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://code.youquwei.net/categories/db/</loc>
-    <lastmod>2022-08-17</lastmod>
+    <lastmod>2023-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://code.youquwei.net/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</loc>
-    <lastmod>2022-08-17</lastmod>
+    <lastmod>2023-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://code.youquwei.net/categories/%E5%88%86%E5%B8%83%E5%BC%8F/</loc>
-    <lastmod>2022-08-17</lastmod>
+    <lastmod>2023-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://code.youquwei.net/categories/go/</loc>
-    <lastmod>2022-08-17</lastmod>
+    <lastmod>2023-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://code.youquwei.net/categories/linux/</loc>
-    <lastmod>2022-08-17</lastmod>
+    <lastmod>2023-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://code.youquwei.net/categories/php/</loc>
-    <lastmod>2022-08-17</lastmod>
+    <lastmod>2023-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://code.youquwei.net/categories/cache/</loc>
-    <lastmod>2022-08-17</lastmod>
+    <lastmod>2023-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
