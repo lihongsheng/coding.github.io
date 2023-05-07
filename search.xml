@@ -2334,6 +2334,7 @@ state 是一个共用的字段，第 0 个bit 表示是被 goroutine 所拥有�
 <p>除了2005年的Hex架构，2008年 Jeffery Palermo的Onion Architecture（洋葱架构）和2017年 Robert Martin的Clean Architecture（干净架构），都是极为类似的思想。除了命名不一样、切入点不一样之外，其他的整体架构都是基于一个二维的内外关系。这也说明了基于DDD的架构最终的形态都是类似的</p>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>DDD不是一个什么特殊的架构，而是任何传统代码经过合理的重构之后最终一定会抵达的终点。DDD的架构能够有效的解决传统架构中的问题：</p>
 <p>高可维护性：当外部依赖变更时，内部代码只用变更跟外部对接的模块，其他业务逻辑不变。<br>高可扩展性：做新功能时，绝大部分的代码都能复用，仅需要增加核心业务逻辑即可。<br>高可测试性：每个拆分出来的模块都符合单一性原则，绝大部分不依赖框架，可以快速的单元测试，做到100%覆盖。<br>代码结构清晰：通过POM module可以解决模块间的依赖关系，<br>所有外接模块都可以单独独立成Jar包被复用。当团队形成规范后，可以快速的定位到相关代码。</p>
+<p>文章来源：<a href="https://developer.aliyun.com/article/715802">https://developer.aliyun.com/article/715802</a></p>
 ]]></content>
       <tags>
         <tag>架构</tag>
