@@ -185,6 +185,109 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://lee-code.top/2023/05/07/ddd%E5%BA%94%E7%94%A8%E6%9E%B6%E6%9E%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="lihongsheng">
+      <meta itemprop="description" content="保持编码的乐趣">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="keep coding">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/05/07/ddd%E5%BA%94%E7%94%A8%E6%9E%B6%E6%9E%84/" class="post-title-link" itemprop="url">ddd应用架构</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-05-07 18:07:54 / 修改时间：18:25:23" itemprop="dateCreated datePublished" datetime="2023-05-07T18:07:54+08:00">2023-05-07</time>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2023/05/07/ddd%E5%BA%94%E7%94%A8%E6%9E%B6%E6%9E%84/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2023/05/07/ddd应用架构/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>17k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>15 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>应用架构<br>架构这个词源于英文里的“Architecture“，源头是土木工程里的“建筑”和“结构”，而架构里的”架“同时又包含了”架子“（scaffolding）的含义，意指能快速搭建起来的固定结构。而今天的应用架构，意指软件系统中固定不变的代码结构、设计模式、规范和组件间的通信方式。在应用开发中架构之所以是最重要的第一步，因为一个好的架构能让系统安全、稳定、快速迭代。在一个团队内通过规定一个固定的架构设计，可以让团队内能力参差不齐的同学们都能有一个统一的开发规范，降低沟通成本，提升效率和代码质量。</p>
+<p>在做架构设计时，一个好的架构应该需要实现以下几个目标：</p>
+<p>独立于框架：架构不应该依赖某个外部的库或框架，不应该被框架的结构所束缚。<br>独立于UI：前台展示的样式可能会随时发生变化（今天可能是网页、明天可能变成console、后天是独立app），但是底层架构不应该随之而变化。<br>独立于底层数据源：无论今天你用MySQL、Oracle还是MongoDB、CouchDB，甚至使用文件系统，软件架构不应该因为不同的底层数据储存方式而产生巨大改变。<br>独立于外部依赖：无论外部依赖如何变更、升级，业务的核心逻辑不应该随之而大幅变化。<br>可测试：无论外部依赖了什么数据库、硬件、UI或者服务，业务的逻辑应该都能够快速被验证正确性。<br>这就好像是建筑中的楼宇：一个好的楼宇，无论内部承载了什么人、有什么样的活动、还是外部有什么风雨，一栋楼都应该屹立不倒，而且可以确保它不会倒。但是今天我们在做业务研发时，更多的会去关注一些宏观的架构，比如SOA架构、微服务架构，而忽略了应用内部的架构设计，很容易导致代码逻辑混乱，很难维护，容易产生bug而且很难发现。今天，我希望能够通过案例的分析和重构，来推演出一套高质量的DDD架构。</p>
+<h3 id="1-案例分析"><a href="#1-案例分析" class="headerlink" title="1. 案例分析"></a>1. 案例分析</h3><p>   我们先看一个简单的案例需求如下：</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;用户可以通过银行网页转账给另一个账号，支持跨币种转账。<br>同时因为监管和对账需求，需要记录本次转账活动。</p>
+<p>拿到这个需求之后，一个开发可能会经历一些技术选型，最终可能拆解需求如下：</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;从MySql数据库中找到转出和转入的账户，选择用MyBatis的mapper实现DAO<br>从Yahoo（或其他渠道）提供的汇率服务获取转账的汇率信息（底层是http开放接口）<br>计算需要转出的金额，确保账户有足够余额，并且没超出每日转账上限<br>实现转入和转出操作，扣除手续费，保存数据库<br>发送Kafka审计消息，以便审计和对账用<br>而一个简单的代码实现如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TransferController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> TransferService transferService;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Result&lt;Boolean&gt; <span class="title">transfer</span><span class="params">(String targetAccountNumber, BigDecimal amount, HttpSession session)</span> </span>&#123;</span><br><span class="line">        Long userId = (Long) session.getAttribute(<span class="string">&quot;userId&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> transferService.transfer(userId, targetAccountNumber, amount, <span class="string">&quot;CNY&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TransferServiceImpl</span> <span class="keyword">implements</span> <span class="title">TransferService</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String TOPIC_AUDIT_LOG = <span class="string">&quot;TOPIC_AUDIT_LOG&quot;</span>;</span><br><span class="line">    <span class="keyword">private</span> AccountMapper accountDAO;</span><br><span class="line">    <span class="keyword">private</span> KafkaTemplate&lt;String, String&gt; kafkaTemplate;</span><br><span class="line">    <span class="keyword">private</span> YahooForexService yahooForex;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Result&lt;Boolean&gt; <span class="title">transfer</span><span class="params">(Long sourceUserId, String targetAccountNumber, BigDecimal targetAmount, String targetCurrency)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 1. 从数据库读取数据，忽略所有校验逻辑如账号是否存在等</span></span><br><span class="line">        AccountDO sourceAccountDO = accountDAO.selectByUserId(sourceUserId);</span><br><span class="line">        AccountDO targetAccountDO = accountDAO.selectByAccountNumber(targetAccountNumber);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2. 业务参数校验</span></span><br><span class="line">        <span class="keyword">if</span> (!targetAccountDO.getCurrency().equals(targetCurrency)) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> InvalidCurrencyException();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3. 获取外部数据，并且包含一定的业务逻辑</span></span><br><span class="line">        <span class="comment">// exchange rate = 1 source currency = X target currency</span></span><br><span class="line">        BigDecimal exchangeRate = BigDecimal.ONE;</span><br><span class="line">        <span class="keyword">if</span> (sourceAccountDO.getCurrency().equals(targetCurrency)) &#123;</span><br><span class="line">            exchangeRate = yahooForex.getExchangeRate(sourceAccountDO.getCurrency(), targetCurrency);</span><br><span class="line">        &#125;</span><br><span class="line">        BigDecimal sourceAmount = targetAmount.divide(exchangeRate, RoundingMode.DOWN);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 4. 业务参数校验</span></span><br><span class="line">        <span class="keyword">if</span> (sourceAccountDO.getAvailable().compareTo(sourceAmount) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> InsufficientFundsException();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (sourceAccountDO.getDailyLimit().compareTo(sourceAmount) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> DailyLimitExceededException();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 5. 计算新值，并且更新字段</span></span><br><span class="line">        BigDecimal newSource = sourceAccountDO.getAvailable().subtract(sourceAmount);</span><br><span class="line">        BigDecimal newTarget = targetAccountDO.getAvailable().add(targetAmount);</span><br><span class="line">        sourceAccountDO.setAvailable(newSource);</span><br><span class="line">        targetAccountDO.setAvailable(newTarget);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 6. 更新到数据库</span></span><br><span class="line">        accountDAO.update(sourceAccountDO);</span><br><span class="line">        accountDAO.update(targetAccountDO);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 7. 发送审计消息</span></span><br><span class="line">        String message = sourceUserId + <span class="string">&quot;,&quot;</span> + targetAccountNumber + <span class="string">&quot;,&quot;</span> + targetAmount + <span class="string">&quot;,&quot;</span> + targetCurrency;</span><br><span class="line">        kafkaTemplate.send(TOPIC_AUDIT_LOG, message);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> Result.success(<span class="keyword">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们可以看到，一段业务代码里经常包含了参数校验、数据读取存储、业务计算、调用外部服务、发送消息等多种逻辑。在这个案例里虽然是写在了同一个方法里，在真实代码中经常会被拆分成多个子方法，但实际效果是一样的，而在我们日常的工作中，绝大部分代码都或多或少的接近于此类结构。在Martin Fowler的 P of EAA书中，这种很常见的代码样式被叫做Transaction Script（事务脚本）。虽然这种类似于脚本的写法在功能上没有什么问题，但是长久来看，他有以下几个很大的问题：可维护性差、可扩展性差、可测试性差。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2023/05/07/ddd%E5%BA%94%E7%94%A8%E6%9E%B6%E6%9E%84/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://lee-code.top/2023/04/11/golang%E7%9A%84sync-mutex/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -633,132 +736,6 @@ state 是一个共用的字段，第 0 个bit 表示是被 goroutine 所拥有�
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://lee-code.top/2022/05/25/fasthttp-workerpool/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="lihongsheng">
-      <meta itemprop="description" content="保持编码的乐趣">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="keep coding">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/05/25/fasthttp-workerpool/" class="post-title-link" itemprop="url">fasthttp-workerpool</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-05-25 00:23:48" itemprop="dateCreated datePublished" datetime="2022-05-25T00:23:48+08:00">2022-05-25</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2023-04-11 22:27:25" itemprop="dateModified" datetime="2023-04-11T22:27:25+08:00">2023-04-11</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/go/" itemprop="url" rel="index"><span itemprop="name">go</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Disqus：</span>
-    
-    <a title="disqus" href="/2022/05/25/fasthttp-workerpool/#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2022/05/25/fasthttp-workerpool/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>5.4k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>5 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>记fasthttp-workerpool的实现方式:<br>golang中官方自带的net/http 默认处理请求的方式，对于一个http请求会单独的新起一个协程去做处理。在请求量大的时候，会使goroutine数量巨大，会增加runtime层的上下文切换成本，调度负担。而fasthttp 使用了workerpool规避这些问题。</p>
-<h3 id="fastHTTP的请求流程的处理"><a href="#fastHTTP的请求流程的处理" class="headerlink" title="fastHTTP的请求流程的处理"></a>fastHTTP的请求流程的处理</h3><p>fasthttp的server启动时候，主要做了</p>
-<ol>
-<li>监听端口</li>
-<li>启动wokerpool</li>
-<li>把真正处理链接的workFun注册到协程池里</li>
-<li>循环接受HTTP链接，然后调用wp.Serve去处理HTTP链接<br><img src="/images/fasthttp-server.png"><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *Server)</span> <span class="title">Serve</span><span class="params">(ln net.Listener)</span> <span class="title">error</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> lastOverflowErrorTime time.Time</span><br><span class="line">	<span class="keyword">var</span> lastPerIPErrorTime time.Time</span><br><span class="line">	<span class="keyword">var</span> c net.Conn</span><br><span class="line">	<span class="keyword">var</span> err error</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 协程池大小</span></span><br><span class="line">	maxWorkersCount := s.getConcurrency()</span><br><span class="line"></span><br><span class="line">	s.mu.Lock()</span><br><span class="line">	&#123;</span><br><span class="line">		s.ln = <span class="built_in">append</span>(s.ln, ln)</span><br><span class="line">		<span class="keyword">if</span> s.done == <span class="literal">nil</span> &#123;</span><br><span class="line">			s.done = <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;)</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> s.concurrencyCh == <span class="literal">nil</span> &#123;</span><br><span class="line">			s.concurrencyCh = <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;, maxWorkersCount)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	s.mu.Unlock()</span><br><span class="line"></span><br><span class="line">	wp := &amp;workerPool&#123;</span><br><span class="line">		WorkerFunc:            s.serveConn, <span class="comment">// 注册真正处理HTTP链接的函数</span></span><br><span class="line">		MaxWorkersCount:       maxWorkersCount,</span><br><span class="line">		LogAllErrors:          s.LogAllErrors,</span><br><span class="line">		MaxIdleWorkerDuration: s.MaxIdleWorkerDuration,</span><br><span class="line">		Logger:                s.logger(),</span><br><span class="line">		connState:             s.setState,</span><br><span class="line">	&#125;</span><br><span class="line">  <span class="comment">// 启动协程池管理，start函数里会触发一个单独的协程用来清理那些过期的协程</span></span><br><span class="line">	wp.Start()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	atomic.AddInt32(&amp;s.open, <span class="number">1</span>)</span><br><span class="line">	<span class="keyword">defer</span> atomic.AddInt32(&amp;s.open, <span class="number">-1</span>)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> c, err = acceptConn(s, ln, &amp;lastPerIPErrorTime); err != <span class="literal">nil</span> &#123;</span><br><span class="line">			wp.Stop()</span><br><span class="line">			<span class="keyword">if</span> err == io.EOF &#123;</span><br><span class="line">				<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">return</span> err</span><br><span class="line">		&#125;</span><br><span class="line">		s.setState(c, StateNew)</span><br><span class="line">		atomic.AddInt32(&amp;s.open, <span class="number">1</span>)</span><br><span class="line">    <span class="comment">//wp.Serve 里会从协程池里获取协程worker，然后去处理HTTP链接</span></span><br><span class="line">		<span class="keyword">if</span> !wp.Serve(c) &#123;</span><br><span class="line">			atomic.AddInt32(&amp;s.open, <span class="number">-1</span>)</span><br><span class="line">			s.writeFastError(c, StatusServiceUnavailable,</span><br><span class="line">				<span class="string">&quot;The connection cannot be served because Server.Concurrency limit exceeded&quot;</span>)</span><br><span class="line">			c.Close()</span><br><span class="line">			s.setState(c, StateClosed)</span><br><span class="line">			<span class="keyword">if</span> time.Since(lastOverflowErrorTime) &gt; time.Minute &#123;</span><br><span class="line">				s.logger().Printf(<span class="string">&quot;The incoming connection cannot be served, because %d concurrent connections are served. &quot;</span>+</span><br><span class="line">					<span class="string">&quot;Try increasing Server.Concurrency&quot;</span>, maxWorkersCount)</span><br><span class="line">				lastOverflowErrorTime = time.Now()</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span> s.SleepWhenConcurrencyLimitsExceeded &gt; <span class="number">0</span> &#123;</span><br><span class="line">				time.Sleep(s.SleepWhenConcurrencyLimitsExceeded)</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		c = <span class="literal">nil</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="workerpool主要的作用逻辑"><a href="#workerpool主要的作用逻辑" class="headerlink" title="workerpool主要的作用逻辑"></a>workerpool主要的作用逻辑</h3>wokerpool主要做了以下这些事情</li>
-<li>管理协程worker，清楚过去的worker</li>
-<li>使用自身的属性read来存储 worker</li>
-<li>HTTP链接和worker使用channel来传递</li>
-<li>接受来自server注册的真正处理链接的函数workFun<br>自身主要结构如下图<br><img src="/images/workerpool-struct.png"><br>处理流程如下图<br><img src="/images/fasthttp-wokerpool.png"><h4 id="workerpool主要函数及属性分析"><a href="#workerpool主要函数及属性分析" class="headerlink" title="workerpool主要函数及属性分析"></a>workerpool主要函数及属性分析</h4></li>
-<li>start函数<br>主要单独起一个协程处理过期的worker，并且初始化了sync.pool的新增worker的方法<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(wp *workerPool)</span> <span class="title">Start</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">if</span> wp.stopCh != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="built_in">panic</span>(<span class="string">&quot;BUG: workerPool already started&quot;</span>)</span><br><span class="line">	&#125;</span><br><span class="line">	wp.stopCh = <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;)</span><br><span class="line">	stopCh := wp.stopCh</span><br><span class="line">  <span class="comment">// 使用sync.pool 来复用workerChan</span></span><br><span class="line">	wp.workerChanPool.New = <span class="function"><span class="keyword">func</span><span class="params">()</span> <span class="title">interface</span></span>&#123;&#125; &#123;</span><br><span class="line">		<span class="keyword">return</span> &amp;workerChan&#123;</span><br><span class="line">			ch: <span class="built_in">make</span>(<span class="keyword">chan</span> net.Conn, workerChanCap),</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">  <span class="comment">// 主要单独起一个协程处理过期的worker</span></span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		<span class="keyword">var</span> scratch []*workerChan</span><br><span class="line">		<span class="keyword">for</span> &#123;</span><br><span class="line">			wp.clean(&amp;scratch)</span><br><span class="line">			<span class="keyword">select</span> &#123;</span><br><span class="line">			<span class="keyword">case</span> &lt;-stopCh:</span><br><span class="line">				<span class="keyword">return</span></span><br><span class="line">			<span class="keyword">default</span>:</span><br><span class="line">				time.Sleep(wp.getMaxIdleWorkerDuration())</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-<li>clean 主要是清理过期的worker<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(wp *workerPool)</span> <span class="title">clean</span><span class="params">(scratch *[]*workerChan)</span></span> &#123;</span><br><span class="line">	maxIdleWorkerDuration := wp.getMaxIdleWorkerDuration()</span><br><span class="line">	criticalTime := time.Now().Add(-maxIdleWorkerDuration)</span><br><span class="line"></span><br><span class="line">	wp.lock.Lock()</span><br><span class="line">	ready := wp.ready</span><br><span class="line">	n := <span class="built_in">len</span>(ready)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 使用二分查找，发现过期的worker</span></span><br><span class="line">	l, r, mid := <span class="number">0</span>, n<span class="number">-1</span>, <span class="number">0</span></span><br><span class="line">	<span class="keyword">for</span> l &lt;= r &#123;</span><br><span class="line">		mid = (l + r) / <span class="number">2</span></span><br><span class="line">		<span class="keyword">if</span> criticalTime.After(wp.ready[mid].lastUseTime) &#123;</span><br><span class="line">			l = mid + <span class="number">1</span></span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			r = mid - <span class="number">1</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	i := r</span><br><span class="line">	<span class="keyword">if</span> i == <span class="number">-1</span> &#123;</span><br><span class="line">		wp.lock.Unlock()</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	*scratch = <span class="built_in">append</span>((*scratch)[:<span class="number">0</span>], ready[:i+<span class="number">1</span>]...)</span><br><span class="line">	m := <span class="built_in">copy</span>(ready, ready[i+<span class="number">1</span>:])</span><br><span class="line">	<span class="keyword">for</span> i = m; i &lt; n; i++ &#123;</span><br><span class="line">		ready[i] = <span class="literal">nil</span></span><br><span class="line">	&#125;</span><br><span class="line">	wp.ready = ready[:m]</span><br><span class="line">	wp.lock.Unlock()</span><br><span class="line"></span><br><span class="line">	tmp := *scratch</span><br><span class="line">	<span class="keyword">for</span> i := <span class="keyword">range</span> tmp &#123;</span><br><span class="line">		tmp[i].ch &lt;- <span class="literal">nil</span></span><br><span class="line">		tmp[i] = <span class="literal">nil</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-<li>serve 接受HTTP请求的入口<br>从连接池里获取worker，然后让worker去处理，如果是新建的worker会起一个协程。<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(wp *workerPool)</span> <span class="title">Serve</span><span class="params">(c net.Conn)</span> <span class="title">bool</span></span> &#123;</span><br><span class="line">  <span class="comment">// getCh会获取协程worker，如果是新建的worker会起一个协程。</span></span><br><span class="line">	ch := wp.getCh()</span><br><span class="line">	<span class="keyword">if</span> ch == <span class="literal">nil</span> &#123; <span class="comment">//说明worker达到最大数目</span></span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">	&#125;</span><br><span class="line">  <span class="comment">// 这里使用channel,与worker里的协程通信</span></span><br><span class="line">	ch.ch &lt;- c</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 获取worker</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(wp *workerPool)</span> <span class="title">getCh</span><span class="params">()</span> *<span class="title">workerChan</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> ch *workerChan</span><br><span class="line">	createWorker := <span class="literal">false</span></span><br><span class="line"></span><br><span class="line">	wp.lock.Lock()</span><br><span class="line">	ready := wp.ready</span><br><span class="line">	n := <span class="built_in">len</span>(ready) - <span class="number">1</span></span><br><span class="line">	<span class="keyword">if</span> n &lt; <span class="number">0</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> wp.workersCount &lt; wp.MaxWorkersCount &#123;</span><br><span class="line">			createWorker = <span class="literal">true</span></span><br><span class="line">			wp.workersCount++</span><br><span class="line">		&#125;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		ch = ready[n]</span><br><span class="line">		ready[n] = <span class="literal">nil</span></span><br><span class="line">		wp.ready = ready[:n]</span><br><span class="line">	&#125;</span><br><span class="line">	wp.lock.Unlock()</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> ch == <span class="literal">nil</span> &#123; <span class="comment">// read取不到，且未达到最大，则新建worker</span></span><br><span class="line">		<span class="keyword">if</span> !createWorker &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">		&#125;</span><br><span class="line">		vch := wp.workerChanPool.Get()</span><br><span class="line">		ch = vch.(*workerChan)</span><br><span class="line">		<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">			wp.workerFunc(ch) <span class="comment">// 在协程里处理链接，通过channel接受HTTP链接</span></span><br><span class="line">			wp.workerChanPool.Put(vch)</span><br><span class="line">		&#125;()</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> ch</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-<li>workerFunc 真正处理链接的地方<br>主要是一直for循环等channel里出现新的HTTP链接，然后接受HTTP链接去处理<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(wp *workerPool)</span> <span class="title">workerFunc</span><span class="params">(ch *workerChan)</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> c net.Conn</span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> err error</span><br><span class="line">	<span class="keyword">for</span> c = <span class="keyword">range</span> ch.ch &#123;</span><br><span class="line">		<span class="keyword">if</span> c == <span class="literal">nil</span> &#123; <span class="comment">// 说明，自身长时间未获取到新的HTTP请求导致超时被关闭或者workerpool停止。</span></span><br><span class="line">			<span class="keyword">break</span></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用Server注册的WorkerFunc真正处理HTTP链接</span></span><br><span class="line">		<span class="keyword">if</span> err = wp.WorkerFunc(c); err != <span class="literal">nil</span> &amp;&amp; err != errHijacked &#123;</span><br><span class="line">			errStr := err.Error()</span><br><span class="line">			<span class="keyword">if</span> wp.LogAllErrors || !(strings.Contains(errStr, <span class="string">&quot;broken pipe&quot;</span>) ||</span><br><span class="line">				strings.Contains(errStr, <span class="string">&quot;reset by peer&quot;</span>) ||</span><br><span class="line">				strings.Contains(errStr, <span class="string">&quot;request headers: small read buffer&quot;</span>) ||</span><br><span class="line">				strings.Contains(errStr, <span class="string">&quot;unexpected EOF&quot;</span>) ||</span><br><span class="line">				strings.Contains(errStr, <span class="string">&quot;i/o timeout&quot;</span>) ||</span><br><span class="line">				errors.Is(err, ErrBadTrailer)) &#123;</span><br><span class="line">				wp.Logger.Printf(<span class="string">&quot;error when serving connection %q&lt;-&gt;%q: %v&quot;</span>, c.LocalAddr(), c.RemoteAddr(), err)</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> err == errHijacked &#123;</span><br><span class="line">			wp.connState(c, StateHijacked)</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			_ = c.Close()</span><br><span class="line">			wp.connState(c, StateClosed)</span><br><span class="line">		&#125;</span><br><span class="line">		c = <span class="literal">nil</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 处理完一个请求后，把自身归返到read里去</span></span><br><span class="line">		<span class="keyword">if</span> !wp.release(ch) &#123;</span><br><span class="line">			<span class="keyword">break</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	wp.lock.Lock()</span><br><span class="line">	wp.workersCount--</span><br><span class="line">	wp.lock.Unlock()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-</ol>
-
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/05/25/fasthttp-workerpool/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -828,7 +805,7 @@ state 是一个共用的字段，第 0 个bit 表示是被 goroutine 所拥有�
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-count">28</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -841,7 +818,7 @@ state 是一个共用的字段，第 0 个bit 表示是被 goroutine 所拥有�
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-count">16</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -857,7 +834,7 @@ state 是一个共用的字段，第 0 个bit 表示是被 goroutine 所拥有�
       <div class="widget-wrap">
           <div id="myCanvasContainer" class="widget tagcloud">
           <canvas width="220" height="250" id="resCanvas" style="width=100%">
-              <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/cap/" rel="tag">cap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/db/" rel="tag">db</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/" rel="tag">php</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/" rel="tag">shell</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag">分布式</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" rel="tag">分布式锁</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B4%A2%E5%BC%95/" rel="tag">索引</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E7%A8%8B/" rel="tag">线程</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BF%9B%E7%A8%8B/" rel="tag">进程</a><span class="tag-list-count">1</span></li></ul>
+              <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/cap/" rel="tag">cap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/db/" rel="tag">db</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/" rel="tag">php</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/" rel="tag">shell</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag">分布式</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" rel="tag">分布式锁</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9E%B6%E6%9E%84/" rel="tag">架构</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B4%A2%E5%BC%95/" rel="tag">索引</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E7%A8%8B/" rel="tag">线程</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BF%9B%E7%A8%8B/" rel="tag">进程</a><span class="tag-list-count">1</span></li></ul>
           </canvas>
           </div>
       </div>
@@ -888,12 +865,12 @@ state 是一个共用的字段，第 0 个bit 表示是被 goroutine 所拥有�
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">190k</span>
+    <span title="站点总字数">207k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:53</span>
+    <span title="站点阅读时长">3:08</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
   </div>
