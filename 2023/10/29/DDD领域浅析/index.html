@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico">
+  <link rel="mask-icon" href="/images/favicon.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"lee-code.top","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"disqus","storage":true,"lazyload":false,"nav":null,"activeClass":"disqus"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="什么是DDD:  领域驱动设计（Domain-Driven Design，简称DDD）是一种软件设计方法，旨在帮助开发者有效地构建复杂的软件系统，特别是那些与业务领域紧密相关的应用程序。DDD 强调通过深入理解业务领域的本质和规则来构建软件系统，以便软件能够更好地反映和支持业务需求。是以业务视角来规划系统架构，使系统架构更好的服务于业务的一套指导方法论。 DDD定义的相关概念：边界上下文：一个由显">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DDD领域浅析">
+<meta property="og:url" content="http://lee-code.top/2023/10/29/DDD%E9%A2%86%E5%9F%9F%E6%B5%85%E6%9E%90/index.html">
+<meta property="og:site_name" content="keep coding">
+<meta property="og:description" content="什么是DDD:  领域驱动设计（Domain-Driven Design，简称DDD）是一种软件设计方法，旨在帮助开发者有效地构建复杂的软件系统，特别是那些与业务领域紧密相关的应用程序。DDD 强调通过深入理解业务领域的本质和规则来构建软件系统，以便软件能够更好地反映和支持业务需求。是以业务视角来规划系统架构，使系统架构更好的服务于业务的一套指导方法论。 DDD定义的相关概念：边界上下文：一个由显">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://lee-code.top/images/ddd/img.png">
+<meta property="og:image" content="http://lee-code.top/images/ddd/img_2.png">
+<meta property="og:image" content="http://lee-code.top/images/ddd/img_1.png">
+<meta property="og:image" content="http://lee-code.top/images/ddd/img_3.png">
+<meta property="og:image" content="http://lee-code.top/images/ddd/img_4.png">
+<meta property="og:image" content="http://lee-code.top/images/ddd/img_5.png">
+<meta property="article:published_time" content="2023-10-29T13:48:33.000Z">
+<meta property="article:modified_time" content="2023-10-29T14:05:54.405Z">
+<meta property="article:author" content="lihongsheng">
+<meta property="article:tag" content="架构">
+<meta property="article:tag" content="ddd">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://lee-code.top/images/ddd/img.png">
+
+<link rel="canonical" href="http://lee-code.top/2023/10/29/DDD%E9%A2%86%E5%9F%9F%E6%B5%85%E6%9E%90/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>DDD领域浅析 | keep coding</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">keep coding</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://lee-code.top/2023/10/29/DDD%E9%A2%86%E5%9F%9F%E6%B5%85%E6%9E%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="lihongsheng">
+      <meta itemprop="description" content="保持编码的乐趣">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="keep coding">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          DDD领域浅析
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-10-29 21:48:33 / 修改时间：22:05:54" itemprop="dateCreated datePublished" datetime="2023-10-29T21:48:33+08:00">2023-10-29</time>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus：</span>
+    
+    <a title="disqus" href="/2023/10/29/DDD%E9%A2%86%E5%9F%9F%E6%B5%85%E6%9E%90/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2023/10/29/DDD领域浅析/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="什么是DDD"><a href="#什么是DDD" class="headerlink" title="什么是DDD:"></a>什么是DDD:</h3><p>  领域驱动设计（Domain-Driven Design，简称DDD）是一种软件设计方法，旨在帮助开发者有效地构建复杂的软件系统，特别是那些与业务领域紧密相关的应用程序。DDD 强调通过深入理解业务领域的本质和规则来构建软件系统，以便软件能够更好地反映和支持业务需求。是以业务视角来规划系统架构，使系统架构更好的服务于业务的一套指导方法论。</p>
+<h3 id="DDD定义的相关概念："><a href="#DDD定义的相关概念：" class="headerlink" title="DDD定义的相关概念："></a>DDD定义的相关概念：</h3><h4 id="边界上下文："><a href="#边界上下文：" class="headerlink" title="边界上下文："></a>边界上下文：</h4><p>一个由显示边界限定的特定职责。领域模型便存在于这个边界之内。在边界内，每一个模型概念，包括它的属性和操作，都具有特殊的含义。 边界上下文是一组基于业务角度定义的一些通用相关语言，包含了一个完整的业务流程里。是为了使业务和技术具有统一沟通术语和限定业务边界而出现。也就是说确定了边界上下文也就是确定了业务边界。<br><img src="/images/ddd/img.png" alt="img.png"></p>
+<h4 id="限界上下文之间的映射关系"><a href="#限界上下文之间的映射关系" class="headerlink" title="限界上下文之间的映射关系"></a>限界上下文之间的映射关系</h4><ul>
+<li><strong>合作关系（Partnership）：两个上下文紧密合作的关系，一荣俱荣，一损俱损。</strong></li>
+<li><strong>共享内核（Shared Kernel）：两个上下文依赖部分共享的模型。</strong></li>
+<li><strong>客户方-供应方开发（Customer-Supplier Development）：上下文之间有组织的上下游依赖。</strong></li>
+<li><strong>遵奉者（Conformist）：下游上下文只能盲目依赖上游上下文。</strong></li>
+<li><strong>防腐层（Anticorruption Layer）：一个上下文通过一些适配和转换与另一个上下文交互。</strong></li>
+<li><strong>开放主机服务（Open Host Service）：定义一种协议来让其他上下文来对本上下文进行访问。</strong></li>
+<li><strong>发布语言（Published Language）：通常与OHS一起使用，用于定义开放主机的协议。</strong></li>
+<li><strong>大泥球（Big Ball of Mud）：混杂在一起的上下文关系，边界不清晰。</strong></li>
+<li><strong>另谋他路（SeparateWay）：两个完全没有任何联系的上下文。</strong><br><img src="/images/ddd/img_2.png" alt="img_2.png"><br><img src="/images/ddd/img_1.png" alt="img_1.png"><h4 id="领域："><a href="#领域：" class="headerlink" title="领域："></a>领域：</h4>领域就是业务知识,它包括业务规则、实体、值对象、聚合、库存、服务等，以及与这些概念相关的关系和交互。是具体指向一个特定的业务领域。<br><img src="/images/ddd/img_3.png" alt="img_3.png"><h4 id="领域服务"><a href="#领域服务" class="headerlink" title="领域服务:"></a>领域服务:</h4>领域服务是一个动作,是一个业务具体的实施过程。对领域对象进行转换或者以多个对象进行计算返回一个值对象。总的来说领域服务是处理业务逻辑。<br>领域需要协调多个领域对象共同完成这个操作或动作。如果强行将这些操作职责分配给任何一个对象，则被分配的对象就是承担一些不该承担的职责，从而会导致对象的职责不明确很混乱。但是基于类的面向对象语言规定任何属性或行为都必须放在对象里面。所以我们需要寻找一种新的模式来表示这种跨多个对象的操作，DDD认为服务是一个很自然的范式用来对应这种跨多个对象的操作，所以就有了领域服务这个模式。和领域对象不同，领域服务是以动词开头来命名的，比如资金转帐服务可以命名为MoneyTransferService。当然，你也可以把服务理解为一个对象，但这和一般意义上的对象有些区别。因为一般的领域对象都是有状态和行为的，而领域服务没有状态只有行为。需要强调的是领域服务是无状态的，它存在的意义就是协调领域对象共完成某个操作，所有的状态还是都保存在相应的领域对象中.<br>最直观的现象是当两个对象有牵连或者依赖的操作时候，且感觉别扭的时候，最好把这个操作放到领域层。<h4 id="实体-entity"><a href="#实体-entity" class="headerlink" title="实体(entity):"></a>实体(entity):</h4>实体是具有唯一标识的对象，其状态和行为与业务领域相关。实体通常具有生命周期，并且可以经历不同的状态变化。entity是基于领域逻辑的实体类，它的字段和数据库储存不需要有必然的联系。Entity包含数据，同时也应该包含行为，是充血模型。<h4 id="值对象："><a href="#值对象：" class="headerlink" title="值对象："></a>值对象：</h4>值没有唯一标识且不可变的对象，它具有不变性、相等性和可替换性。<br>如地址相对于用户来说，单独就地址具有唯一性，但是放在人的从属性上是一旦确定是不会再有地址属性的变化的。在实践中，需要保证值对象创建后就不能被修改，即不允许外部再修改其属性。在不同上下文集成时，会出现模型概念的公用，如商品模型会存在于电商的各个上下文中。在订单上下文中如果你只关注下单时商品信息快照，那么将商品对象视为值对象是很好的选择。<h4 id="聚合根"><a href="#聚合根" class="headerlink" title="聚合根:"></a>聚合根:</h4>聚合是一组相关对象的集合，其中一个对象被指定为聚合根，用于管理整个聚合。这有助于维护领域对象之间的一致性.<br>比如相对于订单来说，有订单数据，订单关联的子单，订单关联的商品。 比如商品表和商品sku。<br>聚合由根实体，值对象和实体组成。<h4 id="如何创建好的聚合？"><a href="#如何创建好的聚合？" class="headerlink" title="如何创建好的聚合？"></a>如何创建好的聚合？</h4></li>
+<li>边界内的内容具有一致性：在一个事务中只修改一个聚合实例。如果你发现边界内很难接受强一致，不管是出于性能或产品需求的考虑，应该考虑剥离出独立的聚合，采用最终一致的方式。</li>
+<li>设计小聚合：大部分的聚合都可以只包含根实体，而无需包含其他实体。即使一定要包含，可以考虑将其创建为值对象。</li>
+<li>通过唯一标识来引用其他聚合或实体：当存在对象之间的关联时，建议引用其唯一标识而非引用其整体对象。如果是外部上下文中的实体，引用其唯一标识或将需要的属性构造值对象。 如果聚合创建复杂，推荐使用工厂方法来屏蔽内部复杂的创建逻辑。</li>
+</ul>
+<p>聚合内部多个组成对象的关系可以用来指导数据库创建，但不可避免存在一定的抗阻。如聚合中存在List&lt;值对象&gt;，那么在数据库中建立1:N的关联需要将值对象单独建表，此时是有id的，建议不要将该id暴露到资源库外部，对外隐蔽。</p>
+<h4 id="领域事件："><a href="#领域事件：" class="headerlink" title="领域事件："></a>领域事件：</h4><p>领域事件由实战领域驱动设计一书提出，领域事件用于在领域内部和不同限界上下文之间传递信息。它们用于通知系统中发生的重要事件。<br>领域事件有助于降低系统内部各个领域对象之间的耦合度，因为它们提供了一种松散耦合的通信机制。这使得系统更容易维护、扩展和修改，因为领域对象之间的依赖性降低了。<br>领域事件还可用于构建系统的历史记录和审计功能。通过捕捉所有重要的领域变化事件，可以轻松地跟踪系统状态的演变，并在需要时进行审计。<br>领域事件常常与事件驱动架构（Event-Driven Architecture）结合使用。在这种架构中，系统中的各个组件通过发布和订阅事件的方式进行通信。当某个领域对象的状态发生变化时，它会发布一个相关的领域事件，而其他订阅了这个事件的组件会被通知并采取相应的行动。</p>
+<h4 id="ACL："><a href="#ACL：" class="headerlink" title="ACL："></a>ACL：</h4><p>ACL 是一种设计模式，旨在保护一个领域模型免受来自外部系统或者不符合领域规则的影响。可以看做是设计模式中的适配器。</p>
+<h4 id="有以下几种情况会考虑引入防腐层："><a href="#有以下几种情况会考虑引入防腐层：" class="headerlink" title="有以下几种情况会考虑引入防腐层："></a>有以下几种情况会考虑引入防腐层：</h4><ul>
+<li>需要将外部上下文中的模型翻译成本上下文理解的模型。外部系统通常会使用它们自己的术语和概念来表示信息。ACL 可以负责将外部的概念翻译成领域内部的概念，以保持领域模型的一致性。</li>
+<li>不同上下文之间的团队协作关系，如果是供奉者关系，建议引入防腐层，避免外部上下文变化对本上下文的侵蚀。</li>
+<li>该访问本上下文使用广泛，为了避免改动影响范围过大。当领域模型需要与多个外部系统进行交互时，可能需要协调它们之间的操作以保持数据的一致性。ACL 可以负责管理这些交互，以确保所有外部系统都能正确地处理数据。<h3 id="DDD的应用架构："><a href="#DDD的应用架构：" class="headerlink" title="DDD的应用架构："></a>DDD的应用架构：</h3><img src="/images/ddd/img_4.png" alt="img_4.png"><br>DDD模式的概念适合实践的架构是整洁架构，六边形架构。DDD也是提现依赖倒置的一个原则：高层模块不应该依赖于低层模块，两者都应该依赖于抽象。抽象不应该依赖于细节，细节应该依赖于抽察。<br>整洁架构：<br><img src="/images/ddd/img_5.png" alt="img_5.png"><table>
+<thead>
+<tr>
+<th>层</th>
+<th>功能职责</th>
+<th>其他描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>用户接口层</td>
+<td>用户界面只用于处理用户显示和用户请求命令，它不应该包含领城或业务逻辑。 有人可能会认为，既然用户界面需要对用户输人进行验证，那么它就应该包含业 务逻辑。事实上，用户界面所进行的验证和对领域模型的验证是不同的。验证只是简单字符长度，数值大小等判断。</td>
+<td>是对外提供统一接口定义的地方。</td>
+</tr>
+<tr>
+<td>此层包括接口的交互或者命令行的交互，统一调用应用层实现业务逻辑，此层应该职责主要是负责基本的传入参数校验等工作。</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>应用层</td>
+<td>编排调用领域服务，触发领域事件。是很薄的一层。这一层所货 责的 工作对业务来说意义重大，也是与其他系统的应用层进行交互的必要渠道 应用层要尽量简单，不包含业务规则成者知识，而只为下一层中的领域对象协调任务，分配工作，使它们互相协作。它没有反映业务情况的状态，但是却可以具有 另外一种状态，为用户或程序品示某个任务的进度。</td>
+<td>在实战领取一书中：定义了应用层是从repo层取出Entity，传递Entity到domain层实现业务逻辑，并且触发领域事件。但是看上边的DDD架构图也可以看出，也有在domain调用repo的。所以个人在基于应用层应该更轻薄的理解下更倾向于应该放到domain，但是夸多个domain的事务实现也是需要考虑到的。</td>
+</tr>
+<tr>
+<td>领域层</td>
+<td>请不要将领城服务与应用服务混杂在一起了。在应用服务中，我们并不 会处理业务设辑，但是领域服务却恰恰是处理业务逻辑的。是业务逻辑的核心所 在。在这里保留业务对象的状态，对业务对象和它 们状态的持久化被委托给了基础设施层。</td>
+<td>最显著的特征，如果一个业务需要多个对象协作，那么它应该到领域里，领域需要协调多个领域对象共同完成这个操作或动作。</td>
+</tr>
+<tr>
+<td>领域层在整洁架构中：是最核心的部分，应该做到不依赖框架，不依赖固定的存储等。对于有所交互的层级应该全部依赖接口定义。</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>基础层</td>
+<td>本层作为其他层的支撑库存在。它提供了层间的通 信，实现对业务对象的持久化和消息机制，包含对用户界面层 的支撑库等作用。</td>
+<td>repository层在整洁架构中主要是系统能隔离硬件或者存储系统的变更，无论硬件或者存储系统怎么变化都对上层提供统一的接口。</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<h3 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h3><pre><code>    [领域驱动设计在互联网业务开发中的实践](https://tech.meituan.com/2017/12/22/ddd-in-practice.html)
+    [什么是DDD（领域驱动设计）？ 这是我见过最容易理解的一篇关于DDD 的文章了](https://zhuanlan.zhihu.com/p/361427612)
+   [阿里技术专家详解 DDD 系列- Domain Primitive](https://mp.weixin.qq.com/s?__biz=MzAxNDEwNjk5OQ==&amp;mid=2650403892&amp;idx=1&amp;sn=a91fa477392e80f9420a8ca4d26bcace&amp;chksm=83953c2cb4e2b53a6af3b5a82c3b7d7ed932bfe83f59877a935445ae89edd0ff4ee1c4e82fba&amp;scene=21#wechat_redirect)
+   [阿里技术专家详解DDD系列 第二弹 - 应用架构](https://mp.weixin.qq.com/s?__biz=MzAxNDEwNjk5OQ==&amp;mid=2650404060&amp;idx=1&amp;sn=cacf40d19528f6c2d9fd165151d6e8b4&amp;chksm=83953cc4b4e2b5d2bd4426e0d2103f2e95715b682f3b7ff333dbb123eaa79d3e5ad24f64beac&amp;scene=21#wechat_redirect)
+   [阿里技术专家详解DDD系列 第三讲 - Repository模式](https://mp.weixin.qq.com/s?__biz=MzAxNDEwNjk5OQ==&amp;mid=2650406692&amp;idx=1&amp;sn=4a4ac4168299d8ca1905a4f457ae4c59&amp;chksm=8395373cb4e2be2a2d066a5ea4e631fd6270e969ce61883b488f61c1ce33fbc0b362ec9cbf7b&amp;scene=21#wechat_redirect)
+   [DDD系列第四讲：领域层设计规范](https://mp.weixin.qq.com/s/w1zqhWGuDPsCayiOgfxk6w)
+   [DDD系列第五讲：聊聊如何避免写流水账代码](https://mp.weixin.qq.com/s/1rdnkROdcNw5ro4ct99SqQ)
+   [DDD 概念参考](https://domain-driven-design.org/zh/ddd-concept-reference.html#%E9%97%AE%E9%A2%98%E7%A9%BA%E9%97%B4problem-space)
+</code></pre>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%9E%B6%E6%9E%84/" rel="tag"># 架构</a>
+              <a href="/tags/ddd/" rel="tag"># ddd</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/05/07/ddd%E5%BA%94%E7%94%A8%E6%9E%B6%E6%9E%84/" rel="prev" title="ddd应用架构">
+      <i class="fa fa-chevron-left"></i> ddd应用架构
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFDDD"><span class="nav-number">1.</span> <span class="nav-text">什么是DDD:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DDD%E5%AE%9A%E4%B9%89%E7%9A%84%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5%EF%BC%9A"><span class="nav-number">2.</span> <span class="nav-text">DDD定义的相关概念：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BE%B9%E7%95%8C%E4%B8%8A%E4%B8%8B%E6%96%87%EF%BC%9A"><span class="nav-number">2.1.</span> <span class="nav-text">边界上下文：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%99%90%E7%95%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E4%B9%8B%E9%97%B4%E7%9A%84%E6%98%A0%E5%B0%84%E5%85%B3%E7%B3%BB"><span class="nav-number">2.2.</span> <span class="nav-text">限界上下文之间的映射关系</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%86%E5%9F%9F%EF%BC%9A"><span class="nav-number">2.3.</span> <span class="nav-text">领域：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%86%E5%9F%9F%E6%9C%8D%E5%8A%A1"><span class="nav-number">2.4.</span> <span class="nav-text">领域服务:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E4%BD%93-entity"><span class="nav-number">2.5.</span> <span class="nav-text">实体(entity):</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%80%BC%E5%AF%B9%E8%B1%A1%EF%BC%9A"><span class="nav-number">2.6.</span> <span class="nav-text">值对象：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%81%9A%E5%90%88%E6%A0%B9"><span class="nav-number">2.7.</span> <span class="nav-text">聚合根:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%88%9B%E5%BB%BA%E5%A5%BD%E7%9A%84%E8%81%9A%E5%90%88%EF%BC%9F"><span class="nav-number">2.8.</span> <span class="nav-text">如何创建好的聚合？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A2%86%E5%9F%9F%E4%BA%8B%E4%BB%B6%EF%BC%9A"><span class="nav-number">2.9.</span> <span class="nav-text">领域事件：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ACL%EF%BC%9A"><span class="nav-number">2.10.</span> <span class="nav-text">ACL：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%89%E4%BB%A5%E4%B8%8B%E5%87%A0%E7%A7%8D%E6%83%85%E5%86%B5%E4%BC%9A%E8%80%83%E8%99%91%E5%BC%95%E5%85%A5%E9%98%B2%E8%85%90%E5%B1%82%EF%BC%9A"><span class="nav-number">2.11.</span> <span class="nav-text">有以下几种情况会考虑引入防腐层：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DDD%E7%9A%84%E5%BA%94%E7%94%A8%E6%9E%B6%E6%9E%84%EF%BC%9A"><span class="nav-number">3.</span> <span class="nav-text">DDD的应用架构：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%82%E8%80%83%EF%BC%9A"><span class="nav-number">4.</span> <span class="nav-text">参考：</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">lihongsheng</p>
+  <div class="site-description" itemprop="description">保持编码的乐趣</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+      
+      <script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+      <script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+      <div class="widget-wrap">
+          <div id="myCanvasContainer" class="widget tagcloud">
+          <canvas width="220" height="250" id="resCanvas" style="width=100%">
+              <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/cap/" rel="tag">cap</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/db/" rel="tag">db</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ddd/" rel="tag">ddd</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/go/" rel="tag">go</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/java/" rel="tag">java</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/" rel="tag">linux</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/" rel="tag">php</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/redis/" rel="tag">redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/" rel="tag">shell</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag">分布式</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/" rel="tag">分布式锁</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9E%B6%E6%9E%84/" rel="tag">架构</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%B4%A2%E5%BC%95/" rel="tag">索引</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%BF%E7%A8%8B/" rel="tag">线程</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BF%9B%E7%A8%8B/" rel="tag">进程</a><span class="tag-list-count">1</span></li></ul>
+          </canvas>
+          </div>
+      </div>
+      
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lihongsheng</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">212k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:13</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://coding-lhs.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "http://lee-code.top/2023/10/29/DDD%E9%A2%86%E5%9F%9F%E6%B5%85%E6%9E%90/";
+    this.page.identifier = "2023/10/29/DDD领域浅析/";
+    this.page.title = "DDD领域浅析";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://coding-lhs.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://lee-code.top/2023/10/29/DDD%E9%A2%86%E5%9F%9F%E6%B5%85%E6%9E%90/</loc>
+    
+    <lastmod>2023-10-29</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://lee-code.top/2023/05/07/ddd%E5%BA%94%E7%94%A8%E6%9E%B6%E6%9E%84/</loc>
     
     <lastmod>2023-05-07</lastmod>
@@ -283,7 +292,7 @@
 
   <url>
     <loc>http://lee-code.top/</loc>
-    <lastmod>2023-05-07</lastmod>
+    <lastmod>2023-10-29</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -291,112 +300,119 @@
   
   <url>
     <loc>http://lee-code.top/tags/java/</loc>
-    <lastmod>2023-05-07</lastmod>
+    <lastmod>2023-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://lee-code.top/tags/%E7%BA%BF%E7%A8%8B/</loc>
-    <lastmod>2023-05-07</lastmod>
+    <lastmod>2023-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://lee-code.top/tags/db/</loc>
-    <lastmod>2023-05-07</lastmod>
+    <lastmod>2023-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://lee-code.top/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</loc>
-    <lastmod>2023-05-07</lastmod>
+    <lastmod>2023-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://lee-code.top/tags/cap/</loc>
-    <lastmod>2023-05-07</lastmod>
+    <lastmod>2023-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://lee-code.top/tags/%E5%88%86%E5%B8%83%E5%BC%8F/</loc>
-    <lastmod>2023-05-07</lastmod>
+    <lastmod>2023-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://lee-code.top/tags/go/</loc>
-    <lastmod>2023-05-07</lastmod>
+    <lastmod>2023-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://lee-code.top/tags/mysql/</loc>
-    <lastmod>2023-05-07</lastmod>
+    <lastmod>2023-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://lee-code.top/tags/%E7%B4%A2%E5%BC%95/</loc>
-    <lastmod>2023-05-07</lastmod>
+    <lastmod>2023-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://lee-code.top/tags/linux/</loc>
-    <lastmod>2023-05-07</lastmod>
+    <lastmod>2023-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://lee-code.top/tags/shell/</loc>
-    <lastmod>2023-05-07</lastmod>
+    <lastmod>2023-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://lee-code.top/tags/php/</loc>
-    <lastmod>2023-05-07</lastmod>
+    <lastmod>2023-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://lee-code.top/tags/redis/</loc>
-    <lastmod>2023-05-07</lastmod>
+    <lastmod>2023-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://lee-code.top/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/</loc>
-    <lastmod>2023-05-07</lastmod>
+    <lastmod>2023-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://lee-code.top/tags/%E8%BF%9B%E7%A8%8B/</loc>
-    <lastmod>2023-05-07</lastmod>
+    <lastmod>2023-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://lee-code.top/tags/%E6%9E%B6%E6%9E%84/</loc>
-    <lastmod>2023-05-07</lastmod>
+    <lastmod>2023-10-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://lee-code.top/tags/ddd/</loc>
+    <lastmod>2023-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
@@ -405,56 +421,56 @@
   
   <url>
     <loc>http://lee-code.top/categories/java/</loc>
-    <lastmod>2023-05-07</lastmod>
+    <lastmod>2023-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://lee-code.top/categories/db/</loc>
-    <lastmod>2023-05-07</lastmod>
+    <lastmod>2023-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://lee-code.top/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</loc>
-    <lastmod>2023-05-07</lastmod>
+    <lastmod>2023-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://lee-code.top/categories/%E5%88%86%E5%B8%83%E5%BC%8F/</loc>
-    <lastmod>2023-05-07</lastmod>
+    <lastmod>2023-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://lee-code.top/categories/go/</loc>
-    <lastmod>2023-05-07</lastmod>
+    <lastmod>2023-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://lee-code.top/categories/linux/</loc>
-    <lastmod>2023-05-07</lastmod>
+    <lastmod>2023-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://lee-code.top/categories/php/</loc>
-    <lastmod>2023-05-07</lastmod>
+    <lastmod>2023-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://lee-code.top/categories/cache/</loc>
-    <lastmod>2023-05-07</lastmod>
+    <lastmod>2023-10-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
